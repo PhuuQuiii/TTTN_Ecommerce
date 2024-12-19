@@ -1,0 +1,42 @@
+@use 'fonts';
+@use 'variables';
+@use 'base';
+
+//skeleton
+@use './skeleton';
+
+// Layout
+@use './Layouts/layouts';
+
+// Pages
+@use './Pages/home';
+@use './Pages/cart';
+@use './Pages/deliveryAddress';
+@use './Pages/profile';
+@use './Pages/login';
+
+//Components
+@use './Components/header';
+@use './Components/topHeader';
+@use './Components/mobileHeader';
+@use './Components/carousel';
+@use './Components/card';
+@use './Components/popularSlider';
+@use './Components/footer';
+@use './Components/listing';
+@use './Components/productListView';
+@use './Components/topCategories';
+
+// Components > Listing
+@use './Components/Listing/filter';
+@use './Components/Listing/productList';
+@use './Components/Listing/stickyFilter';
+
+//Components > Details
+@use './Components/Detail/detailSlider';
+@use './Components/Detail/productSpecs';
+@use './Components/Detail/otherDetails';
+
+//Components > Cart
+@use './Components/Cart/CartItems';
+@use './Components/Cart/OrderSummary';

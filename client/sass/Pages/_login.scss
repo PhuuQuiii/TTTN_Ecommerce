@@ -1,0 +1,65 @@
+.login-wrapper {
+  min-height: calc(100vh - 415px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @media screen and (max-width: 768px) {
+    display: block;
+  }
+  .login-title {
+    text-align: center;
+    p {
+      font-size: 14px;
+    }
+  }
+  .login-form {
+    margin-top: 40px;
+    .login-create,
+    .rem-for {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .login-form-forgot {
+      font-size: 12px;
+    }
+  }
+  .social-login-opt {
+    border-top: 1px solid #eee;
+    padding: 10px;
+    position: relative;
+    #or {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      color: #fff;
+      background: #48b5dc;
+      border-radius: 50%;
+      padding: 5px;
+      font-size: 12px;
+    }
+    .social-title {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .social-btn-cover {
+      display: flex;
+      align-items: center;
+      @media screen and (max-width: 425px) {
+        display: block;
+      }
+      .google {
+        margin-left: 10px;
+        @media screen and (max-width: 425px) {
+          margin-left: 0px;
+          margin-top: 10px;
+        }
+      }
+    }
+  }
+  .welcome-illus {
+    img {
+      width: 100%;
+    }
+  }
+}

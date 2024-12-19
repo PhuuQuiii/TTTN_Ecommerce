@@ -1,0 +1,203 @@
+@use '../../variables' as variables;
+
+.product-specs {
+  padding: 0 40px;
+  @media screen and (max-width: 992px) {
+    padding-left: 0px;
+    margin-top: 20px;
+  }
+  @media screen and (max-width: 767px) {
+    padding: 0px;
+    margin-top: 15px;
+  }
+  .product-title {
+    font-size: 28px;
+    @media screen and (max-width: 767px) {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    @media screen and (max-width: 480px) {
+      font-size: 20px;
+    }
+  }
+  .price-specs {
+    border-bottom: 1px solid #f7f7f7;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    .ratings-reviews {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      @media screen and (max-width: 480px) {
+        display: block;
+      }
+      .ratings {
+        color: variables.$tertiary-color;
+        i {
+          margin-right: 5px;
+        }
+      }
+      .reviews {
+        @media screen and (max-width: 480px) {
+          margin-top: 5px;
+        }
+      }
+    }
+    .price-wish {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+      .old-new-price {
+        display: flex;
+        align-items: center;
+        .old-price {
+          text-decoration: line-through;
+          color: variables.$primary-color;
+          margin-right: 10px;
+          span {
+            font-size: 16px;
+            color: variables.$text;
+            @media screen and (max-width: 480px) {
+              font-size: 14px;
+            }
+          }
+        }
+        .new-price {
+          display: flex;
+          align-items: center;
+          .price {
+            font-size: 28px;
+            color: variables.$primary-color;
+            @media screen and (max-width: 480px) {
+              font-size: 18px;
+            }
+          }
+          .discount {
+            margin-left: 15px;
+            font-size: 14px;
+          }
+        }
+      }
+      .wish-btn {
+        margin-left: 20px;
+        cursor: pointer;
+        img {
+          height: 20px;
+        }
+      }
+    }
+  }
+  .specs {
+    border-bottom: 1px solid #f7f7f7;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    .spec-title {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+    ul {
+      margin-left: 18px;
+      margin-top: 10px;
+    }
+  }
+  .qty-cart-btn {
+    border-bottom: 1px solid #f7f7f7;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    .qty-cart {
+      display: flex;
+      align-items: center;
+      @media screen and (max-width: 375px) {
+        display: block;
+      }
+      .qty-btn {
+        display: flex;
+        align-items: center;
+        @media screen and (max-width: 480px) {
+          display: block;
+        }
+      }
+      .qty {
+        display: flex;
+        align-items: center;
+        margin-right: 15px;
+        .qty-title {
+          margin-right: 10px;
+        }
+        .qty-inc-dcs {
+          display: flex;
+          align-items: center;
+          i {
+            font-size: 10px;
+            padding: 0 15px;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            &.disabled {
+              background: #f7f7f7;
+              border: 0px;
+              cursor: no-drop;
+            }
+          }
+          input {
+            margin: 0 10px;
+            width: 50px;
+            text-align: center;
+            @media screen and (max-width: 767px) {
+              width: 70px;
+            }
+            &:hover,
+            &:focus,
+            :active {
+              border-color: #d9d9d9;
+            }
+          }
+        }
+      }
+      button {
+        // margin-left: 15px;
+        @media screen and (max-width: 375px) {
+          margin-left: 0;
+          margin-top: 15px;
+        }
+        &.buy-now {
+          margin-left: 10px;
+        }
+      }
+    }
+    .wish-comp-btn {
+      display: flex;
+      align-items: center;
+      .wish-btn,
+      .comp-btn {
+        margin-right: 10px;
+        margin-top: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        img {
+          height: 18px;
+        }
+        span {
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+  .prod-cate-specs {
+    .tags {
+      margin-bottom: 5px;
+    }
+    .share {
+      display: flex;
+      align-items: center;
+      button{
+        margin-left: 8px;
+      }
+      i {
+        margin-left: 10px;
+      }
+    }
+  }
+}

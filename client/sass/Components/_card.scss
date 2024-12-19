@@ -1,0 +1,103 @@
+@use '../variables';
+
+.product-card {
+  padding: 0 20px;
+  padding-bottom: 10px;
+  cursor: pointer;
+  @media screen and (max-width: 480px) {
+    padding: 0 15px;
+  }
+  &:hover {
+    .product-box-shadow {
+      box-shadow: variables.$box-shadow;
+      transition: all ease-in-out 0.3s;
+    }
+    .hover-items-image {
+      .card-hover-items {
+        visibility: visible;
+      }
+    }
+  }
+  .product-box-shadow {
+    border: 1px solid variables.$border-color;
+  }
+  .hover-items-image {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    .card-hover-items {
+      position: absolute;
+      bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      background: #fff;
+      padding: 5px;
+      box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.08);
+      visibility: hidden;
+      // transition: all ease-in-out 0.3s;
+      .card-items {
+        padding-left: 15px;
+        padding-right: 15px;
+        border-right: 1px solid variables.$border-color;
+        cursor: pointer;
+        &:last-child {
+          border-right: 0px;
+        }
+        img {
+          height: 18px;
+        }
+      }
+    }
+    .image {
+      width: 100%;
+      img {
+        width: 100%;
+        height: 200px;
+        object-fit: contain;
+        object-position: center;
+      }
+    }
+  }
+  .card-body {
+    padding: 5px 10px;
+    border-top: 0px;
+    .card-category {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      @media screen and (min-width: 769px) and (max-width: 1028px) {
+        display: block;
+      }
+      .cate {
+        color: variables.$light-text-color;
+        max-width: 65%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        @media screen and (min-width: 769px) and (max-width: 1028px) {
+          max-width: 100%;
+        }
+      }
+      .stars {
+        i {
+          color: variables.$tertiary-color;
+          padding-left: 5px;
+          font-size: 11px;
+          &.fade-star {
+            color: #eee;
+          }
+        }
+      }
+    }
+    .prod-price {
+      color: variables.$primary-color;
+    }
+    .prod-name {
+      max-width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+}

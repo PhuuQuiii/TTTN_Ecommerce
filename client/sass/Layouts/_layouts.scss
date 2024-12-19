@@ -1,0 +1,49 @@
+@use '../variables'; // Adjust the path as necessary
+
+.delivery-address {
+    border-right: 1px solid variables.$border-color;
+    background: variables.$light-bg;
+
+}
+
+input {
+    background: variables.$light-bg;
+    font-size: 12px;
+    height: 32px !important;
+    &:hover, .ant-input-focused, &:focus {
+        border-color: variables.$border-color !important;
+        box-shadow: unset !important;
+    }
+}
+
+
+button {
+    // width: 120px !important;
+    height: 35px !important;
+    border-radius: 5px !important;
+    text-transform: capitalize !important;
+    border: 0px;
+    &.primary {
+        background-color: variables.$primary-color;
+        color: #fff;
+        &:hover {
+            color: variables.$primary-color;
+            border-color: variables.$primary-color;
+        }
+    }
+    &.danger{
+        background-color: variables.$danger-color;
+        color: #fff;
+        &:hover {
+            color: variables.$danger-color;
+            border-color: variables.$danger-color;
+        }
+    }
+    &.no-color{
+        background-color: #fff;
+        color: #000;
+        &:hover {
+            color: variables.$secondary-color;
+        }
+    }
+}

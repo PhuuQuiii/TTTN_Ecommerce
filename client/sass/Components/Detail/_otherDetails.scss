@@ -1,0 +1,251 @@
+@use '../../variables' as variables;
+
+.other-details {
+  margin-top: 40px;
+  .ant-tabs-nav-scroll {
+    text-align: center;
+  }
+  .q-a-tab {
+    .not-logged-in {
+      margin: 15px 0;
+    }
+    .ask-qns-form {
+      margin-top: 20px;
+      form {
+        display: flex;
+        input {
+          width: 350px;
+        }
+      }
+      button {
+        margin-left: 10px;
+      }
+    }
+    .qns-ans-section {
+      .title {
+        margin: 10px 0;
+        border-bottom: 1px solid #f7f7f7;
+        padding-bottom: 10px;
+        font-size: 14px;
+      }
+      .qns-details {
+        .qns,
+        .ans {
+          display: flex;
+          align-items: start;
+          margin-bottom: 15px;
+          .q-icon {
+            background-color: variables.$secondary-color;
+            color: #fff;
+            padding: 3px 7px;
+            font-size: 10px;
+            position: relative;
+            margin-top: 3px;
+            &.a-btn {
+              background-color: variables.$light-text-color;
+              .arrow-bottom {
+                border-top: 5px solid variables.$light-text-color;
+              }
+            }
+            .arrow-bottom {
+              width: 0;
+              height: 0;
+              border-right: 5px solid transparent;
+              border-top: 5px solid variables.$secondary-color;
+              position: absolute;
+              bottom: -5px;
+              left: 0px;
+            }
+          }
+          .q-title {
+            margin-left: 10px;
+            // .q-text {
+            //   margin-left: 10px;
+            // }
+            .user {
+              font-size: 10px;
+              color: variables.$light-text-color;
+            }
+          }
+        }
+      }
+    }
+  }
+  .desc-tab {
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  }
+  .add-info {
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .add-info-details {
+      .feature {
+        font-weight: bold;
+      }
+      .feature-detail {
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+        padding-top: 10px;
+        border-top: 1px solid #ececec;
+      }
+      .feature,
+      .detail {
+        width: 400px;
+      }
+    }
+  }
+  .details-reviews {
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      &.prod-review {
+        margin-top: 20px;
+      }
+    }
+    .no-reviews {
+      margin-bottom: 10px;
+    }
+    .all-reviews {
+      .user-review {
+        border-bottom: 1px solid #f7f7f7;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+        &:last-child {
+          border-bottom: 0px;
+        }
+        .review-stars {
+          i {
+            color: variables.$tertiary-color;
+            margin-right: 5px;
+          }
+        }
+        .reviewd-by {
+          margin-bottom: 10px;
+          display: flex;
+          align-items: center;
+          .reivewer-name {
+            color: #adadad;
+            font-size: 12px;
+          }
+          .ver {
+            margin-left: 10px;
+            color: #61ce70;
+            @media screen and (max-width: 480px) {
+              font-size: 10px;
+            }
+            img {
+              height: 20px;
+              margin-right: 4px;
+              @media screen and (max-width: 480px) {
+                height: 15px;
+              }
+            }
+          }
+        }
+      }
+    }
+    .all-ratings-chart {
+      display: flex;
+      margin-top: 35px;
+      @media screen and (max-width: 480px) {
+        display: block;
+        margin-top: 0px;
+      }
+      .rate-avge-stars {
+        .ratings {
+          font-size: 25px;
+          color: #b9b7b7;
+          .ave-rate {
+            font-size: 50px;
+            color: rgba(0, 0, 0, 0.65);
+          }
+        }
+        .total {
+          margin-bottom: 5px;
+        }
+      }
+      .stars-show {
+        margin-left: 40px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        @media screen and (max-width: 480px) {
+          margin-left: 0px;
+        }
+        .star-bar {
+          width: 150px;
+          margin-left: 15px;
+          @media screen and (max-width: 480px) {
+            width: 220px;
+            margin-left: 10px;
+          }
+          .ant-progress-inner {
+            border-radius: unset;
+          }
+        }
+        span {
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+  .reviews-form {
+    max-width: 400px;
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  }
+  .product-vid-cov {
+    display: flex;
+    align-items: center;
+    @media screen and (max-width: 670px) {
+      display: block;
+    }
+    .vid-cov{
+      margin-left: 15px;
+      @media screen and (max-width: 670px) {
+        margin-left: 0px;
+        margin-bottom: 10px;
+      }
+    }
+    .product-video {
+      position: relative;
+      cursor: pointer;
+      text-align: center;
+      width: 300px;
+      &:hover {
+        .anticon {
+          color: #ff3636;
+          transition: all 0.1s ease-in-out;
+        }
+      }
+      img {
+        width: 100%;
+        height: 230px;
+        object-fit: contain;
+      }
+      .overlay {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #b7b7b74d;
+      }
+      .anticon {
+        position: absolute;
+        left: 45%;
+        top: 45%;
+        font-size: 50px;
+      }
+    }
+  }
+}

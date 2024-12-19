@@ -1,0 +1,49 @@
+@use '../variables';
+
+.listing {
+  margin-top: 35px;
+  // @media screen and (max-width: 480px) {
+  //   margin-top: 0px;
+  // }
+  .right-listing {
+    .type-icon {
+      @media screen and (max-width: 480px) {
+        display: none;
+      }
+    }
+    .page-status {
+      font-size: 12px;
+      color: #8d94ac;
+      @media screen and (max-width: 480px) {
+        display: none;
+      }
+    }
+    .pagination {
+      margin-left: 40px;
+      margin-top: 40px;
+      border-top: 1px solid variables.$border-color;
+      padding-top: 30px;
+      margin-bottom: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      @media screen and (max-width: 480px) {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        margin-top: 20px;
+      }
+    }
+  }
+
+  .products-title {
+    font-size: 18px;
+    font-weight: bold;
+    padding-left: 30px;
+    padding-bottom: 7px;
+    @media screen and (max-width: 480px) {
+      padding-left: 0;
+      padding-bottom: 0;
+    }
+  }
+}

@@ -1,0 +1,251 @@
+@use '../variables';
+
+.my-profile {    
+  margin-top: 30px;
+  .left-menu {
+    border-right: 1px solid #efefef;
+    @media screen and (max-width: 992px) {
+      border: 0px;
+    }
+  }
+  .profile-right-menu {
+    padding: 0 10px;
+  }
+  .profile-menu {
+    margin-top: 10px;
+    @media screen and (max-width: 480px) {
+      padding: 0 10px;
+    }
+    @media screen and (max-width: 992px) {
+      margin-top: 15px;
+    }
+    ul {
+      list-style: none;
+      li {
+        margin-bottom: 10px;
+        cursor: pointer;
+        @media screen and (max-width: 992px) {
+          border-right: 1px solid #eee;
+          padding-right: 10px;
+          margin-right: 9px;
+          display: inline-block;
+        }
+        &:last-child {
+          @media screen and (max-width: 992px) {
+            border-right: 0px;
+          }
+        }
+        a {
+          &:hover {
+            color: variables.$secondary-color;
+          }
+        }
+        &.active {
+          a {
+            color: variables.$primary-color;
+          }
+        }
+      }
+    }
+  }
+
+  .menu-details {
+    h3 {
+      margin-bottom: 20px;
+    }
+  }
+
+  .profile-details {
+    .main-profile {
+      border: 1px solid #efefef;
+      padding: 20px;
+      .left-prof {
+        .change-profile {
+          display: flex;
+          justify-content: center;
+          img {
+            height: 150px;
+            width: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+          i {
+            margin-top: 20px;
+            cursor: pointer;
+          }
+        }
+      }
+      .right-prof {
+        .em-det {
+          div {
+            margin-bottom: 5px;
+          }
+        }
+      }
+    }
+    .profile-bottom {
+      margin-top: 20px;
+      border: 1px solid #efefef;
+      padding: 20px;
+      .ant-table-tbody > tr &:last-child {
+        td {
+          border-bottom: 0px;
+        }
+      }
+      td {
+        padding-left: 0px;
+      }
+    }
+  }
+
+  .address-details {
+    .title-add {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      @media screen and (max-width: 480px) {
+        margin-bottom: 15px;
+      }
+    }
+    .edit-address {
+      margin-top: 25px;
+      @media screen and (max-width: 480px) {
+        margin: 0;
+      }
+      .ant-form-item {
+        @media screen and (max-width: 480px) {
+          margin: 0 0 5px;
+        }
+      }
+    }
+  }
+
+  .table-item-img {
+    height: 60px;
+  }
+
+  .my-orders {
+    h3 {
+      margin-bottom: 20px;
+    }
+    .orders-table {
+      margin-top: 20px;
+    }
+    .order-search {
+      width: 100%;
+      @media screen and (max-width: 480px) {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+    .order-select {
+      width: 200px;
+      @media screen and (max-width: 480px) {
+        width: 100%;
+      }
+    }
+  }
+
+  .my-wishlist {
+    h3 {
+      margin-bottom: 20px;
+    }
+    .orders-table {
+      margin-top: 20px;
+    }
+    .order-search {
+      width: 400px;
+      @media screen and (max-width: 480px) {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  .my-reviews {
+    .shop-review {
+      margin: 15px 0;
+      .shop-name {
+        font-weight: bold;
+        font-size: 20px;
+        img {
+          height: 30px;
+        }
+      }
+      .name-rating {
+        display: flex;
+        align-items: center;
+        .ratings {
+          margin-left: 5px;
+          i {
+            color: variables.$tertiary-color;
+            padding-left: 5px;
+            &.fade-star {
+              color: #eee;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.order-details {
+  padding: 10px;
+  .ship-to {
+    border: 1px solid #eee;
+    padding: 5px 10px;
+    .ship-title {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+      margin-bottom: 5px;
+    }
+  }
+  .total-summary {
+    border: 1px solid #eee;
+    padding: 5px 10px;
+    margin-top: 10px;
+    .summart-title {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+      margin-bottom: 5px;
+    }
+    .timeline {
+      margin-top: 15px;
+      .ant-timeline-item-content {
+        p {
+          font-size: 14px;
+          margin-bottom: 0px;
+        }
+      }
+    }
+    .summary-detail {
+      display: flex;
+      justify-content: space-between;
+      &:last-child {
+        border-top: 1px solid #eee;
+        padding-top: 5px;
+        margin-top: 5px;
+      }
+    }
+  }
+  .order-btns {
+    display: flex;
+    margin-top: 10px;
+    justify-content: space-between;
+  }
+  .cancel-order-form {
+    margin-top: 10px;
+    .cancel-title {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+    .cancel-create {
+      text-align: right;
+      .cancel-submit {
+        margin-right: 8px;
+      }
+    }
+  }
+}
