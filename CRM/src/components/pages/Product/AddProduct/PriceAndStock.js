@@ -12,7 +12,7 @@ const PriceAndStock = ({ layout, prev, submitProductInfo, loading, priceAndStock
     const [form] = Form.useForm()
     useEffect(() => {
         form.setFieldsValue({ ...priceAndStockFormData })
-    }, [priceAndStockFormData])
+    }, [form, priceAndStockFormData])
 
     const onFinish = (values) => {
         submitProductInfo(values)
