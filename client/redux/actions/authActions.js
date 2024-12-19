@@ -22,10 +22,10 @@ const register = (body) => {
     await dispatch({ type: REGISTER_FINISH });
     if (response.isSuccess) {
       openNotification("Success", "User registered successfully");
-
       window.location.href = "/login";
     } else if (!response.isSuccess) {
-      dispatch({ type: GLOBAL_ERROR, payload: response.errorMessage });
+      const errorMessage = typeof response.errorMessage === 'string' ? response.errorMessage : 'An error occurred';
+      dispatch({ type: GLOBAL_ERROR, payload: errorMessage });
     }
   };
 };

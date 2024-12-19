@@ -24,14 +24,14 @@ exports.signup = async (req, res) => {
   let user = new User(req.body);
   user = await user.save();
 
-  const mailingData = {
-    from: "Kindeem",
-    to: user.email,
-    subject: "email verification",
-    html: `<p>Hi, ${user.name} . </p></br>
-                    <a href="${process.env.CLIENT_URL}/email-verify?token=${token}">Click me to verify email for your user account</a>`,
-  };
-  await sendEmail(mailingData);
+  // const mailingData = {
+  //   from: "Kindeem",
+  //   to: user.email,
+  //   subject: "email verification",
+  //   html: `<p>Hi, ${user.name} . </p></br>
+  //                   <a href="${process.env.CLIENT_URL}/email-verify?token=${token}">Click me to verify email for your user account</a>`,
+  // };
+  // await sendEmail(mailingData);
   res.status(200).json({
     msg: `Email has been sent to ${req.body.email} to verify your email address.`,
   });
@@ -57,11 +57,11 @@ exports.signin = async (req, res) => {
       error: "Email or password is invaild.",
     });
   }
-  if (user.emailVerifyLink) {
-    return res.status(401).json({
-      error: "Please verify your email address.",
-    });
-  }
+  // if (user.emailVerifyLink) {
+  //   return res.status(401).json({
+  //     error: "Please verify your email address.",
+  //   });
+  // }
   if (user.isBlocked) {
     return res.status(401).json({
       error: "Your account has been blocked.",
