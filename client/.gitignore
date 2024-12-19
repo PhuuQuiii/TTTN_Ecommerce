@@ -30,6 +30,6 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-#css
-/public/css/style.css.map
-/public/css/style.css   
+# #css
+# /public/css/style.css.map
+# /public/css/style.css   
