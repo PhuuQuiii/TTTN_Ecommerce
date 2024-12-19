@@ -43,7 +43,7 @@ const OrderStatus = ({loading, status, order_id, admin_id, toggleOrderApproval, 
     useEffect(() => {
         !isOrderDetailOpen && setOpenToBeReturnedForm(false)
         !isOrderDetailOpen && setToBeReturnedFormData({ ...toBeReturnedForm, remark: '', returnedAmount: '' })
-     }, [isOrderDetailOpen])
+     }, [toBeReturnedForm, isOrderDetailOpen])
 
     //active/approve
     const toggleApproval = () => {

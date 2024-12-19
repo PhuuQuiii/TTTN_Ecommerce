@@ -24,7 +24,7 @@ const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, pr
             ...pagination,
             total: totalCount
         })
-    }, [totalCount])
+    }, [pagination, totalCount])
     useEffect(() => {
         user && getProducts({ id: user._id, page: pagination.current, perPage: pagination.pageSize })
     }, [user])
