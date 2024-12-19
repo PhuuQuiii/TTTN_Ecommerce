@@ -231,21 +231,20 @@ const ProductCard = (props) => {
                 >
                   <a>
                     <div className="image">
-                      {
-                        productData.images[0].medium ?
-                          <img
-                            src={`${IMAGE_BASE_URL}/${productData.images[0].medium}`}
-                            onError={(ev) => {
-                              ev.target.src = "/images/default-image.png";
-                            }}
-                            alt={productData.name}
-                          /> : (
-                            <img
-                              src={`/images/default-image.png`}
-                              alt={productData.name}
-                            />
-                          )
-                      }
+                      {productData.images && productData.images[0] && productData.images[0].medium ? (
+                        <img
+                          src={`${IMAGE_BASE_URL}/${productData.images[0].medium}`}
+                          onError={(ev) => {
+                            ev.target.src = "/images/default-image.png";
+                          }}
+                          alt={productData.name}
+                        />
+                      ) : (
+                        <img
+                          src={`/images/default-image.png`}
+                          alt={productData.name}
+                        />
+                      )}
                     </div>
                   </a>
                 </Link>
