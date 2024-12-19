@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "set NODE_OPTIONS=--openssl-legacy-provider && next -p 3002",
+    "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider next -p 3002",
     "build": "yarn sass-build && next build",
     "start": "next start",
     "sass": "sass --watch sass/main.scss:public/css/style.css",
@@ -49,11 +49,12 @@
     "webpack": "^5.97.1",
     "webpack-cli": "^5.1.4"
   },
-"devDependencies": {
+  "devDependencies": {
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-react": "^7.26.3",
     "babel-loader": "^9.2.1",
+    "cross-env": "^7.0.3",
     "sass": "^1.82.0"
   },
   "readme": "ERROR: No README data found!",
