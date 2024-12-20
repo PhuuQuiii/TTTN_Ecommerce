@@ -250,19 +250,19 @@ exports.forgotPassword = async (req, res) => {
     process.env.JWT_EMAIL_VERIFICATION_KEY,
     { expiresIn: process.env.EMAIL_TOKEN_EXPIRE_TIME }
   );
-  const mailingData = {
-    from: "Ecom",
-    to: user.email,
-    subject: "Password reset Link",
-    html: `<p>Hi, ${user.name} . </p></br>
-                    <a href="${process.env.CLIENT_URL}/reset-password?token=${token}">Click me to reset your password</a>`,
-  };
+  // const mailingData = {
+  //   from: "Ecom",
+  //   to: user.email,
+  //   subject: "Password reset Link",
+  //   html: `<p>Hi, ${user.name} . </p></br>
+  //                   <a href="${process.env.CLIENT_URL}/reset-password?token=${token}">Click me to reset your password</a>`,
+  // };
 
-  await user.updateOne({ resetPasswordLink: token });
-  await sendEmail(mailingData);
-  res.status(200).json({
-    msg: `Email has been sent to ${email}. Follow the instructions to reset your password.`,
-  });
+  // await user.updateOne({ resetPasswordLink: token });
+  // await sendEmail(mailingData);
+  // res.status(200).json({
+  //   msg: `Email has been sent to ${email}. Follow the instructions to reset your password.`,
+  // });
 };
 
 exports.resetPassword = async (req, res) => {
