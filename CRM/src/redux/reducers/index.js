@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import auth from "./auth_reducer";
 import test from "./test_reducer";
 import profile from './profile_reducer'
+import business from './business_reducer'
 import alert from './alert_reducer'
 import notification from './notification_reducer'
 import socket from './socket_reducer'
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
   socket,
   order,
   product,
-  superadmin
+  superadmin,
+  business
 });
 
 export default rootReducer;

@@ -41,7 +41,7 @@ const adminSchema = new mongoose.Schema({
         trim: true,
         maxlength: 32
     },
-    muncipality: {
+    muncipality: { //phan tram hoan thanh profile shop
         type: String,
         trim: true,
         maxlength: 32
@@ -77,7 +77,7 @@ const adminSchema = new mongoose.Schema({
     photo: {
         type: String
     },
-    holidayMode: {
+    holidayMode: { // trang thai ngay nghi cua shop, 0-6 bat dau tu chu nhat
         start: {
             type: Number
         },
@@ -85,7 +85,7 @@ const adminSchema = new mongoose.Schema({
             type: Number
         }
     },
-    salt: String,
+    salt: String, //chuoi ngau nhien cho password hash
     role: {
         type: String,
         enum: ["admin", "superadmin"],

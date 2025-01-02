@@ -172,9 +172,9 @@ exports.deleteFileById = async (req, res) => {
 
 exports.getBusinessInfo = async (req, res) => {
     let businessinfo = await BusinessInfo.findOne({ admin: req.profile._id })
-        .populate('businessLicence')
-        .populate('citizenshipBack')
-        .populate('citizenshipFront')
+        // .populate('businessLicence')
+        // .populate('citizenshipBack')
+        // .populate('citizenshipFront')
     if (!businessinfo) {
         return res.status(404).json({ error: "No business information." })
     }
