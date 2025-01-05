@@ -3,7 +3,6 @@ import { StatusBar, Text } from "react-native";
 import { Provider } from "react-redux";
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
-import * as Permissions from "expo-permissions";
 
 import Main from "./src";
 

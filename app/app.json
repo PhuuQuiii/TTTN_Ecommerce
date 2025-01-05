@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "kindeem_draft",
+    "main": "node_modules/expo/AppEntry.js",
     "slug": "kindeem_draft",
     "version": "1.0.0",
     "orientation": "portrait",
