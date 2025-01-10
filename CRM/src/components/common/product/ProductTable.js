@@ -20,11 +20,17 @@ const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, pr
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const searchInput = useRef(null);
     useEffect(() => {
-        setPagination({
-            ...pagination,
-            total: totalCount
-        })
-    }, [pagination, totalCount])
+        setPagination((prev) => {
+            if (prev.total !== totalCount) {
+                return {
+                    ...prev,
+                    total: totalCount
+                };
+            }
+            return prev;
+        });
+    }, [totalCount]);
+    
     useEffect(() => {
         user && getProducts({ id: user._id, page: pagination.current, perPage: pagination.pageSize })
     }, [user])
