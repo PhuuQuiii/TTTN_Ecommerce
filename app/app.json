@@ -1,5 +1,6 @@
 {
   "expo": {
+    "newArchEnabled": true,
     "name": "kindeem_draft",
     "main": "node_modules/expo/AppEntry.js",
     "slug": "kindeem_draft",

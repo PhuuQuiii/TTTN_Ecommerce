@@ -1,14 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import { StatusBar, Text } from "react-native";
+import { StatusBar, Text, Platform } from "react-native";
 import { Provider } from "react-redux";
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 
 import Main from "./src";
-
 import store from "./redux";
 import { default as Constant } from "./src/constants/Constants";
-
 import NetInfo from "@react-native-community/netinfo";
 
 Notifications.setNotificationHandler({
@@ -52,21 +50,16 @@ const App = () => {
     });
 
     // UnsubscribeInternet
-
     return () => {
-      Notifications.removeNotificationSubscription(notificationListener);
-      Notifications.removeNotificationSubscription(responseListener);
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
       unsubscribeInternet();
     };
   }, []);
 
   return (
     <Provider store={store}>
-      <StatusBar
-        backgroundColor={Constant.tintColor}
-        barStyle="light-content"
-      />
-      {/* <Text>Your expo push token: {expoPushToken}</Text> */}
+      <StatusBar backgroundColor={Constant.tintColor} barStyle="light-content" />
       <Main />
     </Provider>
   );
@@ -75,12 +68,10 @@ const App = () => {
 async function registerForPushNotificationsAsync() {
   let token;
   if (Constants.isDevice) {
-    const { status: existingStatus } = await Permissions.getAsync(
-      Permissions.NOTIFICATIONS
-    );
-    let finalStatus = existingStatus;
-    if (existingStatus !== "granted") {
-      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus.status;
+    if (existingStatus.status !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
     }
     if (finalStatus !== "granted") {
