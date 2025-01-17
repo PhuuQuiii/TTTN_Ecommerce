@@ -1,6 +1,9 @@
 import React from "react";
 import { View, Text } from "react-native";
-import SkeletonContent from "react-native-skeleton-content";
+// import SkeletonContent from "react-native-skeleton-content";
+import SkeletonContent from 'react-native-skeleton-content-nonexpo';
+
+
 
 const Skeleton = () => {
   return (
