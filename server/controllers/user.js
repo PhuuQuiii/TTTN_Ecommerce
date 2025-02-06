@@ -93,24 +93,27 @@ exports.uploadPhoto = async (req, res) => {
     res.json({ photo: profile.photo, socialPhoto: profile.socialPhoto })
 }
 
-exports.addAddress = async(req,res) => {
-    let profile = req.user
-    //if there are already home,office and ship-to addresses
+exports.addAddress = async(req, res) => {
+    let profile = req.user;
+    console.log("User profile:", profile); // Thêm dòng này để kiểm tra dữ liệu người dùng
+    console.log("Current addresses count:", profile.location.length); // Thêm dòng này để kiểm tra số lượng địa chỉ hiện tại
+
+    //if there are already home, office and ship-to addresses
     if (!req.body.label) {
-        return res.status(403).json({error:'Address label undefined.'})
+        return res.status(403).json({ error: 'Address label undefined.' });
     }
-    if (profile.location.length===3) {
-        return res.status(403).json({error: "Cannot add more address."})
+    if (profile.location.length === 3) {
+        return res.status(403).json({ error: "Cannot add more address." });
     }
     //if there is already same label of address of the user then do not create new Address.
-    let addresses = profile.location
+    let addresses = profile.location;
     if (addresses.some(a => a.label === req.body.label)) {
-        return res.status(403).json({ error: `There is already address of label ${req.body.label}` })
+        return res.status(403).json({ error: `There is already address of label ${req.body.label}` });
     }
-    let newAddress = new Address(req.body)
+    let newAddress = new Address(req.body);
     //if newAddress is the first address and label is not ship-to, then it should be active
-    if (!profile.location.length && newAddress.label!=='ship-to') {
-        newAddress.isActive = Date.now()
+    if (!profile.location.length && newAddress.label !== 'ship-to') {
+        newAddress.isActive = Date.now();
     }
     // geolocation
     if (req.body.lat && req.body.long) {
@@ -120,17 +123,17 @@ exports.addAddress = async(req,res) => {
         };
         newAddress.geolocation = geolocation;
     }
-    newAddress.user = profile._id
-    let user = await User.findById(profile._id)
-    updateuser = user.toObject()
-    updateuser.location.push(newAddress._id)
+    newAddress.user = profile._id;
+    let user = await User.findById(profile._id);
+    updateuser = user.toObject();
+    updateuser.location.push(newAddress._id);
     const results = await task
         .update(user, updateuser)
         .options({ viaSave: true })
         .save(newAddress)
-        .run({ useMongoose: true })
+        .run({ useMongoose: true });
 
-    res.json(results[1])
+    res.json(results[1]);
 }
 
 exports.editAddress = async(req,res) => {
@@ -154,6 +157,34 @@ exports.editAddress = async(req,res) => {
     }
     address = await address.save()
     res.json(address)
+}
+
+const mongoose = require("mongoose");
+exports.deleteAddress = async (req, res) => {
+  if (!req.user.location.includes(req.params.address_id)) {
+    return res.status(403).json({ error: "Cannot delete address." });
+  }
+
+  const addressId = mongoose.Types.ObjectId(req.params.address_id);
+  let address = await Address.findById(addressId);
+  if (!address) {
+    return res.status(404).json({ error: "Address not found." });
+  }
+
+  try {
+    const results = await new Fawn.Task()
+      .update(
+        "users",
+        { _id: req.user._id },
+        { $pull: { location: addressId } }
+      )
+      .remove("addresses", { _id: addressId })
+      .run({ useMongoose: true });
+
+    return res.json({ message: "Address deleted successfully." });
+  } catch (err) {
+    return res.status(500).json({ error: err });
+  }
 }
 
 exports.toggleAddressActiveness = async(req,res) => {
