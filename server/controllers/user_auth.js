@@ -49,8 +49,8 @@ exports.signup = async (req, res) => {
       </div>
     `,
   };
-  
-  await sendEmail(mailingData);
+
+  await sendEmail(mailingData); // gưi email xác thực
 
   res.status(200).json({
     msg: `Email has been sent to ${req.body.email} to verify your email address.`,
@@ -70,6 +70,7 @@ exports.emailverify = async (req, res) => {
   res.status(201).json({ msg: "Successfully signup!" });
 };
 
+// Đăng nhập
 exports.signin = async (req, res) => {
   const { email, password } = req.body;
   let user = await User.findByCredentials(email, password);
@@ -84,11 +85,13 @@ exports.signin = async (req, res) => {
   //   });
   // }
   if (user.isBlocked) {
+    // Kiểm tra tài khoản có bị khóa không
     return res.status(401).json({
       error: "Your account has been blocked.",
     });
   }
   const payload = {
+    // Tạo payload để sinh JWT token
     _id: user._id,
     name: user.name,
     email: user.email,
@@ -105,43 +108,16 @@ exports.signin = async (req, res) => {
   return res.json({ accessToken, refreshToken: refreshToken.refreshToken });
 };
 
+// Đăng nhập bằng mạng xã hội
 exports.socialLogin = async (req, res) => {
   const { name, email, socialPhoto, userID, loginDomain, access_token } =
     req.body;
 
-  if (loginDomain === "facebook") {
-    // for app access_token of facebook
-    // const clientId = '207764167510635'
-    // const clientSecret = '409076fa8a8b38cd881542529738f5e7'
-    // const response = await axios.get(`https://graph.facebook.com/oauth/access_token?client_id=${process.env.FB_CLIENT_ID}&client_secret=${process.env.FB_CLIENT_SECRET}&grant_type=client_credentials`)
-
-    // const appAccessToken = response.data.access_token
-    const resp = await axios
-      .get(
-        `https://graph.facebook.com/debug_token?input_token=${access_token}
-        &access_token=${process.env.FB_APP_ACCESS_TOKEN}`
-      )
-      .catch((err) => {
-        // console.log(err.response.data, 'dcscsc')
-        return null;
-      });
-    console.log(resp.data);
-    if (!resp || resp.data.data.error || !resp.data.data.is_valid) {
-      return res.status(401).json({
-        error: resp.data.data.error.message || "Invalid OAuth access token.",
-      });
-    }
-    if (resp.data.data.user_id !== userID) {
-      return res.status(401).json({ error: "Invalid userID." });
-    }
-  }
-
   if (loginDomain === "google") {
-    // const clientId = '1071225542864-6lcs1i4re8ht257ee47lrg2jr891518o.apps.googleusercontent.com'
     const resp = await axios
       .get(`https://oauth2.googleapis.com/tokeninfo?id_token=${access_token}`)
       .catch((err) => {
-        // console.log(err.response.data, 'dcscsc')
+        // console.log(err.response.data, "dcscsc");
         return null;
       });
 
