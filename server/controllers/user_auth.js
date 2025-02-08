@@ -235,23 +235,40 @@ exports.forgotPassword = async (req, res) => {
     });
 
   const token = jwt.sign(
+    //  Tạo token để đặt lại mật khẩu
     { _id: user._id },
     process.env.JWT_EMAIL_VERIFICATION_KEY,
     { expiresIn: process.env.EMAIL_TOKEN_EXPIRE_TIME }
   );
-  // const mailingData = {
-  //   from: "Ecom",
-  //   to: user.email,
-  //   subject: "Password reset Link",
-  //   html: `<p>Hi, ${user.name} . </p></br>
-  //                   <a href="${process.env.CLIENT_URL}/reset-password?token=${token}">Click me to reset your password</a>`,
-  // };
 
-  // await user.updateOne({ resetPasswordLink: token });
-  // await sendEmail(mailingData);
-  // res.status(200).json({
-  //   msg: `Email has been sent to ${email}. Follow the instructions to reset your password.`,
-  // });
+  const mailingData = {
+    from: "Ecom Support",
+    to: user.email,
+    subject: "🔒 Reset Your Password - Action Required",
+    html: `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+      <p>Xin chào <strong>${user.name}</strong>,</p>
+      <p>Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn. Nếu bạn đã yêu cầu thao tác này, hãy nhấp vào nút bên dưới để tạo mật khẩu mới:</p>
+      <div style="text-align: center; margin: 20px 0;">
+        <a href="${process.env.CLIENT_URL}/reset-password?token=${token}" 
+           style="background-color: #007bff; color: #fff; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+          🔑 Đặt lại mật khẩu
+        </a>
+      </div>
+      <p>Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này. Mật khẩu của bạn vẫn an toàn.</p>
+      <p>Cảm ơn bạn,<br><strong>Đội ngũ hỗ trợ Ecom</strong></p>
+    </div>
+  `,
+  };
+
+  await user.updateOne({ resetPasswordLink: token }); // Lưu token vào database, xác thực token khi người dùng đặt lại mật khẩu
+
+  console.log(token); // test lấy token đổi mật khẩu khi còn web còn local
+
+  await sendEmail(mailingData);
+  res.status(200).json({
+    msg: `Email has been sent to ${email}. Follow the instructions to reset your password.`,
+  });
 };
 
 exports.resetPassword = async (req, res) => {
@@ -265,12 +282,31 @@ exports.resetPassword = async (req, res) => {
     });
 
   const updatedFields = {
+    // Cập nhật mật khẩu mới và xóa token đặt lại mật khẩu
     password: newPassword,
     resetPasswordLink: "",
   };
 
-  user = _.extend(user, updatedFields);
+  user = _.extend(user, updatedFields); // Ghi đè dữ liệu cũ của user
   // user.updated = Date.now();
+
+  // Gửi email thông báo thành công
+  const mailingData = {
+    from: "Ecom Support",
+    to: user.email,
+    subject: "🔔 Mật khẩu của bạn đã được thay đổi",
+    html: `
+      <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <p>Xin chào <strong>${user.name}</strong>,</p>
+        <p>Mật khẩu của bạn đã được thay đổi thành công. Nếu bạn không thực hiện thao tác này, vui lòng liên hệ ngay với bộ phận hỗ trợ.</p>
+        <p>Nếu bạn yêu cầu đổi mật khẩu, bạn có thể đăng nhập bằng mật khẩu mới ngay bây giờ.</p>
+        <p>Cảm ơn bạn,</p>
+        <p><strong>Đội ngũ hỗ trợ Ecom</strong></p>
+      </div>
+    `,
+  };
+
+  await sendEmail(mailingData);
 
   await user.save();
   res.json({
@@ -279,7 +315,7 @@ exports.resetPassword = async (req, res) => {
 };
 
 // authentication middleware
-exports.auth = async (req, res, next) => {
+exports.auth = async (req, res, next) => { // Kiểm tra xem người dùng có hợp lệ và không bị khóa tài khoản không
   const token = req.header("x-auth-token");
   try {
     if (token) {
@@ -304,6 +340,7 @@ exports.auth = async (req, res, next) => {
     res.status(401).json({ error: error });
   }
 };
+
 function parseToken(token) {
   // console.log('parseToken in user/auth',token.split(' ')[1]);
   try {
@@ -314,7 +351,7 @@ function parseToken(token) {
 }
 
 //checkUserSignin
-exports.checkUserSignin = async (req, res, next) => {
+exports.checkUserSignin = async (req, res, next) => { // Kiểm tra xem token có hợp lệ không, có bị hết hạn không, và gán thông tin người dùng vào req.authUser.
   const token = req.header("x-auth-token");
   if (token) {
     const user = parseToken(token);
