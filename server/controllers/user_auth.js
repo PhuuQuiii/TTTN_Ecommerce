@@ -323,7 +323,7 @@ exports.auth = async (req, res, next) => { // Kiểm tra xem người dùng có 
       if (u._id) {
         const user = await User.findById(u._id).select("-password -salt");
         if (user) {
-          if (!user.isBlocked) {
+          if (!user.isBlocked) { // Kiểm tra tài khoản có bị khóa không
             req.user = user;
             return next();
           }
@@ -341,7 +341,8 @@ exports.auth = async (req, res, next) => { // Kiểm tra xem người dùng có 
   }
 };
 
-function parseToken(token) {
+function parseToken(token) { // Giải mã token
+
   // console.log('parseToken in user/auth',token.split(' ')[1]);
   try {
     return jwt.verify(token, process.env.JWT_SIGNIN_KEY);
