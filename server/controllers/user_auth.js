@@ -6,8 +6,10 @@ const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const Address = require("../models/Address");
 
+// Đăng ký
 exports.signup = async (req, res) => {
   let userExists = await User.findOne({
+    // kiểm tra email
     email: req.body.email,
     loginDomain: "system",
   });
@@ -16,26 +18,45 @@ exports.signup = async (req, res) => {
       error: "Email is taken!",
     });
   const token = jwt.sign(
+    // Tạo mã token xác thực email
     { email: req.body.email },
     process.env.JWT_EMAIL_VERIFICATION_KEY,
     { expiresIn: process.env.EMAIL_TOKEN_EXPIRE_TIME }
   );
-  req.body.emailVerifyLink = token;
+  req.body.emailVerifyLink = token; // Lưu thông tin người dùng vào database
   let user = new User(req.body);
   user = await user.save();
 
-  // const mailingData = {
-  //   from: "Kindeem",
-  //   to: user.email,
-  //   subject: "email verification",
-  //   html: `<p>Hi, ${user.name} . </p></br>
-  //                   <a href="${process.env.CLIENT_URL}/email-verify?token=${token}">Click me to verify email for your user account</a>`,
-  // };
-  // await sendEmail(mailingData);
+  const mailingData = {
+    from: "Kindeem",
+    to: user.email,
+    subject: "🔐 Xác minh tài khoản của bạn - Kindeem( team TTTN_16)",
+    html: `
+      <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <h2 style="color: #4CAF50;">Chào ${user.name},</h2>
+        <p>Cảm ơn bạn đã đăng ký tài khoản trên <strong>Kindeem</strong>! 🎉</p>
+        <p>Trước khi bạn có thể sử dụng tất cả các tính năng tuyệt vời của chúng tôi, vui lòng xác minh email của bạn bằng cách nhấn vào nút bên dưới:</p>
+        <div style="text-align: center; margin: 20px 0;">
+          <a href="${process.env.CLIENT_URL}/email-verify?token=${token}" 
+             style="background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block;">
+            ✅ Xác minh tài khoản
+          </a>
+        </div>
+        <p>Nếu bạn không đăng ký tài khoản, hãy bỏ qua email này.</p>
+        <hr>
+        <p style="font-size: 14px; color: #777;">Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi qua <a href="mailto:support@kindeem.com">support@kindeem.com</a>.</p>
+        <p style="font-size: 14px; color: #777;">Trân trọng,<br>💚 Đội ngũ Kindeem</p>
+      </div>
+    `,
+  };
+  
+  await sendEmail(mailingData);
+
   res.status(200).json({
     msg: `Email has been sent to ${req.body.email} to verify your email address.`,
   });
 };
+
 // verify email link
 exports.emailverify = async (req, res) => {
   const { token } = req.query;
@@ -85,14 +106,8 @@ exports.signin = async (req, res) => {
 };
 
 exports.socialLogin = async (req, res) => {
-  const {
-    name,
-    email,
-    socialPhoto,
-    userID,
-    loginDomain,
-    access_token,
-  } = req.body;
+  const { name, email, socialPhoto, userID, loginDomain, access_token } =
+    req.body;
 
   if (loginDomain === "facebook") {
     // for app access_token of facebook
@@ -112,11 +127,9 @@ exports.socialLogin = async (req, res) => {
       });
     console.log(resp.data);
     if (!resp || resp.data.data.error || !resp.data.data.is_valid) {
-      return res
-        .status(401)
-        .json({
-          error: resp.data.data.error.message || "Invalid OAuth access token.",
-        });
+      return res.status(401).json({
+        error: resp.data.data.error.message || "Invalid OAuth access token.",
+      });
     }
     if (resp.data.data.user_id !== userID) {
       return res.status(401).json({ error: "Invalid userID." });
@@ -329,8 +342,8 @@ exports.checkUserSignin = async (req, res, next) => {
   const token = req.header("x-auth-token");
   if (token) {
     const user = parseToken(token);
-    if (user.error === 'jwt expired') {
-      return res.json(user)//{error:'jwt expired'}
+    if (user.error === "jwt expired") {
+      return res.json(user); //{error:'jwt expired'}
     }
     const foundUser = await User.findById(user._id).select("name");
     if (foundUser) {
