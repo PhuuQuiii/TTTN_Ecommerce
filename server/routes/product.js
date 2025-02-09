@@ -18,14 +18,14 @@ router.get("/products/:id", adminAuth, hasAuthorization, getProducts) // lấy s
 router.post("/images/:id", adminAuth, hasAuthorization, uploadProductImages,waterMarker, productImages)
 router.delete("/image/:id", adminAuth, hasAuthorization, deleteImageById)//?image_id=
 router.delete("/image/:id/:p_slug", adminAuth, hasAuthorization, deleteImage)//?image_id=
-router.patch('/delete-product/:id/:p_slug', adminAuth, hasAuthorization, deleteProduct)
 
 //user
 router.get('/for-you', userAuth, forYouProducts)
 
-//public
+// shop
 router.get('/:p_slug', checkUserSignin, checkAdminSignin, getProduct) // Lấy danh sách sản phẩm với bộ lọc & phân trang
-router.post("/:id", adminAuth, hasAuthorization, validateProduct, createProduct) //create product
+router.post("/:id", adminAuth, hasAuthorization, validateProduct, createProduct) // add product ( isDeleted = null)
+router.patch('/delete-product/:id/:p_slug', adminAuth, hasAuthorization, deleteProduct) // delete product ( thay đổi giá trị isDeleted = time)
 router.get('/mined-products',minedProducts)   
 router.get('/by-category', checkUserSignin, getProductsByCategory)//?cat_id=&cat_slug=
 router.get('/generate-filter', generateFilter)//?keyword= or ?cat_id=&cat_slug=
