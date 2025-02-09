@@ -35,8 +35,8 @@ exports.product = async (req, res, next) => {
   if (!product) {
     return res.status(404).json({ error: "Product not found." });
   }
-  req.product = product; // Lưu sản phẩm vào req ( các API khác chỉ cần dùng `req.product` để xử lý tiếp theo)
-  next(); // Chuyển sang middleware tiếp the
+  req.product = product;
+  next();
 };
 
 // Lấy danh sách sản phẩm với bộ lọc & phân trang
@@ -129,31 +129,31 @@ exports.productImages = async (req, res) => {
     return res.status(400).json({ error: "Product images are required" });
   }
   let files = []
-  if (!req.profile.isVerified) {
+  if (!req.profile.isVerified) { // kiểm tra tài khoản shop đã được xác minh chưa
     files = req.files.map(({filename}) => `public/uploads/${filename}`)
     fileRemover(files)    
     return res.status(403).json({ error: "Admin is not verified" });
   }
-  let images = req.files.map(async (file) => {
+  let images = req.files.map(async (file) => { // Xử lý ảnh tải lên và tạo ảnh nén
     const image = new ProductImages();
     const { filename, path: filepath, destination } = file;
     image.thumbnail = await imageCompressor(
       filename,
-      80,
+      80, // thumbnail (80px)
       filepath,
       destination,
       "productThumbnail"
     );
     image.medium = await imageCompressor(
       filename,
-      540,
+      540, // medium (540px)
       filepath,
       destination,
       "productMedium"
     );
     image.large = await imageCompressor(
       filename,
-      800,
+      800, // large (800px)
       filepath,
       destination,
       "productLarge"
@@ -169,9 +169,10 @@ exports.productImages = async (req, res) => {
     // return image
   });
   images = await Promise.all(images);
-  fileRemover(files)
+  fileRemover(files) // Xóa ảnh gốc sau khi đã nén & lưu
   res.json(images);
 };
+
 
 exports.deleteImage = async (req, res) => {
   let product = req.product;
@@ -235,52 +236,55 @@ exports.updateProduct = async (req, res) => {
   res.json(product);
 };
 
+// Lấy danh sách sản phẩm theo các tiêu chí lọc và phân trang.
 exports.getProducts = async (req, res) => {
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
   const { createdAt, updatedAt, price, status, keyword, outofstock } = req.query
 
-  let sortFactor = { createdAt: 'desc' };
-  if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { ...sortFactor, createdAt }
+  let sortFactor = { createdAt: 'desc' }; // Mặc định sắp xếp theo createdAt giảm dần
+  if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { ...sortFactor, createdAt } // asc: tăng dần và desc: giảm dần
   if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { ...sortFactor, updatedAt }
-  if (price && (price === 'asc' || price === 'desc')) sortFactor = { price: price === 'asc' ? 1 : -1 }
-  let query = { soldBy: req.profile._id, isDeleted: null }
+  if (price && (price === 'asc' || price === 'desc')) sortFactor = { price: price === 'asc' ? 1 : -1 } // price được chuyển đổi sang số (1 là tăng dần, -1 là giảm dần).
+
+  // Mặc định lọc các sản phẩm do người dùng (soldBy) hiện tại bán và chưa bị xoá (isDeleted: null).
+  let query = { soldBy: req.profile._id, isDeleted: null } 
   if (keyword) query = {
     ...query,
-    name: { $regex: keyword, $options: "i" }
+    name: { $regex: keyword, $options: "i" } //  tìm các sản phẩm có tên chứa keyword
   }
-  if (status && status === 'verified') query = {
+  if (status && status === 'verified') query = { // Lọc sản phẩm đã được xác minh
     ...query,
     isVerified: { $ne: null }
   }
-  if (status && status === 'unverified') query = {
+  if (status && status === 'unverified') query = { // Lọc sản phẩm chưa được xác minh
     ...query,
     isVerified: null
   }
-  if (status && status === 'rejected') query = {
+  if (status && status === 'rejected') query = { // Lọc sản phẩm bị từ chối
     ...query,
     isRejected: { $ne: null }
   }
-  // if (status && status === 'deleted') query = {
+  // if (status && status === 'deleted') query = { // Lọc sản phẩm đã bị xoá
   //   ...query,
   //   isDeleted: { $ne: null }
   // }
-  // if (status && status === 'notdeleted') query = {
+  // if (status && status === 'notdeleted') query = { // Lọc sản phẩm chưa bị xoá
   //   ...query,
   //   isDeleted: null
   // }
-  if (outofstock && outofstock === 'yes') query = {
+  if (outofstock && outofstock === 'yes') query = { // Lọc sản phẩm hết hàng (quantity = 0)
     ...query,
     quantity: 0
   }
   let products = await Product.find(query)
-    .populate("category", "displayName slug")
+    .populate("category", "displayName slug") //  Lấy thông tin displayName và slug của danh mục
     .populate("brand", "brandName slug")
-    .populate("images", "-createdAt -updatedAt -__v")
-    .skip(perPage * page - perPage)
-    .limit(perPage)
+    .populate("images", "-createdAt -updatedAt -__v") // Lấy tất cả ảnh trừ các trường createdAt, updatedAt, __v
+    .skip(perPage * page - perPage) // Bỏ qua các sản phẩm trước đó để thực hiện phân trang
+    .limit(perPage) // Giới hạn số lượng sản phẩm trên mỗi trang.
     .lean()
-    .sort(sortFactor);
+    .sort(sortFactor); // Áp dụng sắp xếp
   // if (price && (price === 'asc' || price === 'desc')) {
   //     products.sort((a, b) => {
   //       return price === 'asc' ? parseFloat(a.price) - parseFloat(b.price) : parseFloat(b.price) - parseFloat(a.price)
@@ -292,7 +296,7 @@ exports.getProducts = async (req, res) => {
   //   return p
   // })
   // products = await Promise.all(products)
-  const totalCount = await Product.countDocuments(query);
+  const totalCount = await Product.countDocuments(query); // Lấy tổng số sản phẩm thỏa mãn điều kiện lọc để dùng cho phân trang
   res.json({ products, totalCount });
 };
 
