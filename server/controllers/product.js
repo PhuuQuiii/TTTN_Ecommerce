@@ -92,9 +92,6 @@ exports.createProduct = async (req, res) => {
     req.body.isVerified = Date.now()
   }
 
-  // console.log("Brand ID:", req.body.brand);
-  // console.log("Category IDs:", req.body.category);
-
   let newProduct = new Product(req.body); // Sản phẩm mới sẽ được gán vào shop đã tạo (soldBy = req.profile._id).
   newProduct.soldBy = req.profile._id;
   // save the product
@@ -223,15 +220,17 @@ exports.deleteImageById = async (req, res) => {
   res.json(image);
 };
 
-exports.updateProduct = async (req, res) => {
+
+// Cho phép cập nhật thông tin sản phẩm, nhưng chỉ khi sản phẩm chưa được xác minh (isVerified = false hoặc null).
+exports.updateProduct = async (req, res) => { 
   let product = req.product;
-  if (product.isVerified) {
+  if (product.isVerified) { // Nếu sản phẩm đã được xác minh (isVerified = true), API sẽ từ chối cập nhật
     return res
       .status(403)
       .json({ error: "Cannot update. Product has already been verified." });
   }
-  product = _.extend(product, req.body);
-  product.isRejected = null
+  product = _.extend(product, req.body); // Gộp các thuộc tính từ obj2 vào obj1, giúp cập nhật sản phẩm mà không làm mất các trường khác.
+  product.isRejected = null // Xóa trạng thái bị từ chối (isRejected), có thể dùng để reset lại sản phẩm nếu trước đó bị từ chối.
   await product.save();
   res.json(product);
 };

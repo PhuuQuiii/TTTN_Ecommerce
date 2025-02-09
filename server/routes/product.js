@@ -26,13 +26,14 @@ router.get('/for-you', userAuth, forYouProducts)
 router.get('/:p_slug', checkUserSignin, checkAdminSignin, getProduct) // Lấy danh sách sản phẩm với bộ lọc & phân trang
 router.post("/:id", adminAuth, hasAuthorization, validateProduct, createProduct) // add product ( isDeleted = null)
 router.patch('/delete-product/:id/:p_slug', adminAuth, hasAuthorization, deleteProduct) // delete product ( thay đổi giá trị isDeleted = time)
+router.put("/:id/:p_slug", adminAuth, hasAuthorization, validateProduct, updateProduct) // update product
+
 router.get('/mined-products',minedProducts)   
 router.get('/by-category', checkUserSignin, getProductsByCategory)//?cat_id=&cat_slug=
 router.get('/generate-filter', generateFilter)//?keyword= or ?cat_id=&cat_slug=
 router.post('/search',checkUserSignin,searchProducts)//need to work on rating nd $option in regex
 router.get('/suggest-keywords', suggestKeywords)//?keyword= 
 
-router.put("/:id/:p_slug", adminAuth, hasAuthorization, validateProduct, updateProduct) //update product
 
 
 module.exports = router;
