@@ -1,14 +1,17 @@
+## (Client => NextJS):
 
-##  (Client => NextJS):
 npm run dev
 
-##  (CRM => React):
+## (CRM => React):
+
 npm start
 
-##  (Mobile App => React-Native)
+## (Mobile App => React-Native)
+
 npx expo start
 
-##  (Server => NodeJS)
+## (Server => NodeJS)
+
 npm run dev
 
 ACCOUNT client
@@ -19,3 +22,6 @@ ACCOUNT admin
 aanandbhandari143@gmail.com
 helloworld1
 
+Account shop
+Jhondoe@gmail.com
+helloworld1

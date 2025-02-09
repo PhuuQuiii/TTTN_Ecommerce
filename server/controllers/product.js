@@ -15,6 +15,7 @@ const Fawn = require("fawn");
 const { fileRemover, imageCompressor } = require("../middleware/helpers");
 const task = Fawn.Task();
 
+//  Lấy thông tin sản phẩm theo slug
 exports.product = async (req, res, next) => {
   const product = await Product.findOne({ slug: req.params.p_slug })
     .populate("images", "-createdAt -updatedAt -__v")
@@ -34,33 +35,36 @@ exports.product = async (req, res, next) => {
   if (!product) {
     return res.status(404).json({ error: "Product not found." });
   }
-  req.product = product;
-  next();
+  req.product = product; // Lưu sản phẩm vào req ( các API khác chỉ cần dùng `req.product` để xử lý tiếp theo)
+  next(); // Chuyển sang middleware tiếp the
 };
+
+// Lấy danh sách sản phẩm với bộ lọc & phân trang
 exports.getProduct = async (req, res) => {
   let role = req.authAdmin && req.authAdmin.role || 'user'
     if (role === 'user' && (!req.product.isVerified || req.product.isDeleted)){
     return res
-    .status(404)
+    .status(404) // Không cho xem sản phẩm nếu sản phẩm chưa được xác minh hoặc đã bị xóa
     .json({ error: "Product is not verified or has been deleted." });
     }
   if (role === 'admin' && req.product.isDeleted) {
     return res
-      .status(404)
+      .status(404) // Không cho xem sản phẩm nếu sản phẩm đã bị xóa 
       .json({ error: "Product has been deleted." });
   }
   //increament viewCount
   // !req.authAdmin && (req.product.viewsCount += 1)
-  if (role === 'user') {
+
+  if (role === 'user') { // Chỉ khi người dùng là user, số lượt xem mới tăng lên 1
     req.product.viewsCount += 1
   }
   await req.product.save()
   //ratings of this product
   const product = req.product.toObject()
-  product.stars = await getRatingInfo(req.product)
+  product.stars = await getRatingInfo(req.product) // Tính toán xếp hạng (stars) của sản phẩm
   //user's action on this product
-  if (req.authUser) {
-    
+  if (req.authUser) { 
+    // Kiểm tra xem người dùng đã thực hiện hành động gì đối với sản phẩm này chưa
     const { hasBought, hasOnCart, hasOnWishlist, hasReviewed } = await userHas(req.product, req.authUser, 'product')
     product.hasOnCart = hasOnCart
     product.hasBought = hasBought
@@ -72,28 +76,34 @@ exports.getProduct = async (req, res) => {
 
 
 exports.createProduct = async (req, res) => {
-  if (!req.profile.isVerified)
+  if (!req.profile.isVerified) // Chỉ cho phép Shop đã xác minh tạo sản phẩm
     return res.status(403).json({ error: "Admin is not verified" });
-  if (req.admin.role!== 'superadmin') {
+
+  if (req.admin.role!== 'superadmin') { // Nếu shop không phải superadmin, thì xóa quyền cập nhật isFeatured và isVerified để tránh thao túng dữ liệu.
     req.body.isFeatured = undefined
     req.body.isVerified = undefined
   }
-  if (req.admin.role === 'superadmin') {
+
+  if (req.admin.role === 'superadmin') { // Superadmin có quyền đặt isFeatured (sản phẩm nổi bật) và isVerified (được xác minh)
     if (req.body.isFeatured) {
       
       req.body.isFeatured = Date.now()
     }
     req.body.isVerified = Date.now()
   }
-  let newProduct = new Product(req.body);
+
+  // console.log("Brand ID:", req.body.brand);
+  // console.log("Category IDs:", req.body.category);
+
+  let newProduct = new Product(req.body); // Sản phẩm mới sẽ được gán vào shop đã tạo (soldBy = req.profile._id).
   newProduct.soldBy = req.profile._id;
   // save the product
   // with linking product to product images
   req.images.forEach(i =>{
     let updataImage = i.toObject()
-    updataImage.productLink = newProduct._id
+    updataImage.productLink = newProduct._id // Gán ID sản phẩm để liên kết với ảnh sản phẩm.
     task
-    .update(i, updataImage)
+    .update(i, updataImage) // Cập nhật dữ liệu ảnh
     .options({ viaSave: true })
   })
   await task
