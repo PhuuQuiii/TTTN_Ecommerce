@@ -37,7 +37,7 @@ exports.product = async (req, res, next) => {
   }
   req.product = product;
   next();
-};
+};  
 
 // Lấy danh sách sản phẩm với bộ lọc & phân trang
 exports.getProduct = async (req, res) => {
@@ -300,37 +300,39 @@ exports.getProducts = async (req, res) => {
   res.json({ products, totalCount });
 };
 
+// Lấy danh sách sản phẩm với nhiều tùy chọn lọc( quận/huyện, từ khóa ) và sắp xếp
 exports.minedProducts = async (req, res) => {
   let page = +req.query.page || 1;
   let perPage = +req.query.perPage || 10;
   let sortFactor
-  let query = {
+  let query = { // lấy những sản phẩm đã được xác thực và chưa bị xoá
     isVerified: { $ne: null },
     isDeleted: null,
   }
-  if (req.header('district')) {
+  if (req.header('district')) { // Lọc theo quận/huyện
     query = {
       ...query,
       availableDistricts: { $in: req.header('district')}
     }
   }
-  if (req.query.keyword === 'latest') {
-    sortFactor = { createdAt: 'desc' }
+  // Tất cả lọc theo giảm dần
+  if (req.query.keyword === 'latest') { // Sắp xếp sản phẩm mới nhất
+    sortFactor = { createdAt: 'desc' } 
   }
-  else if (req.query.keyword === 'featured') {
+  else if (req.query.keyword === 'featured') { // Lọc thêm những sản phẩm nổi bật 
     sortFactor = { createdAt: 'desc' }
     query = {
       ...query,
       isFeatured: { $ne: null }
     }
   }
-  else if (req.query.keyword === 'trending') {
+  else if (req.query.keyword === 'trending') { // Sắp xếp theo điểm xu hướng
     sortFactor = { trendingScore: -1 }
   }
-  else if (req.query.keyword === 'mostviewed') {
+  else if (req.query.keyword === 'mostviewed') { // Sắp xếp theo số lượt xem 
     sortFactor = { viewsCount: -1 }
   } 
-  else if (req.query.keyword === 'topselling') {
+  else if (req.query.keyword === 'topselling') { // Sắp xếp theo số lượng bán ra 
     sortFactor = { noOfSoldOut: -1 }
   } 
   else {
@@ -345,11 +347,11 @@ exports.minedProducts = async (req, res) => {
     .lean()
     .sort(sortFactor);
 
-  let totalCount = await Product.countDocuments(query)
+  let totalCount = await Product.countDocuments(query) // Đếm tổng số sản phẩm phù hợp với query
   // if (totalCount > 50) totalCount = 50
   //user's action on each product
-  if (req.authUser) {
-    
+
+  if (req.authUser) { // Kiểm tra trạng thái sản phẩm trong giỏ hàng hoặc danh sách yêu thích
     products = products.map(async p => {
       //user's action on this product
       const { hasOnCart, hasOnWishlist } = await userHas(p, req.authUser, 'products')
@@ -363,25 +365,28 @@ exports.minedProducts = async (req, res) => {
   }
   res.json({ products, totalCount });
 };
+
+
+// Gợi ý sản phẩm dựa trên lịch sử mua hàng và gợi ý sản phẩm cùng danh mục với những gì người dùng đã mua
 exports.forYouProducts = async (req,res) => {
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
   const { createdAt, updatedAt, price } = req.query
-  let sortFactor = { createdAt: 'desc' };
+  let sortFactor = { createdAt: 'desc' }; // Xác định tiêu chí sắp xếp
   if (createdAt && (createdAt === 'asc' || createdAt === 'desc')) sortFactor = { createdAt }
   if (updatedAt && (updatedAt === 'asc' || updatedAt === 'desc')) sortFactor = { updatedAt }
   if (price && (price === 'asc' || price === 'desc')) sortFactor = { price: price === 'asc' ? 1 : -1 }
-  const orders = await Order.find({ user: req.user._id })
-    .select('-_id product')
+  const orders = await Order.find({ user: req.user._id }) // Lấy lịch sử mua hàng của người dùng
+    .select('-_id product') //  get product list of order
     .populate({
       path: 'product',
-      select: '-_id category',
+      select: '-_id category', // get category list of product
       populate: {
         path: 'category',
         model: 'category',
         select: '_id ',
         match: {
-          isDisabled: null
+          isDisabled: null // bị vô hiệu hóa
         },
         populate: {
           path: 'parent',
@@ -391,7 +396,7 @@ exports.forYouProducts = async (req,res) => {
             isDisabled: null
           },
           populate: {
-            path: 'parent',
+            path: 'parent', // Lấy cấp cha (parent) của danh mục (nếu có) để mở rộng phạm vi gợi ý
             model: 'category',
             select: '_id ',
             match: {
@@ -401,7 +406,7 @@ exports.forYouProducts = async (req,res) => {
         }
       }
     });
-    let categories = []
+    let categories = [] // Xây dựng danh sách danh mục từ lịch sử mua hàng
     orders.forEach(o=>{
       o.product.category.forEach(cat=>{
         categories.push(cat._id)//i.e last layer
@@ -409,13 +414,13 @@ exports.forYouProducts = async (req,res) => {
         // cat.parent.parent && categories.push(cat.parent.parent._id) //i.e first layer
       })
     })
-  categories =[... new Set(categories)]
+  categories =[... new Set(categories)] // Loại bỏ trùng lặp
   if (!categories.length) {
     return res.status(403).json({ error: "Categories not found." });
   }
 
-  let query = { category: { $in: categories } }
-  if (req.header('district')) {
+  let query = { category: { $in: categories } }  // Tìm tất cả các sản phẩm thuộc danh mục mà người dùng đã từng mua
+  if (req.header('district')) { // nếu có khu vực, lọc theo khu vực
     query = {
       ...query,
       availableDistricts: { $in: req.header('district') }
@@ -447,16 +452,19 @@ exports.forYouProducts = async (req,res) => {
   res.json({ products, totalCount });
 }
 
+
+// Gợi ý từ khóa khi người dùng nhập một từ khóa vào trường tìm kiếm.( so sánh keyword với collection SuggestKeywords)
 exports.suggestKeywords = async (req, res) => {
   let limits = +req.query.limits || 5
   let suggestedKeywords = await SuggestKeywords
-    .find({ keyword: { $regex: req.query.keyword || '', $options: "i" }, isDeleted: null })
+    .find({ keyword: { $regex: req.query.keyword || '', $options: "i" }, isDeleted: null }) // So sánh bằng cách tìm chuỗi con trong từ khóa và Không phân biệt chữ hoa, chữ thường.
     .select('-_id keyword')
     .limit(limits)
   suggestedKeywords = suggestedKeywords.map(s => s.keyword)
   res.json(suggestedKeywords)
 }
 
+// Tìm kiếm dựa trên từ khóa, danh mục, thương hiệu, giá cả, kích thước, màu sắc, trọng lượng, bảo hành, đánh giá, và có sắp xếp kết quả theo các tiêu chí như ngày tạo (createdAt), ngày cập nhật (updatedAt) hoặc giá (price).
 exports.searchProducts = async (req, res) => {
   const page = +req.query.page || 1;
   const perPage = +req.query.perPage || 10;
@@ -468,17 +476,17 @@ exports.searchProducts = async (req, res) => {
   let {
     keyword = "",
     brands,
-    max_price,
+    max_price, // Khoảng giá
     min_price,
     sizes,
     ratings,
     colors,
-    warranties,
+    warranties, // Bảo hành
     weights,
-    cat_id,
+    cat_id, // ID danh mục
   } = req.body;
   let categories;
-  if (cat_id) {
+  if (cat_id) { // Nếu có cat_id, truy vấn danh mục trong MongoDB để lấy danh mục cha/con
     categories = await Category.find({
       $or: [{ _id: cat_id }, { parent: cat_id }],
       isDisabled: null,
@@ -487,14 +495,14 @@ exports.searchProducts = async (req, res) => {
       return res.status(404).json({ error: "Categories not found." });
     }
   }
-  let searchingFactor = {};
+  let searchingFactor = {}; // Xây dựng điều kiện tìm kiếm
   if (keyword && !cat_id) {
     //that is if only with keyword
     searchingFactor.isVerified = { $ne: null };
     searchingFactor.isDeleted = null;
     searchingFactor.$or = [
-      { name: { $regex: keyword, $options: "i" } },
-      { tags: { $regex: keyword, $options: "i" } },
+      { name: { $regex: keyword, $options: "i" } }, // name product
+      { tags: { $regex: keyword, $options: "i" } }, //  tags product
     ];
     if (brands) searchingFactor.brand = brands;
     if (max_price && min_price)
@@ -506,7 +514,7 @@ exports.searchProducts = async (req, res) => {
     if (weights) searchingFactor.weight = { $in: weights };
     if (warranties) searchingFactor.warranty = warranties;
     if (ratings) searchingFactor.averageRating = { $gte: +ratings };
-  } else {
+  } else { // Nếu có cat_id, truy vấn sẽ bao gồm danh mục
     //cat_id alongwith another some factors
     searchingFactor.isVerified = { $ne: null };
     searchingFactor.isDeleted = null;
@@ -520,7 +528,7 @@ exports.searchProducts = async (req, res) => {
     if (warranties) searchingFactor.warranty = warranties;
     if (ratings) searchingFactor.averageRating = { $gte: +ratings };
   }
-  if (req.header('district')) {
+  if (req.header('district')) { //  Lọc theo khu vực
       searchingFactor.availableDistricts = { $in: req.header('district') }
   }
   let products = await Product.find(searchingFactor)
@@ -553,6 +561,7 @@ exports.searchProducts = async (req, res) => {
   }
   res.json({ products, totalCount });
 };
+
 
 exports.getProductsByCategory = async (req, res) => {
   const page = +req.query.page || 1;
