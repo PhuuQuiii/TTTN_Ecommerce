@@ -20,6 +20,9 @@ const _ = require("lodash");
 const Fawn = require("fawn");
 const { allOrderStatus } = require("../middleware/common");
 const task = Fawn.Task();
+const mongoose = require("mongoose");
+Fawn.init(mongoose);
+
 const perPage = 10;
 
 exports.order = async (req, res, next) => {
@@ -792,30 +795,47 @@ exports.getOrderStatus = async (req, res) => {
   res.json(allOrderStatus);
 };
 
-exports.editOrderQuantity = async (req,res) => {
-  let order = req.order
-  if (order.status.currentStatus !== 'active') {
-    return res.status(403).json({error:'User cannot update quantity.'})
-  }
-  let updateOrder = order.toObject();
-  let payment = await Payment.findById(order.payment._id);
-  let updatePayment = payment.toObject();
-  // let product = await Product.findById(order.product._id)
-  // let updateProduct = product.toObject()
-  updateOrder.quantity = req.query.quantity
-  // updateProduct.quantity = updateProduct.quantity + order.quantity - updateOrder.quantity
-  updatePayment.amount = Math.round(
-    (order.product.price - order.product.price * (order.product.discountRate / 100)) * updateOrder.quantity
-  )
-  let results = await task
-    .update(payment, updatePayment)
-    .options({ viaSave: true })
-    .update(order, updateOrder)
-    .options({ viaSave: true })
-    // .update(product, updateProduct)
-    // .options({ viaSave: true })
-    .run({ useMongoose: true });
-  
-  res.json({order:results[1],payment:results[0]});
+exports.editOrderQuantity = async (req, res) => {
+  let order = req.order;
 
+  console.log("Current Status:", order.status.currentStatus);
+console.log("Type:", typeof order.status.currentStatus);
+
+
+  if (order.status.currentStatus !== "active") {
+    return res.status(403).json({ error: "User cannot update quantity." });
+  }
+
+  let payment = await Payment.findById(order.payment._id);
+  if (!payment) {
+    return res.status(404).json({ error: "Payment record not found." });
+  }
+
+  let newQuantity = parseInt(req.query.newQuantity, 10);
+  if (isNaN(newQuantity) || newQuantity <= 0) {
+    return res.status(400).json({ error: "Invalid quantity value." });
+  }
+
+  let newAmount = Math.round(
+    (order.product.price - order.product.price * (order.product.discountRate / 100)) * newQuantity
+  );
+
+  try {
+    let updatedOrder = await Order.updateOne(
+        { _id: order._id },
+        { $set: { quantity: newQuantity } }
+    );
+
+    let updatedPayment = await Payment.updateOne(
+        { _id: payment._id },
+        { $set: { amount: newAmount } }
+    );
+
+    res.json({ order: updatedOrder, payment: updatedPayment });
+} catch (error) {
+    console.error("Update Error:", error);
+    res.status(500).json({ error: "Lỗi cập nhật đơn hàng." });
 }
+
+  res.json({ order: results[1], payment: results[0] });
+};
