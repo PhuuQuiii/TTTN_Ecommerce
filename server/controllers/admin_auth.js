@@ -49,7 +49,7 @@ exports.signup = async (req, res) => {
             <p>Cảm ơn bạn đã đăng ký tài khoản bán hàng trên <strong>Kindeem</strong>! 🎉</p>
             <p>Trước khi bạn có thể sử dụng tất cả các tính năng tuyệt vời của chúng tôi, vui lòng xác minh email của bạn bằng cách nhấn vào nút bên dưới:</p>
             <div style="text-align: center; margin: 20px 0;">
-              <a href="${process.env.CLIENT_URL}/email-verify?token=${token}" 
+              <a href="${process.env.ADMIN_CRM_ROUTE}/email-verify?token=${token}" 
                  style="background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block;">
                 ✅ Xác minh tài khoản
               </a>
@@ -79,8 +79,8 @@ exports.emailverify = async (req, res) => {
     });
   admin.emailVerifyLink = "";
   admin.updated = Date.now();
-//   admin.isVerified = new Date(); //time xác minh tài khoản
-//   admin.updatedAt = Date.now();
+  //   admin.isVerified = new Date(); //time xác minh tài khoản
+  //   admin.updatedAt = Date.now();
   await admin.save();
   res.status(201).json({ msg: "Successfully signup!" });
 };
@@ -177,19 +177,23 @@ exports.refreshToken = async (req, res) => {
   }
 };
 
+// Chat real-time, Thông báo đơn hàng mới, Quản lý kết nối shop
 exports.loadMe = async (req, res) => {
   //loadme execute only when CRM is reloaded/after login nd web sockets makes new connection,  so we have to save new socketid for socket maping
   req.io.once("connection", async (socket) => {
+    // Lắng nghe sự kiện kết nối WebSocket
     console.log(socket.id, "connected");
     // disconnect is fired when a client leaves the server
     const newSocketMapping = new SocketMapping({
+      // Lưu socketId của shop vào database
       user: req.admin._id,
       socketId: socket.id,
     });
     let notificationObjOfAdmin = await Notification.findOne({
+      // Lấy thông báo chưa đọc của shop
       admin: req.admin._id,
     });
-    socket.emit("tx", { hello: "world" });
+    socket.emit("tx", { hello: "world" }); // Gửi sự kiện WebSocket đến shop
     if (notificationObjOfAdmin) {
       socket.emit("notification", {
         noOfUnseen: notificationObjOfAdmin.noOfUnseen,
@@ -222,14 +226,28 @@ exports.forgotPassword = async (req, res) => {
     { expiresIn: process.env.EMAIL_TOKEN_EXPIRE_TIME }
   );
   const mailingData = {
-    from: "Ecom",
+    from: "Ecom Support",
     to: admin.email,
-    subject: "Password reset Link",
-    html: `<p>Hi, ${admin.name} . </p></br>
-                    <a href="${process.env.ADMIN_CRM_ROUTE}/reset-password?token=${token}">Click me to reset your password</a>`,
+    subject: "🔒 Reset Your Password - Action Required",
+    html: `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+      <p>Xin chào <strong>${admin.name}</strong>,</p>
+      <p>Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn. Nếu bạn đã yêu cầu thao tác này, hãy nhấp vào nút bên dưới để tạo mật khẩu mới:</p>
+      <div style="text-align: center; margin: 20px 0;">
+        <a href="${process.env.ADMIN_CRM_ROUTE}/reset-password?token=${token}" 
+           style="background-color: #007bff; color: #fff; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+          🔑 Đặt lại mật khẩu
+        </a>
+      </div>
+      <p>Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này. Mật khẩu của bạn vẫn an toàn.</p>
+      <p>Cảm ơn bạn,<br><strong>Đội ngũ hỗ trợ Ecom</strong></p>
+    </div>
+  `,
   };
 
   await admin.updateOne({ resetPasswordLink: token });
+  console.log(token); // test lấy token đổi mật khẩu khi còn web còn local
+
   await sendEmail(mailingData);
   res.status(200).json({
     msg: `Email has been sent to ${email}. Follow the instructions to reset your password.`,
@@ -252,6 +270,22 @@ exports.resetPassword = async (req, res) => {
   };
 
   admin = _.extend(admin, updatedFields);
+
+  const mailingData = {
+    from: "Ecom Support",
+    to: admin.email,
+    subject: "🔔 Mật khẩu của bạn đã được thay đổi",
+    html: `
+      <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <p>Xin chào <strong>${admin.name}</strong>,</p>
+        <p>Mật khẩu của bạn đã được thay đổi thành công. Nếu bạn không thực hiện thao tác này, vui lòng liên hệ ngay với bộ phận hỗ trợ.</p>
+        <p>Nếu bạn yêu cầu đổi mật khẩu, bạn có thể đăng nhập bằng mật khẩu mới ngay bây giờ.</p>
+        <p>Cảm ơn bạn,</p>
+        <p><strong>Đội ngũ hỗ trợ Ecom</strong></p>
+      </div>
+    `,
+  };
+
   admin.updated = Date.now();
 
   await admin.save();
@@ -260,16 +294,16 @@ exports.resetPassword = async (req, res) => {
   });
 };
 
-// authentication middleware
+// authentication middleware // Middleware thực hiện xác thực Admin dựa trên JWT Token được gửi từ client.
 exports.auth = async (req, res, next) => {
-  const token = req.header("x-auth-token");
+  const token = req.header("x-auth-token"); // Lấy token từ request header
   try {
-    if (token) {
+    if (token) { // Kiểm tra nếu có token, giải mã lấy thông tin Admin
       const user = parseToken(token);
-      if (user._id) {
+      if (user._id) { // Kiểm tra _id từ token và lấy Admin từ database
         const admin = await Admin.findById(user._id).select("-password -salt");
         if (admin) {
-          if (!admin.isBlocked) {
+          if (!admin.isBlocked) { //  Kiểm tra Admin có bị khóa tài khoản (isBlocked) không
             req.admin = admin;
             return next();
           }
@@ -295,15 +329,15 @@ function parseToken(token) {
   }
 }
 
-// has authorization middleware
+// has authorization middleware // Middleware này kiểm tra xem Admin có quyền thực hiện hành động hay không
 exports.hasAuthorization = async (req, res, next) => {
-  try {
+  try { // Kiểm tra Admin có đang thao tác trên chính tài khoản của họ không (sameAdmin)
     const sameAdmin =
       req.profile &&
       req.admin &&
       req.profile._id.toString() === req.admin._id.toString();
-    const superadmin = req.admin && req.admin.role === "superadmin";
-    const canAccess = superadmin || sameAdmin;
+    const superadmin = req.admin && req.admin.role === "superadmin"; // Kiểm tra Admin có phải Superadmin không
+    const canAccess = superadmin || sameAdmin; // Nếu là chính chủ hoặc superadmin, cho phép tiếp tục (next())
     if (canAccess) {
       return next();
     }
@@ -312,7 +346,7 @@ exports.hasAuthorization = async (req, res, next) => {
     res.status(401).json({ error: error });
   }
 };
-exports.isSuperAdmin = async (req, res, next) => {
+exports.isSuperAdmin = async (req, res, next) => { // check isSuperAdmin
   try {
     const isSuperAdmin = req.admin && req.admin.role === "superadmin";
     if (isSuperAdmin) {
@@ -323,7 +357,7 @@ exports.isSuperAdmin = async (req, res, next) => {
     res.status(401).json({ error: error });
   }
 };
-exports.isAdmin = async (req, res, next) => {
+exports.isAdmin = async (req, res, next) => { // check isAdmin
   try {
     const isAdmin = req.admin && req.admin.role === "admin";
     if (isAdmin) {
@@ -334,7 +368,7 @@ exports.isAdmin = async (req, res, next) => {
     res.status(401).json({ error: error });
   }
 };
-
+// kiểm tra trạng thái đăng nhập của Admin
 exports.checkAdminSignin = async (req, res, next) => {
   const token = req.header("x-auth-token");
   if (token) {
@@ -342,7 +376,7 @@ exports.checkAdminSignin = async (req, res, next) => {
     if (admin.error === "jwt expired") {
       return res.json(admin); //{error:'jwt expired'}
     }
-    const foundUser = await Admin.findById(admin._id).select("name role");
+    const foundUser = await Admin.findById(admin._id).select("name role"); //  Dùng ID từ token để tìm Admin trong database. (chỉ lấy name và role).
     if (foundUser) {
       if (!foundUser.isBlocked) {
         req.authAdmin = foundUser;
