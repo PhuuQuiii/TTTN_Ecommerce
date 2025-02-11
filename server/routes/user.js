@@ -20,6 +20,6 @@ router.patch('/',auth, uploadUserPhoto, uploadPhoto)
 router.get("/:id", getProfile)
 
 
-router.param('id', profile)
+router.param('id', profile) // url chua tham so id, ham profile duoc goi de xu ly tham so
 
 module.exports = router;
