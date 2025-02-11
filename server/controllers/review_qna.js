@@ -348,11 +348,16 @@ exports.deleteQNAByUser = async (req, res) => {
         return res.status(404).json({ error: 'Invalid qna id.' })
     }
     QnA.qna = QnA.qna.map(q => {
-        if ((q._id.toString() === req.body.qna_id)
-            &&
-            (q.questionby.toString() === req.user._id.toString())) q.isDeleted = Date.now()
-        return q
+        if (
+            q._id.toString() === req.body.qna_id &&
+            q.questionby._id.toString() === req.user._id.toString() 
+          ) {
+            q.isDeleted = Date.now();
+            console.log(`QnA ${q._id} marked as deleted`);
+          }
+        return q;
     })
+    QnA.markModified('qna');
     await QnA.save()
     QnA.qna = QnA.qna.filter(q => q.isDeleted === null)
     let totalCount = QnA.qna.length
