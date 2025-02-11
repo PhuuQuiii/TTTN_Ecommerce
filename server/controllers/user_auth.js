@@ -54,6 +54,7 @@ exports.signup = async (req, res) => {
 
   res.status(200).json({
     msg: `Email has been sent to ${req.body.email} to verify your email address.`,
+    // token: token
   });
 };
 
@@ -315,7 +316,8 @@ exports.resetPassword = async (req, res) => {
 };
 
 // authentication middleware
-exports.auth = async (req, res, next) => { // Kiểm tra xem người dùng có hợp lệ và không bị khóa tài khoản không
+exports.auth = async (req, res, next) => {
+  // Kiểm tra xem người dùng có hợp lệ và không bị khóa tài khoản không
   const token = req.header("x-auth-token");
   try {
     if (token) {
@@ -323,7 +325,8 @@ exports.auth = async (req, res, next) => { // Kiểm tra xem người dùng có 
       if (u._id) {
         const user = await User.findById(u._id).select("-password -salt");
         if (user) {
-          if (!user.isBlocked) { // Kiểm tra tài khoản có bị khóa không
+          if (!user.isBlocked) {
+            // Kiểm tra tài khoản có bị khóa không
             req.user = user;
             return next();
           }
@@ -341,7 +344,8 @@ exports.auth = async (req, res, next) => { // Kiểm tra xem người dùng có 
   }
 };
 
-function parseToken(token) { // Giải mã token
+function parseToken(token) {
+  // Giải mã token
 
   // console.log('parseToken in user/auth',token.split(' ')[1]);
   try {
@@ -352,7 +356,8 @@ function parseToken(token) { // Giải mã token
 }
 
 //checkUserSignin
-exports.checkUserSignin = async (req, res, next) => { // Kiểm tra xem token có hợp lệ không, có bị hết hạn không, và gán thông tin người dùng vào req.authUser.
+exports.checkUserSignin = async (req, res, next) => {
+  // Kiểm tra xem token có hợp lệ không, có bị hết hạn không, và gán thông tin người dùng vào req.authUser.
   const token = req.header("x-auth-token");
   if (token) {
     const user = parseToken(token);
