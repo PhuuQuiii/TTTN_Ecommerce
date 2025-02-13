@@ -29,6 +29,7 @@ router.get('/users', auth, isSuperAdmin, getUsers)
 
 
 // admin's..
+//Validate admin flips
 router.get('/admins', auth, isSuperAdmin, getAdmins)
 router.patch('/flip-admin-business-approval/:b_id', auth, isSuperAdmin, flipAdminBusinessApproval)
 router.patch('/flip-admin-bank-approval/:bank_id', auth, isSuperAdmin, flipAdminBankApproval)

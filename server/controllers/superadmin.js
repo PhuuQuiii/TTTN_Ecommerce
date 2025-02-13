@@ -19,6 +19,8 @@ const Fawn = require("fawn");
 const Districts = require("../models/Districts");
 const { fileRemover, imageCompressor } = require("../middleware/helpers");
 const task = Fawn.Task();
+const mongoose = require("mongoose");
+
 // const perPage = 10;
 
 exports.geoLocation = async (req, res) => {
@@ -59,97 +61,144 @@ exports.getShippingData = async (req, res) => {
 }
 
 exports.banner = async (req, res) => {
-    if (!req.file) {
-        return res.status(400).json({ error: "Banner image is required" })
-    }
-    let newBanner = new Banner()
-    if (req.body.productSlug) {
-        let product = await Product.findOne({
-            slug: req.body.productSlug, isVerified: { "$ne": null },
-            isDeleted: null
-        })
-        if (!product) {
-            const { filename } = req.file;
-            // remove image from public/uploads
-            const Path = `public/uploads/${filename}`;
-            fs.unlinkSync(Path);
-            return res.status(404).json({ error: "Product not found." })
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: "Banner image is required" });
         }
-        newBanner.product = product._id
-    }
-    const { filename, path: filepath, destination } = req.file
-    // await sharp(filepath)
-    //     .resize(8480)
-    //     .toFile(path.resolve(destination, 'banner', filename))
-    await imageCompressor(
-        filename,
-        8480,
-        filepath,
-        destination,
-        "banner"
-    );
-    // remove image from public/uploads
-    const Path = `public/uploads/${filename}`;
-    fs.unlinkSync(Path);
-    newBanner.bannerPhoto = `banner/${filename}`
-    newBanner.link = req.body.link
-    await newBanner.save()
-    res.json(newBanner)
-}
+        
+        console.log("✅ File nhận được:", req.file);
+        console.log("✅ Dữ liệu nhận được:", req.body);
 
-exports.editBanner = async(req,res) => {
-    let banner = await Banner.findById(req.body.banner_id)
-    if (!banner) {
-        if (req.file) {
-            const { filename } = req.file;
-            // remove image from public/uploads
-            const Path = `public/uploads/${filename}`;
-            fs.unlinkSync(Path);
+        let newBanner = new Banner();
+
+        if (req.body.productSlug) {
+            let product = await Product.findOne({
+                slug: req.body.productSlug,
+                isVerified: { "$ne": null },
+                isDeleted: null
+            });
+
+            if (!product) {
+                console.log("❌ Product not found:", req.body.productSlug);
+                return res.status(404).json({ error: "Product not found." });
+            }
+            newBanner.product = product._id;
         }
-        return res.status(404).json({ error: 'Banner not found.' })
+
+        const { filename, path: filepath, destination } = req.file;
+
+        console.log("📂 Đường dẫn file:", filepath);
+
+        await imageCompressor(filename, 8480, filepath, destination, "banner");
+
+        // Kiểm tra file có tồn tại trước khi xóa
+        if (fs.existsSync(filepath)) {
+            fs.unlinkSync(filepath);
+            console.log("🗑️ Đã xóa file:", filepath);
+        } else {
+            console.log("⚠️ File không tồn tại:", filepath);
+        }
+
+        newBanner.bannerPhoto = `banner/${filename}`;
+        newBanner.link = req.body.link;
+
+        await newBanner.save();
+        console.log("✅ Banner đã lưu:", newBanner);
+
+        res.json(newBanner);
+    } catch (error) {
+        console.error("❌ Lỗi API banner:", error);
+        res.status(500).json({ error: "Internal Server Error", details: error.message });
     }
-    if (req.body.productSlug) {
-        let product = await Product.findOne({
-            slug: req.body.productSlug, isVerified: { "$ne": null },
-            isDeleted: null
-        })
-        if (!product) {
+};
+
+
+exports.editBanner = async (req, res) => {
+    try {
+        console.log("🔍 Nhận request:", req.body);
+
+        if (!req.body.banner_id) {
+            return res.status(400).json({ error: "Banner ID is required." });
+        }
+
+        let banner = await Banner.findById(req.body.banner_id);
+        if (!banner) {
+            console.log("❌ Không tìm thấy banner:", req.body.banner_id);
+
             if (req.file) {
                 const { filename } = req.file;
-                // remove image from public/uploads
                 const Path = `public/uploads/${filename}`;
                 fs.unlinkSync(Path);
+                console.log("🗑️ Đã xóa file ảnh:", filename);
             }
-            return res.status(404).json({ error: "Product not found." })
+
+            return res.status(404).json({ error: "Banner not found." });
         }
-        banner.product = product._id
+
+        if (req.body.productSlug) {
+            let product = await Product.findOne({
+                slug: req.body.productSlug,
+                isVerified: { "$ne": null },
+                isDeleted: null
+            });
+
+            if (!product) {
+                console.log("❌ Không tìm thấy sản phẩm:", req.body.productSlug);
+
+                if (req.file) {
+                    const { filename } = req.file;
+                    const Path = `public/uploads/${filename}`;
+                    fs.unlinkSync(Path);
+                    console.log("🗑️ Đã xóa file ảnh:", filename);
+                }
+
+                return res.status(404).json({ error: "Product not found." });
+            }
+
+            banner.product = product._id;
+        }
+
+        if (req.file) {
+            const { filename, path: filepath, destination } = req.file;
+
+            console.log("📂 Đang xử lý ảnh:", filename);
+
+            await imageCompressor(
+                filename,
+                8480,
+                filepath,
+                destination,
+                "banner"
+            );
+
+            // Kiểm tra file cũ có tồn tại trước khi xóa
+            let oldFilePath = `public/uploads/${banner.bannerPhoto}`;
+            if (fs.existsSync(oldFilePath)) {
+                fs.unlinkSync(oldFilePath);
+                console.log("🗑️ Đã xóa ảnh cũ:", oldFilePath);
+            }
+
+            let newFilePath = `public/uploads/${filename}`;
+            if (fs.existsSync(newFilePath)) {
+                fs.unlinkSync(newFilePath);
+                console.log("🗑️ Đã xóa ảnh tạm:", newFilePath);
+            }
+
+            banner.bannerPhoto = `banner/${filename}`;
+        }
+
+        banner.link = req.body.link;
+        await banner.save();
+
+        console.log("✅ Banner đã cập nhật:", banner);
+        res.json(banner);
+
+    } catch (error) {
+        console.error("❌ Lỗi API editBanner:", error);
+        res.status(500).json({ error: "Internal Server Error", details: error.message });
     }
-    if (req.file) {
-        const { filename, path: filepath, destination } = req.file
-        // await sharp(filepath)
-        //     .resize(8480)
-        //     .toFile(path.resolve(destination, 'banner', filename))
-        await imageCompressor(
-            filename,
-            8480,
-            filepath,
-            destination,
-            "banner"
-        );
-        //remove old banner pic from bannner folder
-        // let Path = `public/uploads/${banner.bannerPhoto}`;
-        // fs.unlinkSync(Path);
-        // // remove image from public/uploads
-        // Path = `public/uploads/${filename}`;
-        // fs.unlinkSync(Path);
-        let files = [`public/uploads/${banner.bannerPhoto}`, `public/uploads/${filename}`]
-        fileRemover(files)
-        banner.bannerPhoto = `banner/${filename}`
-    }
-    banner.link = req.body.link
-    await banner.save()
-    res.json(banner)
-}
+};
+
 
 exports.deleteBanner = async (req, res) => {
     let banner = await Banner.findById(req.body.banner_id)
@@ -303,51 +352,105 @@ exports.blockUnbolckDispatcher = async (req, res) => {
     res.json(dispatcher)
 }
 
+
+
 exports.flipAdminBusinessApproval = async (req, res) => {
-    let businessInfo = await BusinessInfo.findById(req.params.b_id)
-    if (!businessInfo) {
-        return res.status(404).json({ error: "No business information available" })
+    try {
+        // 🔹 Tìm thông tin doanh nghiệp dựa trên ID từ params
+        let businessInfo = await BusinessInfo.findById(req.params.b_id);
+        if (!businessInfo) {
+            return res.status(404).json({ error: "No business information available" });
+        }
+
+        // 🔹 Nếu doanh nghiệp đã được xác minh, hủy xác minh
+        if (businessInfo.isVerified) {
+            let updateBusinessInfo = businessInfo.toObject();
+            updateBusinessInfo.isVerified = null;
+
+            let admin = await Admin.findById(businessInfo.admin);
+            if (!admin) {
+                return res.status(404).json({ error: "Admin not found." });
+            }
+            let updateAdmin = admin.toObject();
+            updateAdmin.isVerified = null;
+
+            // 🔹 Cập nhật thông tin trong một transaction
+            const results = await task
+                .update(BusinessInfo, { _id: businessInfo._id }, updateBusinessInfo)
+                .update(Admin, { _id: admin._id }, updateAdmin)
+                .options({ viaSave: true })
+                .run({ useMongoose: true });
+
+            return res.json(results[0]); // Trả về thông tin sau khi cập nhật
+        }
+
+        // 🔹 Nếu chưa được xác minh, tiến hành xác minh
+        businessInfo.isVerified = Date.now();
+
+        // 🔹 Chuyển đổi các trường cần thiết sang ObjectId nếu cần
+        const convertToObjectId = (value) => {
+            return mongoose.Types.ObjectId.isValid(value) ? new mongoose.Types.ObjectId(value) : value;
+        };
+
+        businessInfo.citizenshipFront = convertToObjectId(businessInfo.citizenshipFront);
+        businessInfo.citizenshipBack = convertToObjectId(businessInfo.citizenshipBack);
+        businessInfo.businessLicence = convertToObjectId(businessInfo.businessLicence);
+
+        await businessInfo.save(); // Lưu thông tin cập nhật
+        res.json(businessInfo); // Trả về kết quả thành công
+    } catch (error) {
+        console.error("Error flipping business approval:", error);
+        res.status(500).json({ error: "Internal Server Error", details: error.message });
     }
-    if (businessInfo.isVerified) {
-        let updateBusinessInfo = businessInfo.toObject()
-        updateBusinessInfo.isVerified = null
-        let admin = await Admin.findById(businessInfo.admin)
-        let updateAdmin = admin.toObject()
-        updateAdmin.isVerified = null
-        const results = await task
-            .update(businessInfo, updateBusinessInfo)
-            .update(Admin, updateAdmin)
-            .options({ viaSave: true })
-            .run({ useMongoose: true })
-        return res.json(results[0])
-    }
-    businessInfo.isVerified = Date.now()
-    await businessInfo.save()
-    res.json(businessInfo)
-}
+};
 
 exports.flipAdminBankApproval = async (req, res) => {
-    let bankInfo = await AdminBank.findById(req.params.bank_id)
-    if (!bankInfo) {
-        return res.status(404).json({ error: "No bank information available" })
+    try {
+        let bankInfo = await AdminBank.findById(req.params.bank_id);
+        console.log("Bank Info:", bankInfo); // 🔹 Debug
+
+        if (!bankInfo) {
+            return res.status(404).json({ error: "No bank information available" });
+        }
+
+        if (bankInfo.isVerified) {
+            let updateBankInfo = bankInfo.toObject();
+            updateBankInfo.isVerified = null;
+
+            console.log("Admin ID:", bankInfo.admin); // 🔹 Debug
+            if (!mongoose.Types.ObjectId.isValid(bankInfo.admin)) {
+                return res.status(400).json({ error: "Invalid admin ID" });
+            }
+
+            let admin = await Admin.findById(bankInfo.admin);
+            console.log("Admin Info:", admin); // 🔹 Debug
+            if (!admin) {
+                return res.status(404).json({ error: "Admin not found" });
+            }
+
+            let updateAdmin = admin.toObject();
+            updateAdmin.isVerified = null;
+
+            console.log("Updating Bank & Admin..."); // 🔹 Debug
+            const results = await task
+                .update(bankInfo, updateBankInfo)
+                .update(Admin, updateAdmin)
+                .options({ viaSave: true })
+                .run({ useMongoose: true });
+
+            return res.json(results[0]);
+        }
+
+        // Xác thực tài khoản
+        bankInfo.isVerified = new Date();
+        await bankInfo.save();
+        res.json(bankInfo);
+    } catch (error) {
+        console.error("Error:", error); // 🔹 Debug lỗi trong console
+        res.status(500).json({ error: "Internal Server Error", details: error.message });
     }
-    if (bankInfo.isVerified) {
-        let updateBankInfo = bankInfo.toObject()
-        updateBankInfo.isVerified = null
-        let admin = await Admin.findById(bankInfo.admin)
-        let updateAdmin = admin.toObject()
-        updateAdmin.isVerified = null
-        const results = await task
-            .update(bankInfo, updateBankInfo)
-            .update(Admin, updateAdmin)
-            .options({ useSave: true })
-            .run({ useMongoose: true })
-        return res.json(results[0])
-    }
-    bankInfo.isVerified = Date.now()
-    await bankInfo.save()
-    res.json(bankInfo)
-}
+};
+
 
 exports.flipAdminWarehouseApproval = async (req, res) => {
     let warehouse = await AdminWarehouse.findById(req.params.w_id)
