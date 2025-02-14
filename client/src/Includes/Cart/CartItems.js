@@ -87,7 +87,7 @@ const CartItems = (props) => {
               <>
                 {/* <span className="delivery-date">Get By: 25 - 28 Aug 2019</span> */}
                 <span className="price">
-                  Cost: Rs {props.order?.getShippingChargeResp}
+                  Cost: Dong {props.order?.getShippingChargeResp}
                 </span>
               </>
             ) : (
@@ -104,7 +104,7 @@ const CartItems = (props) => {
           <div className="title">
             <h4>My Cart ({inStockProducts?.totalCount} Items)</h4>
             <div className="price">
-              Total: Rs {inStockProducts?.totalAmount?.toFixed(2)}
+              Total: Dong {inStockProducts?.totalAmount?.toFixed(2)}
             </div>
           </div>
         }
@@ -135,7 +135,7 @@ const CartItems = (props) => {
                 Out Of Stock ({noStockProducts?.totalCount} Items)
             </h4>
               <div className="price">
-                Total: Rs {noStockProducts?.totalAmount?.toFixed(2)}
+                Total: Dong {noStockProducts?.totalAmount?.toFixed(2)}
               </div>
             </div>
           }

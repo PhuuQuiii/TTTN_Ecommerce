@@ -153,12 +153,12 @@ class ProductSpecs extends Component {
                     {
                       product?.discountRate > 0 &&
                       <div className="old-price">
-                        <span>Rs {product.price.$numberDecimal}</span>
+                        <span> {product.price.$numberDecimal} Dong</span>
                       </div>
                     }
                     <div className="new-price">
                       <span className="price">
-                        Rs{" "}
+                        {" "} Dong
                         {product?.price.$numberDecimal -
                           ((product?.price.$numberDecimal *
                             product?.discountRate) /
@@ -167,10 +167,10 @@ class ProductSpecs extends Component {
                       {
                         product?.discountRate > 0 &&
                         <span className="discount">
-                          (Save Rs {(product?.price.$numberDecimal *
+                          (Save  {(product?.price.$numberDecimal *
                             product?.discountRate) /
                             100} |{" "}
-                          {product.discountRate}
+                          {product.discountRate} Dong
                     %)
                   </span>
                       }

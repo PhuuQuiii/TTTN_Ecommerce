@@ -97,7 +97,7 @@ class CheckoutItems extends Component {
               <>
                 {/* <span className="delivery-date">Get By: 25 - 28 Aug 2019</span> */}
                 <span className="price">
-                  Cost: Rs {this.props.order?.getShippingChargeResp}
+                  Cost: Dong {this.props.order?.getShippingChargeResp}
                 </span>
               </>
             ) : (
@@ -111,7 +111,7 @@ class CheckoutItems extends Component {
           <div className="title">
             <h4>My Cart ({this.state.listItems?.totalCount} Items)</h4>
             <div className="price">
-              Total: Rs {this.props.cart.checkoutItems?.totalAmount || this.state.listItems?.totalAmount?.toFixed(2)}
+              Total: Dong {this.props.cart.checkoutItems?.totalAmount || this.state.listItems?.totalAmount?.toFixed(2)}
             </div>
           </div>
           <div className="items-list">

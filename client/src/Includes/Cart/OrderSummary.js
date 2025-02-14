@@ -199,7 +199,7 @@ class OrderSummary extends Component {
               <div className="ti-pr">
                 <div className="ti">Total</div>
                 <div className="pr">
-                  Rs {(totalCheckoutItems + deliveryCharges).toFixed(2)}
+                  Dong {(totalCheckoutItems + deliveryCharges).toFixed(2)}
                 </div>
               </div>
             </div>
