@@ -14,7 +14,8 @@ export default function(state = initialState, action) {
       return {
         ...state,
         business: payload,
-        loading: false
+        loading: false,
+        error: {}
       };
     case BUSINESS_TYPES.BUSINESS_ERROR:
       return {

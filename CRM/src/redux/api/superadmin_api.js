@@ -31,4 +31,30 @@ export class SuperadminService {
     let data = postService(url, body, 'PUT');
     return data;
   }
+
+  flipAdminBusinessApproval(b_id) {
+    let url = `/superadmin/flip-admin-business-approval/${b_id}`;
+    return postService(url, undefined, 'PATCH');
+  }
+
+  flipAdminBankApproval(bank_id) {
+    let url = `/superadmin/flip-admin-bank-approval/${bank_id}`;
+    return postService(url, undefined, 'PATCH');
+  }
+
+  flipAdminWarehouseApproval(w_id) {
+    let url = `/superadmin/flip-admin-warehouse-approval/${w_id}`;
+    return postService(url, undefined, 'PATCH');
+  }
+
+  flipAdminAccountApproval(a_id) {
+    let url = `/superadmin/flip-admin-account-approval/${a_id}`;
+    return postService(url, undefined, 'PATCH');
+  }
+
+  blockUnblockAdmin(id) {
+    let url = `/superadmin/block-unblock-admin/${id}`;
+    return postService(url, undefined, 'PATCH');
+  }
+  
 }

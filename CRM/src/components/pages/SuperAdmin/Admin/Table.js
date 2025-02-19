@@ -22,6 +22,7 @@ const Table = ({ getAdmin, getAdmins, beAdmin, multiLoading, admins, totalCount,
     // const [searchText, setSearchText] = useState('')
     // const [searchedColumn, setSearchedColumn] = useState('')
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+    const [selectedAdmin, setSelectedAdmin] = useState(null);
     const searchInput = useRef(null);
 
     useEffect(() => {
@@ -108,6 +109,8 @@ const Table = ({ getAdmin, getAdmins, beAdmin, multiLoading, admins, totalCount,
     })
 
     const openAdmin = (admin) => {
+        console.log("Selected Admin ID:", admin._id);
+        setSelectedAdmin(admin);
         setIsDrawerOpen(true)
         getAdmin(admin._id)
     }
@@ -217,7 +220,7 @@ const Table = ({ getAdmin, getAdmins, beAdmin, multiLoading, admins, totalCount,
         visible={isDrawerOpen}
         closeIcon={<i className="fas fa-times btn btn-danger"></i>}
     >
-        <AdminDetail isAdminDetailOpen={isDrawerOpen} />
+        {selectedAdmin && <AdminDetail adminId={selectedAdmin._id} />}
     </Drawer>
     </>)
 }

@@ -171,15 +171,32 @@ exports.deleteFileById = async (req, res) => {
 };
 
 exports.getBusinessInfo = async (req, res) => {
-    let businessinfo = await BusinessInfo.findOne({ admin: req.profile._id })
-        // .populate('businessLicence')
-        // .populate('citizenshipBack')
-        // .populate('citizenshipFront')
-    if (!businessinfo) {
-        return res.status(404).json({ error: "No business information." })
+    try {
+        const businessinfo = await BusinessInfo.findOne({ admin: req.profile._id })
+            .select("ownerName address city citizenshipNumber businessRegisterNumber citizenshipFront citizenshipBack businessLicence createdAt updatedAt isVerified");
+
+        if (!businessinfo) {
+            return res.status(404).json({ error: "No business information." });
+        }
+
+        console.log("Business Info from DB:", businessinfo);
+
+        // Nếu muốn gửi ảnh với URL đầy đủ
+        const baseUrl = process.env.SERVER_URL || "http://localhost:3001";
+        const formattedData = {
+            ...businessinfo._doc,
+            citizenshipFront: businessinfo.citizenshipFront ? `${baseUrl}/uploads/${businessinfo.citizenshipFront}` : null,
+            citizenshipBack: businessinfo.citizenshipBack ? `${baseUrl}/uploads/${businessinfo.citizenshipBack}` : null,
+            businessLicence: businessinfo.businessLicence ? `${baseUrl}/uploads/${businessinfo.businessLicence}` : null
+        };
+
+        res.json(formattedData);
+    } catch (error) {
+        console.error("Error fetching business info:", error);
+        res.status(500).json({ error: "Server error." });
     }
-    res.json(businessinfo)
-}
+};
+
 
 exports.businessinfo = async (req, res) => {
     //make req.files to array of objs
