@@ -7,18 +7,12 @@ const businessInfoService = new BusinessInfoService();
 export const getBusinessInfo = (userId) => async dispatch => {
   try {
     const response = await businessInfoService.getBusinessInfo(userId);
-    if (response.isSuccess) {
-      dispatch({
-        type: BUSINESS_TYPES.GET_BUSINESS_INFO,
-        payload: response.data
-      });
-    } else {
-      dispatch({
-        type: BUSINESS_TYPES.BUSINESS_ERROR,
-        payload: { msg: response.errorMessage, status: response.status }
-      });
-    }
+    dispatch({
+      type: BUSINESS_TYPES.GET_BUSINESS_INFO,
+      payload: response.data // Truyền dữ liệu từ response.data
+    });
   } catch (err) {
+    console.error("Action Error:", err); // Log lỗi nếu có
     dispatch({
       type: BUSINESS_TYPES.BUSINESS_ERROR,
       payload: { msg: err.message, status: err.status }

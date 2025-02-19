@@ -1,7 +1,7 @@
-import { BUSINESS_TYPES } from '../types';
+import { BANK_TYPES } from '../types';
 
 const initialState = {
-  business: null,
+  bank: null,
   loading: true,
   error: {}
 };
@@ -10,14 +10,19 @@ export default function(state = initialState, action) {
   const { type, payload } = action;
 
   switch(type) {
-    case BUSINESS_TYPES.GET_BUSINESS_INFO:
+    case BANK_TYPES.GET_BANK_INFO:
       return {
         ...state,
-        business: payload,
-        loading: false,
-        error: {}
+        bank: payload,
+        loading: false
       };
-    case BUSINESS_TYPES.BUSINESS_ERROR:
+    case BANK_TYPES.UPDATE_BANK_INFO:
+      return {
+        ...state,
+        bank: payload,
+        loading: false
+      };
+    case BANK_TYPES.BANK_ERROR:
       return {
         ...state,
         error: payload,
