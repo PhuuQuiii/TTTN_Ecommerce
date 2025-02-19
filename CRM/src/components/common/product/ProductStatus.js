@@ -1,7 +1,8 @@
-import React, { Fragment, useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { Radio, Popconfirm, Checkbox } from 'antd';
+import { Checkbox, Popconfirm, Radio } from 'antd';
+import axios from 'axios';
+import PropTypes from 'prop-types';
+import React, { Fragment, useState } from 'react';
+import { connect } from 'react-redux';
 import { approveProduct, disApproveProduct } from '../../../redux/actions/superadmin_action';
 
 export const ProductStatus = ({ isSuperadmin, product, loading , approveProduct, disApproveProduct}) => {
@@ -24,9 +25,28 @@ export const ProductStatus = ({ isSuperadmin, product, loading , approveProduct,
         setRejectFormData(e.target.value)
     }
 
-    function makeProductFeatured () {
-        console.log('helloworld');
-    }
+    function makeProductFeatured() {
+        if (!product?.slug) return;
+    
+        const token = localStorage.getItem("token");
+    
+        axios.put(`http://localhost:3001/api/superadmin/featured-product/${product.slug}`, {}, {
+            headers: {
+                "x-auth-token": token,
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => {
+            console.log('✅ Product marked as featured:', response.data);
+            
+            // Cập nhật UI ngay lập tức
+            product.isFeatured = true;  
+            setOpenFeaturedConfirmation(false); // Đóng popconfirm sau khi xác nhận
+        })
+        .catch(error => {
+            console.error('❌ Error marking product as featured:', error.response?.data || error);
+        });
+    }    
 
     //to be returned form 
     const rejectForm = () => {
@@ -80,9 +100,12 @@ export const ProductStatus = ({ isSuperadmin, product, loading , approveProduct,
                         okText="Ok"
                         cancelText="Cancel"
                     >
-                        <Checkbox disabled={loading} onChange={onFeaturedCheckboxClicked}>
-                        Make it Featured
-                        </Checkbox>
+<Checkbox
+    disabled={loading}
+    onChange={() => setOpenFeaturedConfirmation(true)}
+>
+    Make it Featured
+</Checkbox>
                     </Popconfirm>
                 }
             </div>
