@@ -378,7 +378,7 @@ exports.getNotifications = async(req,res) => {
     adminNotification = {
         admin: req.admin._id,
         notifications:[],
-        noOFUnseen:0
+        noOfUnseen:0
     }
     res.json(adminNotification)
 
