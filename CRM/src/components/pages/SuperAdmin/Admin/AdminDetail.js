@@ -12,6 +12,7 @@ import {
   getAdmin
 } from '../../../../redux/actions/superadmin_action';
 import { getBusinessInfo } from '../../../../redux/actions/business_actions';
+import { fetchBankInfo } from '../../../../redux/actions/bank_actions';
 
 const { TabPane } = Tabs;
 
@@ -19,18 +20,24 @@ const AdminDetail = ({ adminId, admin }) => {
   const dispatch = useDispatch();
   const { loading, error, data } = useSelector(state => state.superadmin);
   const { business, loading: businessLoading, error: businessError } = useSelector(state => state.business);
-
+  const { bank, loading: bankLoading, error: bankError } = useSelector(state => state.bank);
+    
   useEffect(() => {
     if (adminId) {
       console.log("Admin ID in AdminDetail:", adminId);
-      dispatch(getBusinessInfo(adminId));
-      dispatch(getAdmin(adminId)); // Lấy thông tin admin từ API
+        dispatch(getBusinessInfo(adminId));
+        dispatch(getAdmin(adminId)); // Lấy thông tin admin từ API
+        dispatch(fetchBankInfo(adminId));
     }
   }, [dispatch, adminId]);
 
   useEffect(() => {
     console.log("Business Info:", business); // Log dữ liệu business khi nó thay đổi
   }, [business]);
+    
+  useEffect(() => {
+    console.log("Bank Info:", bank); // Log dữ liệu bank khi nó thay đổi
+  }, [bank]);
 
   const handleApproveBusiness = () => {
     if (business?._id) {
@@ -39,7 +46,9 @@ const AdminDetail = ({ adminId, admin }) => {
   };
     
   const handleApproveBank = () => {
-    dispatch(flipAdminBankApproval(adminId));
+    if (bank?._id) {
+      dispatch(flipAdminBankApproval(bank._id));
+    }
   };
 
   const handleApproveWarehouse = () => {
@@ -101,14 +110,24 @@ const AdminDetail = ({ adminId, admin }) => {
         </TabPane>
 
         <TabPane tab="Bank Info" key="bank">
-          <p>
-            <strong>Bank Name:</strong> {admin?.adminBank?.bankName}
-          </p>
-          <p>
-            <strong>Verification Status:</strong>{' '}
-            {admin?.adminBank?.isVerified ? 'Verified' : 'Not Verified'}
-          </p>
-          <button onClick={handleApproveBank}>Approve Bank</button>
+          {bankLoading ? (
+            <p>Loading...</p>
+          ) : bankError ? (
+            <p>Error: {bankError.msg}</p>
+          ) : (
+            <>
+              <p>
+                <strong>Bank Name:</strong> {bank?.bankName}
+              </p>
+              <p>
+                <strong>Verification Status:</strong>{' '}
+                {bank?.isVerified ? 'Verified' : 'Not Verified'}
+              </p>
+              {!bank?.isVerified && (
+                <button onClick={handleApproveBank}>Approve Bank</button>
+              )}
+            </>
+          )}
         </TabPane>
 
         <TabPane tab="Warehouse Info" key="warehouse">
@@ -151,15 +170,19 @@ AdminDetail.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  admin: state.superadmin.admin, // Lấy thông tin admin từ Redux store
-  business: state.business.business,
-  businessLoading: state.business.loading,
-  businessError: state.business.error
+    admin: state.superadmin.admin, // Lấy thông tin admin từ Redux store
+    business: state.business.business,
+    businessLoading: state.business.loading,
+    businessError: state.business.error,
+    bank: state.bank.bank,
+    bankLoading: state.bank.loading,
+    bankError: state.bank.error
 });
 
 const mapDispatchToProps = {
-  getBusinessInfo,
-  getAdmin
+    getBusinessInfo,
+    getAdmin,
+    fetchBankInfo,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminDetail);
