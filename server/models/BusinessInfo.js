@@ -36,17 +36,14 @@ const businessSchema = new mongoose.Schema({
         required: true,
         maxlength: 32
     },
-    citizenshipFront: {
-        type: Schema.Types.ObjectId,
-        ref: "adminfile",
+    citizenshipFront:  {
+        type: String
     },
     citizenshipBack: {
-        type: Schema.Types.ObjectId,
-        ref: "adminfile",
+        type: String
     },
-    businessLicence:{
-        type: Schema.Types.ObjectId,
-        ref: "adminfile",
+    businessLicence: {
+        type: String
     },
     isVerified:{
         type: Date,//as we may need verified date

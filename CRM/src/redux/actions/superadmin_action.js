@@ -1,4 +1,4 @@
-import { SUCCESS, ADMINS_TYPES,ADMIN_TYPES, BEING_ADMIN, BEING_SUPERADMIN, PRODUCTS_TYPES, TOGGLE_PRODUCT_STATUS_TYPES} from "../types";
+import { SUCCESS, ADMINS_TYPES,ADMIN_TYPES, BEING_ADMIN, BEING_SUPERADMIN, PRODUCTS_TYPES, TOGGLE_PRODUCT_STATUS_TYPES, ADMIN_APPROVAL_TYPES} from "../types";
 import { finish, init, success, error } from "../commonActions";
 import { SuperadminService } from "../api/superadmin_api";
 
@@ -89,5 +89,85 @@ export const disApproveProduct = (product_slug, comment) => async (dispatch) => 
     dispatch(success(TOGGLE_PRODUCT_STATUS_TYPES.TOGGLE_PRODUCT_STATUS, response.data[1]));
   } else if (!response.isSuccess) {
     dispatch(error(response.errorMessage));
+  }
+};
+
+export const flipAdminBusinessApproval = (businessId) => async (dispatch) => {
+  try {
+    dispatch({ type: ADMIN_APPROVAL_TYPES.FLIP_ADMIN_BUSINESS_APPROVAL_REQUEST });
+    const response = await superadminService.flipAdminBusinessApproval(businessId);
+    dispatch({
+      type: ADMIN_APPROVAL_TYPES.FLIP_ADMIN_BUSINESS_APPROVAL_SUCCESS,
+      payload: response
+    });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_APPROVAL_TYPES.FLIP_ADMIN_BUSINESS_APPROVAL_FAILURE,
+      error: error.message
+    });
+  }
+};
+
+export const flipAdminBankApproval = (bank_id) => async (dispatch) => {
+  try {
+    dispatch({ type: ADMIN_APPROVAL_TYPES.FLIP_ADMIN_BANK_APPROVAL_REQUEST });
+    const response = await superadminService.flipAdminBankApproval(bank_id);
+    dispatch({
+      type: ADMIN_APPROVAL_TYPES.FLIP_ADMIN_BANK_APPROVAL_SUCCESS,
+      payload: response
+    });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_APPROVAL_TYPES.FLIP_ADMIN_BANK_APPROVAL_FAILURE,
+      error: error.message
+    });
+  }
+};
+
+export const flipAdminWarehouseApproval = (w_id) => async (dispatch) => {
+  try {
+    dispatch({ type: ADMIN_APPROVAL_TYPES.FLIP_ADMIN_WAREHOUSE_APPROVAL_REQUEST });
+    const response = await superadminService.flipAdminWarehouseApproval(w_id);
+    dispatch({
+      type: ADMIN_APPROVAL_TYPES.FLIP_ADMIN_WAREHOUSE_APPROVAL_SUCCESS,
+      payload: response
+    });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_APPROVAL_TYPES.FLIP_ADMIN_WAREHOUSE_APPROVAL_FAILURE,
+      error: error.message
+    });
+  }
+};
+
+export const flipAdminAccountApproval = (a_id) => async (dispatch) => {
+  try {
+    dispatch({ type: ADMIN_APPROVAL_TYPES.FLIP_ADMIN_ACCOUNT_APPROVAL_REQUEST });
+    const response = await superadminService.flipAdminAccountApproval(a_id);
+    dispatch({
+      type: ADMIN_APPROVAL_TYPES.FLIP_ADMIN_ACCOUNT_APPROVAL_SUCCESS,
+      payload: response
+    });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_APPROVAL_TYPES.FLIP_ADMIN_ACCOUNT_APPROVAL_FAILURE,
+      error: error.message
+    });
+  }
+};
+
+export const blockUnblockAdmin = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: ADMIN_APPROVAL_TYPES.BLOCK_UNBLOCK_ADMIN_REQUEST });
+    const response = await superadminService.blockUnblockAdmin(id);
+    dispatch({
+      type: ADMIN_APPROVAL_TYPES.BLOCK_UNBLOCK_ADMIN_SUCCESS,
+      payload: response
+    });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_APPROVAL_TYPES.BLOCK_UNBLOCK_ADMIN_FAILURE,
+      error: error.message
+    });
   }
 };
