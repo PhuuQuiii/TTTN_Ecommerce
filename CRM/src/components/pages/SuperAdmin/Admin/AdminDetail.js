@@ -21,20 +21,20 @@ const AdminDetail = ({ adminId, admin }) => {
   const { loading, error, data } = useSelector(state => state.superadmin);
   const { business, loading: businessLoading, error: businessError } = useSelector(state => state.business);
   const { bank, loading: bankLoading, error: bankError } = useSelector(state => state.bank);
-    
+
   useEffect(() => {
     if (adminId) {
       console.log("Admin ID in AdminDetail:", adminId);
-        dispatch(getBusinessInfo(adminId));
-        dispatch(getAdmin(adminId)); // Lấy thông tin admin từ API
-        dispatch(fetchBankInfo(adminId));
+      dispatch(getBusinessInfo(adminId));
+      dispatch(getAdmin(adminId)); 
+      dispatch(fetchBankInfo(adminId));
     }
   }, [dispatch, adminId]);
 
   useEffect(() => {
     console.log("Business Info:", business); // Log dữ liệu business khi nó thay đổi
   }, [business]);
-    
+
   useEffect(() => {
     console.log("Bank Info:", bank); // Log dữ liệu bank khi nó thay đổi
   }, [bank]);
@@ -44,7 +44,7 @@ const AdminDetail = ({ adminId, admin }) => {
       dispatch(flipAdminBusinessApproval(business._id));
     }
   };
-    
+
   const handleApproveBank = () => {
     if (bank?._id) {
       dispatch(flipAdminBankApproval(bank._id));
@@ -110,23 +110,28 @@ const AdminDetail = ({ adminId, admin }) => {
         </TabPane>
 
         <TabPane tab="Bank Info" key="bank">
-          {bankLoading ? (
-            <p>Loading...</p>
-          ) : bankError ? (
-            <p>Error: {bankError.msg}</p>
+        {bankLoading ? (
+              <p>Loading...</p>
+          ) : bankError.msg ? (
+              <p>Error: {bankError.msg}</p>
+          ) : bank ? (
+              <>
+                  <p><strong>Account Holder:</strong> {bank.data.accountHolder ?? "N/A"}</p>
+                  <p><strong>Account Number:</strong> {bank.data.accountNumber}</p>
+                  <p><strong>Bank Name:</strong> {bank.data.bankName}</p>
+                  <p><strong>Branch Name:</strong> {bank.data.branchName}</p>
+                  <p><strong>Routing Number:</strong> {bank.data.routingNumber}</p>
+                  <p><strong>Cheque Copy:</strong>
+                  <img src={`${process.env.REACT_APP_SERVER_URL}/uploads/${bank.data.chequeCopy}`} alt="Cheque Copy"
+                    // style={{ width: '200px', height: 'auto' }}
+                  /></p>
+                  <p><strong>Verification Status:</strong> {bank.data.isVerified ? 'Verified' : 'Not Verified'}</p>
+                  {!bank.data.isVerified && (
+                    <button onClick={handleApproveBank}>Approve Bank</button>
+                  )}
+              </>
           ) : (
-            <>
-              <p>
-                <strong>Bank Name:</strong> {bank?.bankName}
-              </p>
-              <p>
-                <strong>Verification Status:</strong>{' '}
-                {bank?.isVerified ? 'Verified' : 'Not Verified'}
-              </p>
-              {!bank?.isVerified && (
-                <button onClick={handleApproveBank}>Approve Bank</button>
-              )}
-            </>
+              <p>No bank data available</p>
           )}
         </TabPane>
 
@@ -170,19 +175,19 @@ AdminDetail.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-    admin: state.superadmin.admin, // Lấy thông tin admin từ Redux store
-    business: state.business.business,
-    businessLoading: state.business.loading,
-    businessError: state.business.error,
-    bank: state.bank.bank,
-    bankLoading: state.bank.loading,
-    bankError: state.bank.error
+  admin: state.superadmin.admin, // Lấy thông tin admin từ Redux store
+  business: state.business.business,
+  businessLoading: state.business.loading,
+  businessError: state.business.error,
+  bank: state.bank.bank,
+  bankLoading: state.bank.loading,
+  bankError: state.bank.error
 });
 
 const mapDispatchToProps = {
-    getBusinessInfo,
-    getAdmin,
-    fetchBankInfo,
+  getBusinessInfo,
+  getAdmin,
+  fetchBankInfo,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminDetail);

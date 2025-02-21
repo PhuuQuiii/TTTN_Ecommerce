@@ -179,9 +179,8 @@ exports.getBusinessInfo = async (req, res) => {
             return res.status(404).json({ error: "No business information." });
         }
 
-        console.log("Business Info from DB:", businessinfo);
 
-        // Nếu muốn gửi ảnh với URL đầy đủ
+        // gửi ảnh với URL đầy đủ
         const baseUrl = process.env.SERVER_URL || "http://localhost:3001";
         const formattedData = {
             ...businessinfo._doc,
@@ -269,7 +268,7 @@ exports.businessinfo = async (req, res) => {
 
 
 exports.getBankInfo = async (req, res) => {
-    let bankinfo = await AdminBank.findOne({ admin: req.profile._id }).populate('chequeCopy')
+    let bankinfo = await AdminBank.findOne({ admin: req.profile._id })
     if (!bankinfo) {
         return res.status(404).json({ error: "No bank information." })
     }

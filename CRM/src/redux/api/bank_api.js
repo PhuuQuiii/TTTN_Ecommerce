@@ -8,9 +8,10 @@ export class BankService {
     return data;
   }
 
-  getBankInfo(id) {
+  async getBankInfo(id) {
     let url = `/admin/bank/${id}`;
-    let data = getService(url);
+    const data = await getService(url);
     return data;
-  }
+}
+
 }
