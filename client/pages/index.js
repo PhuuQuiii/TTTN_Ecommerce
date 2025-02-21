@@ -3,8 +3,8 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import MainCarousel from "../src/Components/Carousel";
 import ProductSlider from "../src/Components/ProductSlider";
 import SliderHeader from "../src/Components/SliderHeader";
-// import Popular from "../src/Components/Popular";
-// import LatestSLider from "../src/Components/LatestSlider";
+import Popular from "../src/Components/Popular";
+import LatestSLider from "../src/Components/LatestSlider";
 import initialize from "../utils/initialize";
 import actions from "../redux/actions";
 import Layout from "../src/Components/Layout";
@@ -67,7 +67,7 @@ const Index = (props) => {
         </Row>
         <div className="container">
           {
-            !isEmpty(allProducts.featuredProducts?.products) && (
+            !isEmpty(allProducts.featuredProducts?.products) && 
               <>
                 <SliderHeader
                   headTitle="Featured Products"
@@ -76,9 +76,9 @@ const Index = (props) => {
                 />
                 <ProductSlider data={allProducts.featuredProducts} sliderName="featured" />
               </>
-            )
+            
           }
-          {/* <section className="latest-popular">
+          <section className="latest-popular">
             <Row>
               <Col lg={12} xs={24} md={12}>
                 <Popular data={allProducts.latestProducts} />
@@ -87,7 +87,7 @@ const Index = (props) => {
                 <LatestSLider data={allProducts.latestProducts} />
               </Col>
             </Row>
-          </section> */}
+          </section>
           {
             !isEmpty(allProducts.trendingProducts?.products) &&
             <>
