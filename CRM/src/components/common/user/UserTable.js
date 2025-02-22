@@ -7,12 +7,14 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 const UserTable = ({ getUsers, blockUnblockUser, multiLoading, users, totalCount }) => {
     const [pagination, setPagination] = useState({
         current: 1,
-        pageSize: 5,
+        pageSize: 10,
         total: 0,
         pageSizeOptions: [5, 10, 15, 20, 50, 100],
         showQuickJumper: true,
         showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`
     });
+    const [searchText, setSearchText] = useState('');
+    const [filteredUsers, setFilteredUsers] = useState(users);
     const searchInput = useRef(null);
 
     useEffect(() => {
@@ -26,21 +28,26 @@ const UserTable = ({ getUsers, blockUnblockUser, multiLoading, users, totalCount
         getUsers({ page: pagination.current, perPage: pagination.pageSize });
     }, [pagination.current, pagination.pageSize]);
 
-    const handleUserTableChange = (pagination, filters, sorter) => {
+    useEffect(() => {
+        setFilteredUsers(users.filter(user => user.name.toLowerCase().includes(searchText.toLowerCase())));
+    }, [searchText, users]);
+
+    const handleUserTableChange = (pagination, filters) => {
         setPagination((prev) => ({
             ...prev,
             current: pagination.current,
             pageSize: pagination.pageSize
         }));
-        getUsers({ page: pagination.current, perPage: pagination.pageSize, keyword: filters.name?.[0], status: filters.status?.[0] });
     };
 
-    const handleSearch = (selectedKeys, confirm, dataIndex) => {
-        confirm();
-    };
+    // const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    //     confirm();
+    //     setSearchText(selectedKeys[0]);
+    // };
 
     const handleReset = clearFilters => {
         clearFilters();
+        setSearchText('');
     };
 
     // const getUserSearchProps = dataIndex => ({
@@ -76,17 +83,17 @@ const UserTable = ({ getUsers, blockUnblockUser, multiLoading, users, totalCount
     //             setTimeout(() => searchInput.current.select(), 100);
     //         }
     //     },
-    //     render: user => user.name
+    //     render: text => text
     // });
 
     const columns = useMemo(() => [
-        // {
-        //     title: 'User',
-        //     dataIndex: '',
-        //     key: 'user',
-        //     width: '30%',
-        //     ...getUserSearchProps('')
-        // },
+        {
+            title: 'User',
+            dataIndex: 'name',
+            key: 'user',
+            width: '30%',
+            // ...getUserSearchProps('name')
+        },
         {
             title: 'Email',
             dataIndex: 'email',
@@ -108,7 +115,7 @@ const UserTable = ({ getUsers, blockUnblockUser, multiLoading, users, totalCount
         },
         {
             title: 'Status',
-            dataIndex: '',
+            dataIndex: 'isBlocked',
             key: 'status',
             filterMultiple: false,
             filters: [
@@ -116,8 +123,8 @@ const UserTable = ({ getUsers, blockUnblockUser, multiLoading, users, totalCount
                 { text: 'Blocked', value: 'blocked' },
                 { text: 'Active', value: 'active' },
             ],
-            render: user => {
-                if (user.isBlocked) return (<span className="badge badge-pill badge-danger">Blocked</span>);
+            render: isBlocked => {
+                if (isBlocked) return (<span className="badge badge-pill badge-danger">Blocked</span>);
                 return (<span className="badge badge-pill badge-success">Active</span>);
             },
             width: '10%',
@@ -150,7 +157,7 @@ const UserTable = ({ getUsers, blockUnblockUser, multiLoading, users, totalCount
         <AntdUserTable
             columns={columns}
             rowKey={record => record._id}
-            dataSource={users}
+            dataSource={filteredUsers}
             pagination={pagination}
             loading={multiLoading}
             onChange={handleUserTableChange}
