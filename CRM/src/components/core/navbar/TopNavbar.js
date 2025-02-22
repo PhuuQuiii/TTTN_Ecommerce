@@ -21,7 +21,7 @@ const TopNavbar = ({ signOut,user }) => {
 
 			<div className="navbar-collapse collapse">
 				<ul className="navbar-nav ml-auto">
-					<li className="nav-item dropdown">
+					{/* <li className="nav-item dropdown">
 						<Link className="nav-icon dropdown-toggle" to='' id="messagesDropdown" data-toggle="dropdown">
 							<div className="position-relative">
 								<i className="align-middle" data-feather="message-circle"></i>
@@ -88,7 +88,7 @@ const TopNavbar = ({ signOut,user }) => {
 								<Link to='' className="text-muted">Show all messages</Link>
 							</div>
 						</div>
-					</li>
+					</li> */}
 					<NotificationBar/>
 					{/* <li className="nav-item dropdown">
 							<Link className="nav-flag dropdown-toggle" to='' id="languageDropdown" data-toggle="dropdown">

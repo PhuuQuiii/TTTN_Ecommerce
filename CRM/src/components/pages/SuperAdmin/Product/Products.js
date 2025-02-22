@@ -1,11 +1,13 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { getProducts } from '../../../../redux/actions/superadmin_action'
-import { getProduct, deleteProduct} from '../../../../redux/actions/product_actions'
+import PropTypes from 'prop-types';
+import React from 'react';
+import { connect } from 'react-redux';
+import { deleteProduct, getProduct } from '../../../../redux/actions/product_actions';
+import { getProducts } from '../../../../redux/actions/superadmin_action';
 import ProductTable from '../../../common/product/ProductTable';
+
 const Products = ({ getProduct, getProducts, deleteProduct, multiLoading, products, totalCount, superadmin }) => {
-    return <ProductTable
+    return (
+        <ProductTable
             getProduct={getProduct}
             getProducts={getProducts}
             deleteProduct={deleteProduct}
@@ -13,8 +15,9 @@ const Products = ({ getProduct, getProducts, deleteProduct, multiLoading, produc
             products={products}
             totalCount={totalCount}
             user={superadmin}
-    />
-}
+        />
+    );
+};
 
 Products.propTypes = {
     superadmin: PropTypes.object,
@@ -24,12 +27,13 @@ Products.propTypes = {
     getProduct: PropTypes.func.isRequired,
     getProducts: PropTypes.func.isRequired,
     deleteProduct: PropTypes.func,
-}
+};
+
 const mapStateToProps = (state) => ({
     superadmin: state.auth.authUser,
     products: state.product.products,
     multiLoading: state.product.multiLoading,
     totalCount: state.product.totalCount,
-})
+});
 
-export default connect(mapStateToProps, { getProducts, getProduct, deleteProduct })(Products)
+export default connect(mapStateToProps, { getProducts, getProduct, deleteProduct })(Products);
