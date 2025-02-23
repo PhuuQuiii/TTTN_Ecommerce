@@ -13,6 +13,7 @@ import {
 } from '../../../../redux/actions/superadmin_action';
 import { getBusinessInfo } from '../../../../redux/actions/business_actions';
 import { fetchBankInfo } from '../../../../redux/actions/bank_actions';
+import { fetchWareHouseInfo } from '../../../../redux/actions/warehouse_actions';
 
 const { TabPane } = Tabs;
 
@@ -21,6 +22,7 @@ const AdminDetail = ({ adminId, admin }) => {
   const { loading, error, data } = useSelector(state => state.superadmin);
   const { business, loading: businessLoading, error: businessError } = useSelector(state => state.business);
   const { bank, loading: bankLoading, error: bankError } = useSelector(state => state.bank);
+  const { warehouse, loading: warehouseLoading, error: warehouseError } = useSelector(state => state.warehouse);
 
   useEffect(() => {
     if (adminId) {
@@ -28,6 +30,7 @@ const AdminDetail = ({ adminId, admin }) => {
       dispatch(getBusinessInfo(adminId));
       dispatch(getAdmin(adminId)); 
       dispatch(fetchBankInfo(adminId));
+      dispatch(fetchWareHouseInfo(adminId));
     }
   }, [dispatch, adminId]);
 
@@ -38,6 +41,10 @@ const AdminDetail = ({ adminId, admin }) => {
   useEffect(() => {
     console.log("Bank Info:", bank); // Log dữ liệu bank khi nó thay đổi
   }, [bank]);
+
+  useEffect(() => {
+    console.log("Warehouse Info:", warehouse); // Log dữ liệu warehouse khi nó thay đổi
+  }, [warehouse]);
 
   const handleApproveBusiness = () => {
     if (business?._id) {
@@ -52,7 +59,9 @@ const AdminDetail = ({ adminId, admin }) => {
   };
 
   const handleApproveWarehouse = () => {
-    dispatch(flipAdminWarehouseApproval(adminId));
+    if (warehouse?._id) {
+      dispatch(flipAdminWarehouseApproval(warehouse._id));
+    }
   };
 
   const handleApproveAccount = () => {
@@ -138,15 +147,24 @@ const AdminDetail = ({ adminId, admin }) => {
         </TabPane>
 
         <TabPane tab="Warehouse Info" key="warehouse">
-          <p>
-            <strong>Address:</strong> {admin?.adminWareHouse?.address},{' '}
-            {admin?.adminWareHouse?.city}
-          </p>
-          <p>
-            <strong>Verification Status:</strong>{' '}
-            {admin?.adminWareHouse?.isVerified ? 'Verified' : 'Not Verified'}
-          </p>
-          <button onClick={handleApproveWarehouse}>Approve Warehouse</button>
+          {warehouseLoading ? (
+            <p>Loading...</p>
+          ) : warehouseError.msg ? (
+            <p>Error: {warehouseError.msg}</p>
+          ) : warehouse ? (
+            <>
+              <p><strong>Name:</strong> {warehouse.name}</p>
+              <p><strong>Address:</strong> {warehouse.address}</p>
+              <p><strong>City:</strong> {warehouse.city}</p>
+              <p><strong>Phone Number:</strong> {warehouse.phoneno}</p>
+              <p><strong>Verification Status:</strong> {warehouse.isVerified ? 'Verified' : 'Not Verified'}</p>
+              {!warehouse.isVerified && (
+                <button onClick={handleApproveWarehouse}>Approve Warehouse</button>
+              )}
+            </>
+          ) : (
+            <p>No warehouse information available</p>
+          )}
         </TabPane>
 
         <TabPane tab="Overall Account" key="account">
