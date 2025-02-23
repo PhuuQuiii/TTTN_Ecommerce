@@ -10,7 +10,7 @@ export const fetchBankInfo = (bankId) => async dispatch => {
     console.log("Bank API Response:", response);
     dispatch({
       type: BANK_TYPES.GET_BANK_INFO,
-      payload: response
+      payload: response.data
     });
   } catch (error) {
     console.error("Bank API Error:", error);
@@ -28,7 +28,7 @@ export const saveBankInfo = (id, bankInfo) => async dispatch => {
     const response = await bankService.updateBank(bankInfo, id);
     dispatch({
       type: BANK_TYPES.UPDATE_BANK_INFO,
-      payload: response
+      payload: response.data
     });
   } catch (error) {
     dispatch({
