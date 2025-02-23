@@ -197,7 +197,7 @@ const AdminDetail = ({ adminId, admin }) => {
           {warehouseLoading ? (
             <p>Loading...</p>
           ) : warehouseError.msg ? (
-            <p>Error: {warehouseError.msg}</p>
+            <p>{warehouseError.msg}</p>
           ) : warehouse ? (
             <>
               <p><strong>Name:</strong> {warehouse.name}</p>
