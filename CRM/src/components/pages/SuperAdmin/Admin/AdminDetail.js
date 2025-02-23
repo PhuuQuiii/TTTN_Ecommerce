@@ -35,6 +35,10 @@ const AdminDetail = ({ adminId, admin }) => {
   }, [dispatch, adminId]);
 
   useEffect(() => {
+    console.log("Admin:", admin); // Log dữ liệu business khi nó thay đổi
+  }, [admin]);
+
+  useEffect(() => {
     console.log("Business Info:", business); // Log dữ liệu business khi nó thay đổi
   }, [business]);
 
@@ -84,7 +88,50 @@ const AdminDetail = ({ adminId, admin }) => {
         <button onClick={handleBlockUnblockAdmin}>Block/Unblock Admin</button>
       </p>
 
-      <Tabs defaultActiveKey="business">
+      <Tabs defaultActiveKey="account">
+      <TabPane tab="Overall Account" key="account">
+          <p>
+            <strong>Account Status:</strong>{' '}
+            {admin?.isVerified
+              ? `Verified on ${new Date(admin.isVerified).toLocaleString()}`
+              : 'Not Verified'}
+          </p>
+          <p>
+            <strong>Business Info Status:</strong>{' '}
+            {business?.isVerified
+              ? 'Verified'
+              : 'Not Verified'}
+          </p>
+          <p>
+            <strong>Bank Info Status:</strong>{' '}
+            {bank?.isVerified
+              ? 'Verified'
+              : 'Not Verified'}
+          </p>
+          <p>
+            <strong>Warehouse Info Status:</strong>{' '}
+            {warehouse?.isVerified
+              ? 'Verified'
+              : 'Not Verified'}
+          </p>
+          <p>
+            <strong>Email Verification Status:</strong>{' '}
+            {admin?.emailVerifyLink
+              ? 'Not Verified'
+              : 'Verified'}
+          </p>
+          <p>
+            <strong>Account Block Status:</strong>{' '}
+            {admin?.isBlocked
+              ? 'Blocked'
+              : 'Active'}
+          </p>
+          {!admin?.isVerified && (
+            <button onClick={handleApproveAccount}>Approve Account</button>
+          )}
+        </TabPane>
+
+
         <TabPane tab="Business Info" key="business">
           {businessLoading ? (
             <p>Loading...</p>
@@ -167,15 +214,6 @@ const AdminDetail = ({ adminId, admin }) => {
           )}
         </TabPane>
 
-        <TabPane tab="Overall Account" key="account">
-          <p>
-            <strong>Account Status:</strong>{' '}
-            {admin?.isVerified
-              ? `Verified on ${admin?.isVerified}`
-              : 'Not Verified'}
-          </p>
-          <button onClick={handleApproveAccount}>Approve Account</button>
-        </TabPane>
 
         <TabPane tab="Other" key="other">
           <p>Other Info</p>
