@@ -1,24 +1,26 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react'
-import { useHistory } from "react-router-dom";
-import { Table as AntdProductTable, Input, Button, Space, Popconfirm, Avatar, Drawer } from 'antd';
-import Highlighter from 'react-highlight-words';
-import moment from 'moment'
 import { SearchOutlined } from '@ant-design/icons';
-import PropTypes from 'prop-types'
-import ProductDetail from './ProductDetail'
+import { Table as AntdProductTable, Avatar, Button, Drawer, Input, Popconfirm, Space } from 'antd';
+import moment from 'moment';
+import PropTypes from 'prop-types';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useHistory } from "react-router-dom";
+import ProductDetail from './ProductDetail';
+
 const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, products, totalCount, user }) => {
     let history = useHistory();
     const [pagination, setPagination] = useState({
-        defaultPageSize: 5,
+        current: 1,
+        pageSize: 5,
         total: 0,
         pageSizeOptions: [5, 10, 15, 20, 50, 100],
         showQuickJumper: true,
         showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`
-    })
+    });
     // const [searchText, setSearchText] = useState('')
     // const [searchedColumn, setSearchedColumn] = useState('')
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const searchInput = useRef(null);
+
     useEffect(() => {
         setPagination((prev) => {
             if (prev.total !== totalCount) {
@@ -30,25 +32,30 @@ const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, pr
             return prev;
         });
     }, [totalCount]);
-    
-    useEffect(() => {
-        user && getProducts({ id: user._id, page: pagination.current, perPage: pagination.pageSize })
-    }, [user])
 
+    useEffect(() => {
+        user && getProducts({ id: user._id, page: pagination.current, perPage: pagination.pageSize });
+    }, [user, pagination.current, pagination.pageSize, getProducts]);
 
     const handleProductTableChange = (pagination, filters, sorter) => {
+        setPagination((prev) => ({
+            ...prev,
+            current: pagination.current,
+            pageSize: pagination.pageSize
+        }));
+
         if (!sorter.length) {
-            sorter = [sorter]
+            sorter = [sorter];
         }
 
-        let price = sorter.find(s => s.columnKey === 'price')
-        price = price?.order ? price.order === 'ascend' ? 'asc' : 'desc' : ''
+        let price = sorter.find(s => s.columnKey === 'price');
+        price = price?.order ? price.order === 'ascend' ? 'asc' : 'desc' : '';
 
-        let createdAt = sorter.find(s => s.columnKey === 'createdAt')
-        createdAt = createdAt?.order ? createdAt.order === 'ascend' ? 'asc' : 'desc' : ''
+        let createdAt = sorter.find(s => s.columnKey === 'createdAt');
+        createdAt = createdAt?.order ? createdAt.order === 'ascend' ? 'asc' : 'desc' : '';
 
-        user && getProducts({ id: user._id, page: pagination.current, perPage: pagination.pageSize, keyword: filters.product?.[0], createdAt, updatedAt: '', status: filters.status?.[0], price, outofstock: filters.qty?.[0] })
-    }
+        user && getProducts({ id: user._id, page: pagination.current, perPage: pagination.pageSize, keyword: filters.product?.[0], createdAt, updatedAt: '', status: filters.status?.[0], price, outofstock: filters.qty?.[0] });
+    };
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -115,12 +122,13 @@ const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, pr
             //     )
         }
 
-    })
+    });
 
     const openProduct = (product) => {
-        getProduct(product.slug)
-        setIsDrawerOpen(true)
-    }
+        getProduct(product.slug);
+        setIsDrawerOpen(true);
+    };
+
     const filters = useMemo(() => {
         let filters = [
             { text: 'All', value: 'undefined' },
@@ -129,12 +137,12 @@ const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, pr
             { text: 'Rejected', value: 'rejected' },
             { text: 'Deleted', value: 'deleted' },
             { text: 'Featured', value: 'featured' },
-        ]
-        if (user?.role === 'admin') filters.length = 4
-        return filters
-    }, [user])
+        ];
+        if (user?.role === 'admin') filters.length = 4;
+        return filters;
+    }, [user]);
 
-    const isSuperadmin = useMemo(()=>user?.role === 'superadmin'? true : false,[user])
+    const isSuperadmin = useMemo(() => user?.role === 'superadmin' ? true : false, [user]);
 
     const columns = useMemo(() => [
         {
@@ -148,10 +156,8 @@ const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, pr
             title: 'Category',
             dataIndex: 'category',
             render: cat => {
-                let str = cat.map(a => {
-                    return a.displayName
-                })
-                return str.toString()
+                let str = cat.map(a => a.displayName);
+                return str.toString();
             },
             width: '15%',
         },
@@ -163,7 +169,7 @@ const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, pr
             },
             key: 'price',
             render: product => {
-                return <h4 style={{ fontSize: '1.1rem' }}>{`Rs ${product.price.$numberDecimal}`}<span className="period" style={{ fontSize: '0.7rem' }}>{`/${product.discountRate}% discount`}</span></h4>
+                return <h4 style={{ fontSize: '1.1rem' }}>{`Rs ${product.price.$numberDecimal}`}<span className="period" style={{ fontSize: '0.7rem' }}>{`/${product.discountRate}% discount`}</span></h4>;
             },
             width: '15%',
         },
@@ -174,11 +180,11 @@ const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, pr
             filterMultiple: false,
             filters,
             render: product => {
-                if (user?.role === 'superadmin' && product.isDeleted) return (<><span className="badge badge-pill badge-dark">deleted</span><span className="badge badge-pill badge-danger">unverified</span></>)
-                if (product.isRejected) return (<><span className="badge badge-pill badge-warning">rejected</span><span className="badge badge-pill badge-danger">unverified</span></>)
-                if (product.isFeatured) return (<><span className="badge badge-pill badge-secondary">featured</span><span className="badge badge-pill badge-success">verified</span></>)
-                if (!product.isVerified) return (<span className="badge badge-pill badge-danger">unverified</span>)
-                if (product.isVerified) return (<span className="badge badge-pill badge-success">verified</span>)
+                if (user?.role === 'superadmin' && product.isDeleted) return (<><span className="badge badge-pill badge-dark">deleted</span><span className="badge badge-pill badge-danger">unverified</span></>);
+                if (product.isRejected) return (<><span className="badge badge-pill badge-warning">rejected</span><span className="badge badge-pill badge-danger">unverified</span></>);
+                if (product.isFeatured) return (<><span className="badge badge-pill badge-secondary">featured</span><span className="badge badge-pill badge-success">verified</span></>);
+                if (!product.isVerified) return (<span className="badge badge-pill badge-danger">unverified</span>);
+                if (product.isVerified) return (<span className="badge badge-pill badge-success">verified</span>);
             },
             width: '5%',
         },
@@ -192,8 +198,8 @@ const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, pr
                 { text: 'Out of Stock', value: 'yes' },
             ],
             render: product => {
-                if (product.quantity < 1) return (<span className="badge badge-pill badge-dark">Out of Stock</span>)
-                return `${product.quantity}`
+                if (product.quantity < 1) return (<span className="badge badge-pill badge-dark">Out of Stock</span>);
+                return `${product.quantity}`;
             },
             width: '5%',
         },
@@ -216,7 +222,7 @@ const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, pr
                 {user?.role === 'admin' && <button onClick={() => history.push(`/edit-product/${product.slug}`)} className="btn btn-warning btn-sm"><i className="fas fa-pen "></i></button>}
                 <Popconfirm
                     title="Are you sure to delete this product?"
-                    onConfirm={() => deleteProduct(isSuperadmin?product.soldBy._id: product.soldBy, product.slug)}
+                    onConfirm={() => deleteProduct(isSuperadmin ? product.soldBy._id : product.soldBy, product.slug)}
                     okText="Yes"
                     cancelText="No"
                 >
@@ -224,8 +230,7 @@ const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, pr
                 </Popconfirm>
             </>
         },
-    ], []);
-
+    ], [user, filters, getProduct]);
 
     return (
         <>
@@ -233,11 +238,13 @@ const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, pr
                 columns={columns}
                 rowKey={record => record._id}
                 dataSource={products}
-                pagination={pagination}
+                pagination={{
+                    ...pagination,
+                    total: totalCount,
+                }}
                 loading={multiLoading}
                 onChange={handleProductTableChange}
                 size='small'
-            // scroll={{ y: 400 }}
             />
             <Drawer
                 title="Product Detail"
@@ -253,8 +260,9 @@ const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, pr
                     isSuperadmin={isSuperadmin}
                 />}
             </Drawer>
-        </>)
-}
+        </>
+    );
+};
 
 ProductTable.propTypes = {
     user: PropTypes.object,
@@ -264,6 +272,6 @@ ProductTable.propTypes = {
     getProduct: PropTypes.func.isRequired,
     getProducts: PropTypes.func.isRequired,
     deleteProduct: PropTypes.func,
-}
+};
 
-export default ProductTable
+export default ProductTable;

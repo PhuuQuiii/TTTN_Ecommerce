@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import { Carousel, Tabs } from 'antd';
-import { SideBySideMagnifier } from "react-image-magnifiers";
 import parse from 'html-react-parser';
-import ProductStatus from './ProductStatus'
-const { TabPane } = Tabs
+import PropTypes from 'prop-types';
+import React from 'react';
+import { SideBySideMagnifier } from "react-image-magnifiers";
+import { connect } from 'react-redux';
+import ProductStatus from './ProductStatus';
 
+const { TabPane } = Tabs;
 
-export const ProductDetail = ({product, singleLoading, isSuperadmin}) => {
+export const ProductDetail = ({ product, singleLoading, isSuperadmin }) => {
     const contentStyle = {
         height: '170px',
         color: '#fff',
@@ -16,13 +16,13 @@ export const ProductDetail = ({product, singleLoading, isSuperadmin}) => {
         textAlign: 'center',
         background: '#364d79',
     };
+
     return (
         <div className="row">
             <div className="col-xl-5">
                 <Carousel>
                     {
                         product?.images.map(image => (
-
                             <div key={image._id}>
                                 <h3 style={contentStyle}>
                                     <SideBySideMagnifier
@@ -30,7 +30,6 @@ export const ProductDetail = ({product, singleLoading, isSuperadmin}) => {
                                         alwaysInPlace={true}
                                         imageSrc={`${process.env.REACT_APP_SERVER_URL}/uploads/${image.medium}`}
                                         imageAlt="Example"
-                                    // largeImageSrc={`${process.env.REACT_APP_SERVER_URL}/uploads/${image.large}`} // Optional
                                     />
                                 </h3>
                             </div>
@@ -43,26 +42,24 @@ export const ProductDetail = ({product, singleLoading, isSuperadmin}) => {
                     <h2>{product?.name}</h2>
                 </div>
                 <div className="mb-2">
-                    <p><strong>brand:</strong> {product?.brand?.brandName}     <strong>category:</strong> {product?.category?.map(c=>c.displayName).join(', ')}</p>
+                    <p><strong>Brand:</strong> {product?.brand?.brandName} <strong>Category:</strong> {product?.category?.map(c => c.displayName).join(', ')}</p>
                 </div>
                 <div className="mb-2">
-                    <p><strong>tags:</strong> {product?.tags?.join(', ')}</p>
+                    <p><strong>Tags:</strong> {product?.tags?.join(', ')}</p>
                 </div>
-                <ProductStatus isSuperadmin={isSuperadmin} product={product}/>
+                <ProductStatus isSuperadmin={isSuperadmin} product={product} />
             </div>
             <div className="row mb-12">
                 <div className="col-md-12">
                     <div className="my-2">
                         <h6>Highlights:</h6>
                     </div>
-                    {
-                        product && parse(product?.highlights)
-                    }
-                    <hr className="my-2"/>
+                    {product && parse(product?.highlights)}
+                    <hr className="my-2" />
                     <div className="my-2">
                         <h6>Details:</h6>
                     </div>
-                    <Tabs >
+                    <Tabs>
                         <TabPane tab="Description" key="a">
                             {product && parse(product?.description)}
                         </TabPane>
@@ -72,24 +69,21 @@ export const ProductDetail = ({product, singleLoading, isSuperadmin}) => {
                     </Tabs>
                 </div>
             </div>
-            
         </div>
-    )
-}
+    );
+};
 
 ProductDetail.propTypes = {
     product: PropTypes.object,
     singleLoading: PropTypes.bool,
-    isSuperadmin:PropTypes.bool,
-}
+    isSuperadmin: PropTypes.bool,
+};
 
 const mapStateToProps = (state) => ({
     product: state.product.product,
-    singleLoading: state.product.singleLoading
-})
+    singleLoading: state.product.singleLoading,
+});
 
-const mapDispatchToProps = {
-    
-}
+const mapDispatchToProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductDetail)
+export default connect(mapStateToProps, mapDispatchToProps)(ProductDetail);
