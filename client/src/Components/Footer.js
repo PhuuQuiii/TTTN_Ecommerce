@@ -20,17 +20,17 @@ const Footer = () => {
       <Row>
         <Col lg={8} xs={24} className="company-info">
           <div className="logo">
-            <img src="/images/logo.png" />
+            <img src="/images/logo_white.png" />
           </div>
           <div className="company-details">
             We are a team of designers and developers that create high quality
             Magento, Wordpress, Prestashop, Opencart
           </div>
           <div className="comp-address">
-            ADDRESS: 6688Princess Road, London, Greater London
+            ADDRESS: Vietnam Aviation Academy, Ho Chi Minh City, Vietnam
           </div>
-          <div className="comp-phone">PHONE: (012) 800 456 789-987</div>
-          <div className="comp-email">EMAIL: Contact@plazathemes.com</div>
+          <div className="comp-phone">PHONE: (099) 8776 543 21</div>
+          <div className="comp-email">EMAIL: Contact@quindigo.com</div>
         </Col>
         <Col lg={4} xs={24} md={12} className="customer-care footer-ul-design">
           <h4>Customer Care</h4>

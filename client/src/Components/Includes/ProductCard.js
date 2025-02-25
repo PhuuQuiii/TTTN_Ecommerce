@@ -1,17 +1,16 @@
-import React, { Component, useEffect, useState } from "react";
-import { Tooltip } from "antd";
-import { Popconfirm } from "antd";
-import { connect, useDispatch, useSelector } from "react-redux";
+import { Popconfirm, Tooltip } from "antd";
 import { withRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 //includes
-import QuickViewModal from "./QuickViewModal";
 import Link from "next/link";
-import actions from "../../../redux/actions";
 import StarRatings from "react-star-ratings";
-import { IMAGE_BASE_URL } from "../../../utils/constants";
+import actions from "../../../redux/actions";
 import { previousQuery } from "../../../utils/common";
+import { IMAGE_BASE_URL } from "../../../utils/constants";
 import { singleProductCardSkeleton } from "../../../utils/skeletons";
+import QuickViewModal from "./QuickViewModal";
 
 const ProductCard = (props) => {
   const dispatch = useDispatch();
@@ -269,7 +268,7 @@ const ProductCard = (props) => {
               </div>
               <div className="prod-name medium-line">{productData.name}</div>
               <div className="prod-price large-line">
-                {!checkSkeleton && "Rs"} {productData.price.$numberDecimal}
+                {!checkSkeleton && "vnđ"} {productData.price.$numberDecimal}
               </div>
             </div>) : (
               <Link
@@ -316,7 +315,7 @@ const ProductCard = (props) => {
                     </div>
                     <div className="prod-name medium-line">{productData.name}</div>
                     <div className="prod-price large-line">
-                      {!checkSkeleton && "Rs"} {productData.price.$numberDecimal}
+                      {!checkSkeleton && "vnđ"} {productData.price.$numberDecimal}
                     </div>
                   </div>
                 </a>

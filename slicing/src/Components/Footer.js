@@ -15,10 +15,10 @@ class Footer extends Component {
               Magento, Wordpress, Prestashop, Opencart
             </div>
             <div className="comp-address">
-              ADDRESS: 6688Princess Road, London, Greater London
+            ADDRESS: Vietnam Aviation Academy, Ho Chi Minh City, Vietnam
             </div>
-            <div className="comp-phone">PHONE: (012) 800 456 789-987</div>
-            <div className="comp-email">EMAIL: Contact@plazathemes.com</div>
+            <div className="comp-phone">PHONE: (099) 8776 543 21</div>
+            <div className="comp-email">EMAIL: Contact@quindigo.com</div>
           </Col>
           <Col lg={4} xs={24} md={12} className="customer-care footer-ul-design">
             <h4>Customer Care</h4>

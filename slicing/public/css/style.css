@@ -68,11 +68,11 @@ body.overflow {
   color: #fff;
 }
 .action-btn.action-btn-add {
-  color: #48b5dc;
-  border-color: #48b5dc;
+  color: #18253f;
+  border-color: #18253f;
 }
 .action-btn.action-btn-add:hover {
-  background-color: #48b5dc;
+  background-color: #18253f;
   color: #fff;
 }
 
@@ -221,20 +221,20 @@ button {
   border: 0px;
 }
 button.primary {
-  background-color: #61ce70;
+  background-color: #1f1f1f;
   color: #fff;
 }
 button.primary:hover {
-  color: #61ce70;
-  border-color: #61ce70;
+  color: #1f1f1f;
+  border-color: #1f1f1f;
 }
 button.secondary {
-  background-color: #48b5dc;
+  background-color: #18253f;
   color: #fff;
 }
 button.secondary:hover {
-  color: #48b5dc;
-  border-color: #48b5dc;
+  color: #18253f;
+  border-color: #18253f;
 }
 
 .product-slider {
@@ -355,7 +355,7 @@ button.secondary:hover {
   cursor: pointer;
 }
 .my-profile .profile-menu ul li:hover {
-  color: #61ce70;
+  color: #1f1f1f;
 }
 .my-profile .menu-details h3 {
   margin-bottom: 20px;
@@ -483,7 +483,7 @@ button.secondary:hover {
   border-bottom: 0px;
 }
 .main-header .menu-logo .menu .menu-list ul.category li:hover {
-  background-color: #48b5dc;
+  background-color: #18253f;
   color: #fff;
 }
 .main-header .menu-logo .menu .menu-list ul.category li:hover ul.sub-category,
@@ -627,7 +627,7 @@ button.secondary:hover {
   width: 10px !important;
 }
 .ant-carousel .slick-dots li.slick-active button {
-  background: #61ce70 !important;
+  background: #1f1f1f !important;
   opacity: 1 !important;
 }
 .ant-carousel .slick-dots li button {
@@ -742,7 +742,7 @@ button.secondary:hover {
   padding-left: 5px;
 }
 .product-card .card-body .prod-price {
-  color: #61ce70;
+  color: #1f1f1f;
 }
 
 .popular-slider {
@@ -950,7 +950,7 @@ button.secondary:hover {
   cursor: pointer;
 }
 .product-list-view .pd-details .name-price .name .pd-name:hover {
-  color: #61ce70;
+  color: #1f1f1f;
 }
 .product-list-view .pd-details .name-price .name .sold-by {
   color: #8d94ac;
@@ -984,7 +984,7 @@ button.secondary:hover {
   font-size: 13px;
 }
 .product-list-view .pd-details .name-price .price .price-disc .disc {
-  color: #48b5dc;
+  color: #18253f;
 }
 .product-list-view .pd-details .qty {
   display: flex;
@@ -1030,8 +1030,8 @@ button.secondary:hover {
   margin-top: 15px;
 }
 .product-list-view .pd-details .delete-product button {
-  color: #61ce70;
-  border-color: #61ce70;
+  color: #1f1f1f;
+  border-color: #1f1f1f;
 }
 @media screen and (max-width: 767px) {
   .product-list-view .pd-details .delete-product button {
@@ -1039,7 +1039,7 @@ button.secondary:hover {
   }
 }
 .product-list-view .pd-details .delete-product button:hover {
-  background: #61ce70;
+  background: #1f1f1f;
   color: #fff;
 }
 
@@ -1115,8 +1115,8 @@ button.secondary:hover {
   color: #f7f7f7;
 }
 .product-lists .sorting-page .view-sort .type-icon .list-icon:first-child {
-  color: #61ce70;
-  border-color: #61ce70;
+  color: #1f1f1f;
+  border-color: #1f1f1f;
 }
 .product-lists .sorting-page .page-status {
   font-size: 12px;
@@ -1208,7 +1208,7 @@ button.secondary:hover {
   cursor: pointer;
 }
 .sticky-filter .filter-type.apply-type {
-  color: #48b5dc;
+  color: #18253f;
 }
 .sticky-filter .filter-type.removeBorder {
   border-right: 0px;
@@ -1327,7 +1327,7 @@ button.secondary:hover {
 }
 .product-specs .price-specs .old-new-price .old-price {
   text-decoration: line-through;
-  color: #61ce70;
+  color: #1f1f1f;
 }
 .product-specs .price-specs .old-new-price .old-price span {
   font-size: 16px;
@@ -1339,7 +1339,7 @@ button.secondary:hover {
 }
 .product-specs .price-specs .old-new-price .new-price .price {
   font-size: 28px;
-  color: #61ce70;
+  color: #1f1f1f;
 }
 .product-specs .price-specs .old-new-price .new-price .discount {
   margin-left: 15px;
@@ -1467,7 +1467,7 @@ button.secondary:hover {
 }
 .other-details .q-a-tab .qns-ans-section .qns-details .qns .q-icon,
 .other-details .q-a-tab .qns-ans-section .qns-details .ans .q-icon {
-  background-color: #48b5dc;
+  background-color: #18253f;
   color: #fff;
   padding: 3px 7px;
   font-size: 10px;
@@ -1487,7 +1487,7 @@ button.secondary:hover {
   width: 0;
   height: 0;
   border-right: 5px solid transparent;
-  border-top: 5px solid #48b5dc;
+  border-top: 5px solid #18253f;
   position: absolute;
   bottom: -5px;
   left: 0px;
@@ -1556,7 +1556,7 @@ button.secondary:hover {
 }
 .other-details .details-reviews .all-reviews .user-review .reviewd-by .ver {
   margin-left: 10px;
-  color: #61ce70;
+  color: #1f1f1f;
 }
 .other-details .details-reviews .all-reviews .user-review .reviewd-by .ver img {
   height: 20px;
@@ -1704,9 +1704,9 @@ button.secondary:hover {
 }
 .order-shipping .order-summary .price-details .order-procced button {
   width: 100%;
-  background: #48b5dc;
+  background: #18253f;
   color: #fff;
-  border: #48b5dc;
+  border: #18253f;
 }
 
 /*# sourceMappingURL=style.css.map */

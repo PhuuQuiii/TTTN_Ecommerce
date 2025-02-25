@@ -1,14 +1,14 @@
+import { Pagination } from "antd";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Pagination } from "antd";
 
 //includes
 import ProductListView from "../../Components/ProductListView";
 
 // utils
 import {
-  scrollToTop,
-  previousQuery,
+    previousQuery,
+    scrollToTop,
 } from "../../../utils/common";
 import { myCartsSkeleton } from "../../../utils/skeletons";
 
@@ -87,7 +87,7 @@ const CartItems = (props) => {
               <>
                 {/* <span className="delivery-date">Get By: 25 - 28 Aug 2019</span> */}
                 <span className="price">
-                  Cost: Dong {props.order?.getShippingChargeResp}
+                  Cost: vnđ {props.order?.getShippingChargeResp}
                 </span>
               </>
             ) : (
@@ -104,7 +104,7 @@ const CartItems = (props) => {
           <div className="title">
             <h4>My Cart ({inStockProducts?.totalCount} Items)</h4>
             <div className="price">
-              Total: Dong {inStockProducts?.totalAmount?.toFixed(2)}
+              Total: vnđ {inStockProducts?.totalAmount?.toFixed(2)}
             </div>
           </div>
         }
@@ -135,7 +135,7 @@ const CartItems = (props) => {
                 Out Of Stock ({noStockProducts?.totalCount} Items)
             </h4>
               <div className="price">
-                Total: Dong {noStockProducts?.totalAmount?.toFixed(2)}
+                Total: vnđ {noStockProducts?.totalAmount?.toFixed(2)}
               </div>
             </div>
           }

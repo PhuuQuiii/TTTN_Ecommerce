@@ -1,19 +1,18 @@
-import React, { Component } from "react";
-import { Button, Input } from "antd";
 import {
-  PhoneOutlined,
-  EnvironmentOutlined,
-  MailOutlined,
+    EnvironmentOutlined,
+    MailOutlined,
+    PhoneOutlined,
 } from "@ant-design/icons";
-import { getDiscountedPrice, openNotification } from "../../../utils/common";
+import { Button } from "antd";
+import { isEmpty } from "lodash";
 import Link from "next/link";
-import { STORE_CHECKOUT_ITEMS } from "../../../redux/types";
+import { withRouter } from "next/router";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import actions from "../../../redux/actions";
-import { withRouter } from "next/router";
-import initialize from "../../../utils/initialize";
+import { STORE_CHECKOUT_ITEMS } from "../../../redux/types";
+import { getDiscountedPrice } from "../../../utils/common";
 import EditAddressModal from "../../Components/EditAddressModal";
-import { isEmpty } from "lodash";
 
 const shortid = require('shortid');
 
@@ -176,7 +175,7 @@ class OrderSummary extends Component {
             <div className="price-cover">
               <div className="ti-pr">
                 <div className="ti">Cart Total</div>
-                <div className="pr">Rs {totalCheckoutItems.toFixed(2)}</div>
+                <div className="pr">vnđ {totalCheckoutItems.toFixed(2)}</div>
               </div>
               {/* <div className="ti-pr">
                 <div className="ti">Cart Discount</div>
@@ -188,7 +187,7 @@ class OrderSummary extends Component {
               </div> */}
               <div className="ti-pr">
                 <div className="ti">Delivery Charges</div>
-                <div className="pr">Rs {deliveryCharges}</div>
+                <div className="pr">vnđ {deliveryCharges}</div>
               </div>
             </div>
             {/* <div className="cupon-voucher">
@@ -199,7 +198,7 @@ class OrderSummary extends Component {
               <div className="ti-pr">
                 <div className="ti">Total</div>
                 <div className="pr">
-                  Dong {(totalCheckoutItems + deliveryCharges).toFixed(2)}
+                  vnđ {(totalCheckoutItems + deliveryCharges).toFixed(2)}
                 </div>
               </div>
             </div>

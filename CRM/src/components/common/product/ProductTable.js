@@ -169,7 +169,7 @@ const ProductTable = ({ getProduct, getProducts, deleteProduct, multiLoading, pr
             },
             key: 'price',
             render: product => {
-                return <h4 style={{ fontSize: '1.1rem' }}>{`Rs ${product.price.$numberDecimal}`}<span className="period" style={{ fontSize: '0.7rem' }}>{`/${product.discountRate}% discount`}</span></h4>;
+                return <h4 style={{ fontSize: '1.1rem' }}>{`vnđ ${product.price.$numberDecimal}`}<span className="period" style={{ fontSize: '0.7rem' }}>{`/${product.discountRate}% discount`}</span></h4>;
             },
             width: '15%',
         },

@@ -11,6 +11,6 @@ h1 - 42
 border-color - #D1D1D1
 background-color - #F1F1F1
 
-primary color - #48b5dc
+primary color - #18253f
 secondary color - #f2c900
-tertiary color - #61ce70
+tertiary color - #1f1f1f

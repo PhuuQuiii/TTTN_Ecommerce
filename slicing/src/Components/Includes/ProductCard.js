@@ -1,5 +1,5 @@
-import React, { Component } from "react";
 import { Tooltip } from "antd";
+import React, { Component } from "react";
 
 //includes
 import QuickViewModal from "./QuickViewModal";
@@ -95,7 +95,7 @@ class ProductCard extends Component {
               </div>
             </div>
             <div className="prod-name">Auctor Sem Argu</div>
-            <div className="prod-price">Rs 1500</div>
+            <div className="prod-price">vnđ 1500</div>
           </div>
         </div>
       </div>

@@ -1,17 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Pagination } from "antd";
 
 //includes
 import actions from "../../../redux/actions";
-import ProductListView from "../../Components/ProductListView";
 import {
-  getDiscountedPrice,
-  scrollToTop,
-  openNotification,
+    scrollToTop
 } from "../../../utils/common";
-import { times } from "lodash";
-import next from "next";
+import ProductListView from "../../Components/ProductListView";
 
 class CheckoutItems extends Component {
   state = {
@@ -97,7 +92,7 @@ class CheckoutItems extends Component {
               <>
                 {/* <span className="delivery-date">Get By: 25 - 28 Aug 2019</span> */}
                 <span className="price">
-                  Cost: Dong {this.props.order?.getShippingChargeResp}
+                  Cost: vnđ {this.props.order?.getShippingChargeResp}
                 </span>
               </>
             ) : (
@@ -111,7 +106,7 @@ class CheckoutItems extends Component {
           <div className="title">
             <h4>My Cart ({this.state.listItems?.totalCount} Items)</h4>
             <div className="price">
-              Total: Dong {this.props.cart.checkoutItems?.totalAmount || this.state.listItems?.totalAmount?.toFixed(2)}
+              Total: vnđ {this.props.cart.checkoutItems?.totalAmount || this.state.listItems?.totalAmount?.toFixed(2)}
             </div>
           </div>
           <div className="items-list">

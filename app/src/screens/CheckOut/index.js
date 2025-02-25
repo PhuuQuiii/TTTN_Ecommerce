@@ -1,26 +1,22 @@
 import React, { Component } from "react";
 
 import {
-  TouchableWithoutFeedback,
   ScrollView,
-  TouchableOpacity,
+  TouchableWithoutFeedback
 } from "react-native-gesture-handler";
 
+import { Alert, Image, StyleSheet, Text, View } from "react-native";
 import {
-  Avatar,
-  Card,
-  Title,
-  Paragraph,
   Appbar,
   Button,
+  Card,
   TextInput,
-  TouchableRipple,
+  TouchableRipple
 } from "react-native-paper";
-import { View, Text, Image, StyleSheet, Alert } from "react-native";
 
+import { MaterialIcons } from "@expo/vector-icons";
 import Constants from "../../constants/Constants";
 import { productData } from "../../utils/mock";
-import { MaterialIcons } from "@expo/vector-icons";
 
 const productDatas = [productData[0]];
 
@@ -253,7 +249,7 @@ export class CheckOutScreen extends Component {
                   justifyContent: "center",
                 }}
               >
-                <Text style={{ fontSize: 13 }}>{"Total: Rs 199"}</Text>
+                <Text style={{ fontSize: 13 }}>{"Total: vnđ 199"}</Text>
               </View>
               <View style={{ flex: 0.7, ...styles.footer }}>
                 <Button

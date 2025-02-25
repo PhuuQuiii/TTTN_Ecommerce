@@ -89,7 +89,7 @@ export default function superadminReducer(state = initialState, action) {
     case ADMIN_APPROVAL_TYPES.GET_USERS_SUCCESS:
       return {
         ...state,
-        users: action.payload.users, // Đảm bảo payload.users chứa danh sách người dùng
+        users: action.payload.users, // vnđảm bảo payload.users chứa danh sách người dùng
         totalCount: action.payload.totalCount, // Cập nhật totalCount nếu cần
       };
     case ADMIN_APPROVAL_TYPES.GET_USER_SUCCESS:

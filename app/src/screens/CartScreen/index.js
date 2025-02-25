@@ -2,27 +2,27 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-  TouchableWithoutFeedback,
   ScrollView,
+  TouchableWithoutFeedback,
 } from "react-native-gesture-handler";
 
+import { Image, StyleSheet, Text, ToastAndroid, View } from "react-native";
 import {
-  Card,
   Appbar,
   Button,
+  Card,
   Checkbox,
   TouchableRipple,
 } from "react-native-paper";
-import { View, Text, Image, StyleSheet, ToastAndroid } from "react-native";
 
-import Constants from "../../constants/Constants";
 import {
-  getCartProducts,
   editCartQty,
+  getCartProducts,
 } from "../../../redux/actions/cartActions";
 import { getProductDetails } from "../../../redux/actions/productActions";
-import Skeleton from "../../components/shared/Skeleton";
 import { getDiscountedAmount, SERVER_BASE_URL } from "../../../utils/common";
+import Skeleton from "../../components/shared/Skeleton";
+import Constants from "../../constants/Constants";
 
 const CartScreen = (props) => {
   const dispatch = useDispatch();
@@ -280,8 +280,8 @@ const CartScreen = (props) => {
                   justifyContent: "center",
                 }}
               >
-                <Text style={{ fontSize: 10 }}>{"Shipping: Rs 0"}</Text>
-                <Text style={{ fontSize: 13 }}>{"Total: Rs 0"}</Text>
+                <Text style={{ fontSize: 10 }}>{"Shipping: vnđ 0"}</Text>
+                <Text style={{ fontSize: 13 }}>{"Total: vnđ 0"}</Text>
               </View>
               <View style={{ flex: 0.7, ...styles.footer }}>
                 <Button
