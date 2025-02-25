@@ -103,7 +103,7 @@ class ProductSpecs extends Component {
         {
           !_.isEmpty(product) &&
           <AllHelmet
-            title={`${product.name} | KINDEEM`}
+            title={`${product.name} | QUINDIGO`}
             desc={`${description}`}
             url={`http://sthautsav.com.np/products/${product.slug}`}
             img={`http://sthautsav.com.np:3001/uploads/${product.images[0].large}`} />
@@ -369,15 +369,17 @@ class ProductSpecs extends Component {
                   <b>Share this product:</b>
                   <span>
                     <FacebookShareButton
-                      url={`http://157.245.106.101:3000/products/${product.slug}`}
-                      quote={"Kindeem - explore the mall"}
-                      hashtag="#kindeem" >
+                      // url={`http://157.245.106.101:3000/products/${product.slug}`}
+                      url={`https://duco9t.pro.vn/`}
+                      quote={"Quindigo - explore the mall"}
+                      hashtag="#Quindigo" >
                       <FacebookIcon size={32} round={true} />
                     </FacebookShareButton>
                     <TwitterShareButton
-                      url={`http://sthautsav.com.np/products/${product.slug}`}
-                      quote={"Kindeem - explore the mall"}
-                      hashtag="#kindeem"
+                      // url={`http://sthautsav.com.np/products/${product.slug}`}
+                      url={`https://duco9t.pro.vn/`}
+                      quote={"Quindigo - explore the mall"}
+                      hashtag="#Quindigo"
                     >
                       <TwitterIcon size={32} round={true} />
                     </TwitterShareButton>

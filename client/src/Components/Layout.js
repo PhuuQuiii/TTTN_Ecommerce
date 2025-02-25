@@ -34,7 +34,7 @@ class Layout extends Component {
     return (
       <div>
         <Head>
-          <title>{title || "Kindeem"}</title>
+          <title>{title || "Quindigo"}</title>
         </Head>
 
         <Header data={this.props.menuCate} />
