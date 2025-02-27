@@ -6,5 +6,8 @@
     "start": "cd shippinginterface && npm start",
     "build": "cd shippinginterface && npm run build",
     "test": "cd shippinginterface && npm test"
+  },
+  "devDependencies": {
+    "hardhat": "^2.22.19"
   }
 }

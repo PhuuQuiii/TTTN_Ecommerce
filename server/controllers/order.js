@@ -23,6 +23,13 @@ const task = Fawn.Task();
 const mongoose = require("mongoose");
 Fawn.init(mongoose);
 
+const OrderManagementABI = require('../../contracts/build/contracts/OrderManagement.json').abi;
+
+const Web3 = require('web3');
+const web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545'));
+const contractAddress = '0x48240EF49e9608293B20f6e3cFE52d948FDA9677'; // Thay thế bằng địa chỉ hợp đồng mới
+const orderManagement = new web3.eth.Contract(OrderManagementABI, contractAddress);
+
 const perPage = 10;
 
 exports.order = async (req, res, next) => {
@@ -170,140 +177,158 @@ exports.calculateShippingCharge = async (req, res) => {
 };
 
 exports.createOrder = async (req, res) => {
-  const {products,shipto,shippingCharge,orderID,method} = req.body;
-  //vaidate address
-  if (!shipto.region || !shipto.area || !shipto.city || !shipto.address || !shipto.phoneno) {
-    return res.status(403).json({ error: "Address fields are required." });
-  }
-  //validate products
-  let p_slugs = products.map(p=>p.p_slug)
-  let Products = await Product.find({
-    slug: p_slugs, 
-    isVerified: { $ne: null },
-    isDeleted: null,
-  }).populate("soldBy", "isBlocked isVerified holidayMode");
-
-
-  if (Products.length !== p_slugs.length) {
-    return res.status(404).json({ error: 'Products not found.' })
-  }
-  if (products.find(p => {
-    if (p.quantity === undefined || +p.quantity < 1) return p
-  })) {
-    return res.status(403).json({ error: 'Product quantity is required.' })
-  }
-
-  //validate each product
-  let error
-  const isAdminOnHoliday = (first, last) => {
-    let week = [0, 1, 2, 3, 4, 5, 6];
-    let firstIndex = week.indexOf(first);
-    week = week.concat(week.splice(0, firstIndex)); //Shift array so that first day is index 0
-    let lastIndex = week.indexOf(last); //Find last day
-    //Cut from first day to last day nd check with today day
-    return week.slice(0, lastIndex + 1).some((d) => d === new Date().getDay());
-  };
-  for (let i = 0; i < Products.length; i++) {
-    const product = Products[i];
-    if (product.soldBy.isBlocked || !product.soldBy.isVerified) {
-      error = `Seller not available of product ${product.name}`
-      break;
-    }
-    if (
-      isAdminOnHoliday(
-        product.soldBy.holidayMode.start,
-        product.soldBy.holidayMode.end
-      )
-    ) {
-      error = `Seller is on holiday of product ${product.name}. Please order manually ` 
-      break;
-    }
-    // if (product.quantity === 0) {
-    //   error = `Product ${product.name} is out of the stock.`
-    //   break;
-    // }
-    
-
-    if (product.quantity < products.find(p => p.p_slug === product.slug).quantity) {
-      error = `There are only ${product.quantity} quantity of product ${product.name} available.`
-      break;
-    }
-    
-  }
-  if (error) {
-    return res.status(403).json({error})
-  }
-
-  //create orders
-  Products = products.map(async product =>{
-    // new order
-    let thisProduct = Products.find(p => p.slug === product.p_slug)
-    const newOrder = new Order();
-    newOrder.orderID = orderID;
-    newOrder.user = req.user._id;
-    newOrder.product = thisProduct._id;
-    newOrder.soldBy = thisProduct.soldBy;
-    newOrder.quantity = product.quantity;
-    newOrder.productAttributes = product.productAttributes;
-    newOrder.shipto = {
-      region: shipto.region,
-      city: shipto.city,
-      area: shipto.area,
-      address: shipto.address,
-      phoneno: shipto.phoneno,
-    };
-    if (shipto.lat && shipto.long) {
-      let geolocation = {
-        type: "Point",
-        coordinates: [shipto.long, shipto.lat],
-      };
-      newOrder.shipto.geolocation = geolocation;
-    }
-    const status = {
-      currentStatus: "active",
-      activeDate: Date.now(),
-    };
-    newOrder.status = status;
+  const {products, shipto, shippingCharge, orderID, method} = req.body;
   
-    // new payment
-    const newPayent = new Payment({
-      user: req.user._id,
-      order: newOrder._id,
-      method: method,
-      shippingCharge: shippingCharge,
-      transactionCode: orderID,
-      amount: Math.round(
-        (thisProduct.price - thisProduct.price * (thisProduct.discountRate / 100)) *
-          newOrder.quantity
-      ),
-      from: req.user.phone,//esewa type
-    });
-    newOrder.payment = newPayent._id;
-
-    //if product is in cart remove from it
-    let cart = await Cart.findOne({ product:thisProduct._id, user: req.user._id, isDeleted: null })
-    if (cart) {
-      let updateCart = cart.toObject()
-      updateCart.isDeleted = Date.now()
-      task.update(cart, updateCart)
-        .options({ viaSave: true })
-      
+  try {
+    //validate address
+    if (!shipto.region || !shipto.area || !shipto.city || !shipto.address || !shipto.phoneno) {
+      return res.status(403).json({ error: "Address fields are required." });
     }
-    // update thisProduct
-    // const updateProduct = thisProduct.toObject();
-    // updateProduct.quantity = updateProduct.quantity - newOrder.quantity;
-    const results = await task
-      .save(newOrder)
-      .save(newPayent)
-      // .update(thisProduct, updateProduct)
-      // .options({ viaSave: true })
-       .run({ useMongoose: true });
-    return { order: results[1], payment: results[2] }
-  })
 
-  Products = await Promise.all(Products)
+    //validate products
+    let p_slugs = products.map(p => p.p_slug);
+    let Products = await Product.find({
+      slug: p_slugs, 
+      isVerified: { $ne: null },
+      isDeleted: null,
+    }).populate("soldBy", "isBlocked isVerified holidayMode");
+  
+    if (Products.length !== p_slugs.length) {
+      return res.status(404).json({ error: 'Products not found.' });
+    }
 
-  res.json(Products);
+    if (products.find(p => {
+      if (p.quantity === undefined || +p.quantity < 1) return p;
+    })) {
+      return res.status(403).json({ error: 'Product quantity is required.' });
+    }
+
+    // Format address thành string 
+    const shippingAddress = `${shipto.region}, ${shipto.city}, ${shipto.area}, ${shipto.address}`;
+
+    // Lấy account hiện tại
+    const accounts = await web3.eth.getAccounts();
+    
+    // Gọi smart contract với đúng định dạng
+    await orderManagement.methods.createOrder(
+      accounts[0], // Địa chỉ ví của user
+      shippingAddress,        // String địa chỉ giao hàng  
+      p_slugs                 // Array các product slug
+    ).send({ 
+      from: accounts[0],
+      gas: 3000000
+    });
+
+    //validate each product
+    let error;
+    const isAdminOnHoliday = (first, last) => {
+      let week = [0, 1, 2, 3, 4, 5, 6];
+      let firstIndex = week.indexOf(first);
+      week = week.concat(week.splice(0, firstIndex));
+      let lastIndex = week.indexOf(last);
+      return week.slice(0, lastIndex + 1).some((d) => d === new Date().getDay());
+    };
+
+    for (let i = 0; i < Products.length; i++) {
+      const product = Products[i];
+      if (product.soldBy.isBlocked || !product.soldBy.isVerified) {
+        error = `Seller not available of product ${product.name}`
+        break;
+      }
+      if (
+        isAdminOnHoliday(
+          product.soldBy.holidayMode.start,
+          product.soldBy.holidayMode.end
+        )
+      ) {
+        error = `Seller is on holiday of product ${product.name}. Please order manually ` 
+        break;
+      }
+      if (product.quantity < products.find(p => p.p_slug === product.slug).quantity) {
+        error = `There are only ${product.quantity} quantity of product ${product.name} available.`
+        break;
+      }
+    }
+
+    if (error) {
+      return res.status(403).json({error})
+    }
+
+    // Create orders
+    const orders = products.map(async product => {
+      let thisProduct = Products.find(p => p.slug === product.p_slug)
+      const newOrder = new Order({
+        orderID,
+        user: req.user._id,
+        product: thisProduct._id,
+        soldBy: thisProduct.soldBy,
+        quantity: product.quantity,
+        productAttributes: product.productAttributes,
+        shipto: {
+          region: shipto.region,
+          city: shipto.city,
+          area: shipto.area,
+          address: shipto.address,
+          phoneno: shipto.phoneno,
+          geolocation: shipto.lat && shipto.long ? {
+            type: "Point",
+            coordinates: [shipto.long, shipto.lat],
+          } : undefined
+        },
+        status: {
+          currentStatus: "active",
+          activeDate: Date.now(),
+        }
+      });
+
+      const newPayment = new Payment({
+        user: req.user._id,
+        order: newOrder._id,
+        method: method,
+        shippingCharge: shippingCharge,
+        transactionCode: orderID,
+        amount: Math.round(
+          (thisProduct.price - thisProduct.price * (thisProduct.discountRate / 100)) *
+            newOrder.quantity
+        ),
+        from: req.user.phone,
+      });
+
+      newOrder.payment = newPayment._id;
+
+      //Remove from cart if exists
+      let cart = await Cart.findOne({ product:thisProduct._id, user: req.user._id, isDeleted: null })
+      if (cart) {
+        let updateCart = cart.toObject()
+        updateCart.isDeleted = Date.now()
+        task.update(cart, updateCart)
+          .options({ viaSave: true })
+      }
+
+      const results = await task
+        .save(newOrder)
+        .save(newPayment)
+        .run({ useMongoose: true });
+
+      return { order: results[0], payment: results[1] }
+    });
+
+    const results = await Promise.all(orders);
+    res.json(results);
+
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ 
+      error: "Error creating order",
+      details: error.message 
+    });
+  }
+};
+
+// Function to update order status on blockchain
+const updateOrderStatusOnBlockchain = async (orderID, status) => {
+  const accounts = await web3.eth.getAccounts();
+  await orderManagement.methods.updateOrderStatus(orderID, status).send({ from: accounts[0] });
 };
 
 const search_orders = async (page, perPage, keyword = '', query, res, type) => {
@@ -473,6 +498,7 @@ exports.toggleOrderApproval = async (req, res) => {
     order.status.currentStatus = updateOrder.status.currentStatus
     order.status.approvedDate = updateOrder.status.approvedDate
     order.soldBy = order.soldBy._id
+    await updateOrderStatusOnBlockchain(order.orderID, "Approved");
     return res.json(order);
   }
   if (order.status.currentStatus === "approve") {
@@ -498,6 +524,7 @@ exports.toggleOrderApproval = async (req, res) => {
     order.status.currentStatus = updateOrder.status.currentStatus
     order.status.approvedDate = updateOrder.status.approvedDate
     order.soldBy = order.soldBy._id
+    await updateOrderStatusOnBlockchain(order.orderID, "Active");
     return res.json(order);
   }
 };
@@ -838,4 +865,32 @@ console.log("Type:", typeof order.status.currentStatus);
 }
 
   res.json({ order: results[1], payment: results[0] });
+};
+
+exports.getOrdersForSOC = async (req, res) => {
+  const orders = await Order.find({ "status.currentStatus": "confirmed" })
+    .populate('user', 'name')
+    .populate('product', 'name')
+    .lean();
+  res.json(orders);
+};
+
+exports.confirmOrder = async (req, res) => {
+  const order = await Order.findById(req.params.order_id);
+  if (!order) {
+    return res.status(404).json({ error: 'Order not found' });
+  }
+  if (order.soldBy._id.toString() !== req.profile._id.toString()) {
+    return res.status(401).json({ error: 'Unauthorized Admin' });
+  }
+  order.status.currentStatus = 'confirmed';
+  await order.save();
+
+  // Hiển thị đơn hàng cho shipper cùng thành phố
+  const dispatchers = await Dispatcher.find({ 'address.city': order.shipto.city });
+  dispatchers.forEach(dispatcher => {
+    // Gửi thông báo hoặc cập nhật danh sách đơn hàng cho shipper
+  });
+
+  res.json(order);
 };

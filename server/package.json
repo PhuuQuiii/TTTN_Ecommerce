@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
+    "bcrypt": "^5.1.1",
     "corn": "0.0.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -31,6 +32,7 @@
     "shortid": "^2.2.15",
     "socket.io": "^2.3.0",
     "swagger-jsdoc": "^4.0.0",
-    "swagger-ui-express": "^4.1.4"
+    "swagger-ui-express": "^4.1.4",
+    "web3": "^1.8.2"
   }
 }

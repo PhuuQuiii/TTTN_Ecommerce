@@ -14,6 +14,9 @@ npx expo start
 
 npm run dev
 
+## (Shipping Interface => React)
+npm start
+
 ACCOUNT client
 test@gmail.com
 test1234
