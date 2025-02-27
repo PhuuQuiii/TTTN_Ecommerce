@@ -1,0 +1,10 @@
+{
+  "name": "tttn_ecommerce",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "cd shippinginterface && npm start",
+    "build": "cd shippinginterface && npm run build",
+    "test": "cd shippinginterface && npm test"
+  }
+}
