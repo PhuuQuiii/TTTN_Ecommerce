@@ -54,7 +54,7 @@ const PriceAndStock = ({ layout, prev, submitProductInfo, loading, priceAndStock
                     name="discountRate"
                     rules={[
                         {
-                            type: 'number',
+                            type: 'string',
                             // required: true,
                             message: "Please input product discount rate!",
                         }
@@ -68,7 +68,7 @@ const PriceAndStock = ({ layout, prev, submitProductInfo, loading, priceAndStock
                     name="quantity"
                     rules={[
                         {
-                            type: 'number',
+                            type: 'string',
                             // required: true,
                             message: "Please input product quantity!",
                         }

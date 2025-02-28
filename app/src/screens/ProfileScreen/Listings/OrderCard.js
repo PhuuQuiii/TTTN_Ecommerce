@@ -1,24 +1,18 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { Image, StyleSheet, View } from "react-native";
 import {
-  Avatar,
-  Button,
   Card,
-  Title,
   Paragraph,
+  Title
 } from "react-native-paper";
-import { View, Image, StyleSheet, Text } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
-  TouchableNativeFeedback,
-  TouchableWithoutFeedback,
+  TouchableWithoutFeedback
 } from "react-native-gesture-handler";
-import { AntDesign } from "@expo/vector-icons";
 
-import Constants from "../../../constants/Constants";
 import { getProductDetails } from "../../../../redux/actions/productActions";
 import { SERVER_BASE_URL } from "../../../../utils/common";
-import { removeFromWishList } from "../../../../redux/actions/wishlistActions";
 
 const OrderCard = (props) => {
   const dispatch = useDispatch();
@@ -54,7 +48,7 @@ const OrderCard = (props) => {
                   {props.product.price && (
                     <Paragraph>
                       {" "}
-                      Rs
+                      vnđ
                       {` ${
                         props.product.price.$numberDecimal ||
                         props.product.price

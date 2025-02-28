@@ -40,13 +40,13 @@ exports.signup = async (req, res) => {
   let admin = new Admin(req.body);
   await admin.save();
   const mailingData = {
-    from: "Kindeem",
+    from: "QUINDIGO",
     to: admin.email,
-    subject: "🔐 Xác minh tài khoản của bạn - Kindeem( team TTTN_16)",
+    subject: "🔐 Xác minh tài khoản của bạn - Quindigo( team TTTN_16)",
     html: `
           <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
             <h2 style="color: #4CAF50;">Chào ${admin.name},</h2>
-            <p>Cảm ơn bạn đã đăng ký tài khoản bán hàng trên <strong>Kindeem</strong>! 🎉</p>
+            <p>Cảm ơn bạn đã đăng ký tài khoản bán hàng trên <strong>Quindigo</strong>! 🎉</p>
             <p>Trước khi bạn có thể sử dụng tất cả các tính năng tuyệt vời của chúng tôi, vui lòng xác minh email của bạn bằng cách nhấn vào nút bên dưới:</p>
             <div style="text-align: center; margin: 20px 0;">
               <a href="${process.env.ADMIN_CRM_ROUTE}/email-verify?token=${token}" 
@@ -56,8 +56,8 @@ exports.signup = async (req, res) => {
             </div>
             <p>Nếu bạn không đăng ký tài khoản, hãy bỏ qua email này.</p>
             <hr>
-            <p style="font-size: 14px; color: #777;">Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi qua <a href="mailto:support@kindeem.com">support@kindeem.com</a>.</p>
-            <p style="font-size: 14px; color: #777;">Trân trọng,<br>💚 Đội ngũ Kindeem</p>
+            <p style="font-size: 14px; color: #777;">Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi qua <a href="mailto:support@Quindigo.com">support@Quindigo.com</a>.</p>
+            <p style="font-size: 14px; color: #777;">Trân trọng,<br>💚 Đội ngũ Quindigo</p>
           </div>
         `,
   };

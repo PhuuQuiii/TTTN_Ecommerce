@@ -1,6 +1,5 @@
-import React, { Component } from "react"
-import { Checkbox } from 'antd';
-import { Icon, Row, Col } from 'antd'
+import { Checkbox, Col, Row } from 'antd';
+import React, { Component } from "react";
 
 class Filter extends Component{
     
@@ -19,9 +18,9 @@ class Filter extends Component{
         ];
     
         const priceOptions = [
-            { label: 'Rs. 179 to Rs. 1977', value: '179-1977' },
-            { label: 'Rs. 1977 to Rs. 3775', value: '1977-3775' },
-            { label: 'Rs. 3775 to Rs. 5179', value: '3775-5179' }
+            { label: 'vnđ. 179 to vnđ. 1977', value: '179-1977' },
+            { label: 'vnđ. 1977 to vnđ. 3775', value: '1977-3775' },
+            { label: 'vnđ. 3775 to vnđ. 5179', value: '3775-5179' }
         ];
     
         const colorOptions = [

@@ -1,4 +1,4 @@
-import { ADMINS_TYPES, ADMIN_TYPES, ADMIN_APPROVAL_TYPES } from "../types";
+import { ADMINS_TYPES, ADMIN_APPROVAL_TYPES, ADMIN_TYPES } from "../types";
 
 const initialState = {
   admin: null,
@@ -8,10 +8,13 @@ const initialState = {
   totalCount: 0,
   loading: false,
   error: null,
-  data: null
+  data: null,
+  users: [],
+  user: null, // Thêm user vào initialState
+  toggleUserBlockLoading: false, // Thêm toggleUserBlockLoading vào initialState
 };
 
-export default function (state = initialState, action) {
+export default function superadminReducer(state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
     case ADMINS_TYPES.GET_ADMINS:
@@ -81,6 +84,35 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
         error: action.error
+      };
+
+    case ADMIN_APPROVAL_TYPES.GET_USERS_SUCCESS:
+      return {
+        ...state,
+        users: action.payload.users, // vnđảm bảo payload.users chứa danh sách người dùng
+        totalCount: action.payload.totalCount, // Cập nhật totalCount nếu cần
+      };
+    case ADMIN_APPROVAL_TYPES.GET_USER_SUCCESS:
+      return {
+        ...state,
+        user: action.payload, // Cập nhật state với dữ liệu người dùng
+      };
+    case ADMIN_APPROVAL_TYPES.BLOCK_UNBLOCK_USER_REQUEST:
+      return {
+        ...state,
+        toggleUserBlockLoading: true,
+      };
+    case ADMIN_APPROVAL_TYPES.BLOCK_UNBLOCK_USER_SUCCESS:
+      return {
+        ...state,
+        toggleUserBlockLoading: false,
+        users: state.users.map(user => user.id === payload.id ? { ...user, isBlocked: payload.isBlocked } : user),
+      };
+    case ADMIN_APPROVAL_TYPES.BLOCK_UNBLOCK_USER_FAILURE:
+      return {
+        ...state,
+        toggleUserBlockLoading: false,
+        error: action.error,
       };
 
     default:

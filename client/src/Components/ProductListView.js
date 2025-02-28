@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import { Row, Col, Input, Button, Popconfirm, Checkbox } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
-import { connect } from "react-redux";
-import _, { isEmpty } from "lodash";
-import actions from "../../redux/actions";
-import { openNotification, getDiscountedPrice, getUserInfo } from "../../utils/common";
+import { Button, Checkbox, Col, Input, Popconfirm, Row } from "antd";
+import { isEmpty } from "lodash";
 import Link from "next/link";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import actions from "../../redux/actions";
+import { openNotification } from "../../utils/common";
 import { IMAGE_BASE_URL } from "../../utils/constants";
-import { myCartsSkeleton, productDetailSkeleton } from "../../utils/skeletons";
+import { myCartsSkeleton } from "../../utils/skeletons";
 class ProductListView extends Component {
   state = {
     pdQty: 1,
@@ -265,16 +265,16 @@ class ProductListView extends Component {
                         {items.product?.discountRate === 0 ? (
                           <div className="new-price">
                             {" "}
-                            {!checkSkeleton && 'Rs'} {items.product?.price.$numberDecimal}
+                            {!checkSkeleton && 'vnđ'} {items.product?.price.$numberDecimal}
                           </div>
                         ) : (
                             !checkSkeleton &&
                             <>
                               <div className="new-price">
                                 <span className="old-price">
-                                  {!checkSkeleton && 'Rs'} {items.product?.price.$numberDecimal}
+                                  {!checkSkeleton && 'vnđ'} {items.product?.price.$numberDecimal}
                                 </span>
-                                {!checkSkeleton && 'Rs'}{" "}
+                                {!checkSkeleton && 'vnđ'}{" "}
                                 {items.product?.price.$numberDecimal -
                                   (items.product?.price.$numberDecimal *
                                     items.product?.discountRate) /

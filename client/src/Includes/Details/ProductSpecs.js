@@ -1,17 +1,15 @@
-import React, { Component } from "react";
-import { Input, Button, Popconfirm } from "antd";
-import { withRouter } from "next/router";
-import { connect } from "react-redux";
-import actions from "../../../redux/actions";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, LoadingOutlined } from "@ant-design/icons";
+import { Button, Input, Popconfirm, Spin } from "antd";
+import _ from 'lodash';
 import Link from "next/link";
+import { withRouter } from "next/router";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { FacebookIcon, FacebookShareButton, TwitterIcon, TwitterShareButton } from 'react-share';
 import StarRatings from "react-star-ratings";
-import _ from 'lodash'
+import actions from "../../../redux/actions";
 import { STORE_CHECKOUT_ITEMS } from "../../../redux/types";
-import { FacebookShareButton, TwitterShareButton, TwitterIcon, FacebookIcon } from 'react-share'
 import AllHelmet from "../../Components/AllHelmet";
-import { Spin } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
 
 class ProductSpecs extends Component {
   state = {
@@ -105,7 +103,7 @@ class ProductSpecs extends Component {
         {
           !_.isEmpty(product) &&
           <AllHelmet
-            title={`${product.name} | KINDEEM`}
+            title={`${product.name} | QUINDIGO`}
             desc={`${description}`}
             url={`http://sthautsav.com.np/products/${product.slug}`}
             img={`http://sthautsav.com.np:3001/uploads/${product.images[0].large}`} />
@@ -153,12 +151,12 @@ class ProductSpecs extends Component {
                     {
                       product?.discountRate > 0 &&
                       <div className="old-price">
-                        <span> {product.price.$numberDecimal} Dong</span>
+                        <span> {product.price.$numberDecimal} vnđ</span>
                       </div>
                     }
                     <div className="new-price">
                       <span className="price">
-                        {" "} Dong
+                        {" "} vnđ
                         {product?.price.$numberDecimal -
                           ((product?.price.$numberDecimal *
                             product?.discountRate) /
@@ -170,7 +168,7 @@ class ProductSpecs extends Component {
                           (Save  {(product?.price.$numberDecimal *
                             product?.discountRate) /
                             100} |{" "}
-                          {product.discountRate} Dong
+                          {product.discountRate} vnđ
                     %)
                   </span>
                       }
@@ -371,15 +369,17 @@ class ProductSpecs extends Component {
                   <b>Share this product:</b>
                   <span>
                     <FacebookShareButton
-                      url={`http://157.245.106.101:3000/products/${product.slug}`}
-                      quote={"Kindeem - explore the mall"}
-                      hashtag="#kindeem" >
+                      // url={`http://157.245.106.101:3000/products/${product.slug}`}
+                      url={`https://duco9t.pro.vn/`}
+                      quote={"Quindigo - explore the mall"}
+                      hashtag="#Quindigo" >
                       <FacebookIcon size={32} round={true} />
                     </FacebookShareButton>
                     <TwitterShareButton
-                      url={`http://sthautsav.com.np/products/${product.slug}`}
-                      quote={"Kindeem - explore the mall"}
-                      hashtag="#kindeem"
+                      // url={`http://sthautsav.com.np/products/${product.slug}`}
+                      url={`https://duco9t.pro.vn/`}
+                      quote={"Quindigo - explore the mall"}
+                      hashtag="#Quindigo"
                     >
                       <TwitterIcon size={32} round={true} />
                     </TwitterShareButton>

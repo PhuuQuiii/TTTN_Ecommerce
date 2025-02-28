@@ -12,7 +12,7 @@ class PopularCard extends Component {
           </div>
           <div className="card-body">
             <div className="prod-name">Auctor Sem Argu</div>
-            <div className="prod-price">Rs 1500</div>
+            <div className="prod-price">vnđ 1500</div>
           </div>
         </div>
       </div>

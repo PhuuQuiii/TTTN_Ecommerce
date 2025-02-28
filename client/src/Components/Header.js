@@ -1,14 +1,14 @@
+import { SearchOutlined } from '@ant-design/icons';
+import { Col, Row } from "antd";
 import React, { Component } from "react";
-import { Row, Col, Input, Button } from "antd";
-import { SearchOutlined } from '@ant-design/icons'
 import { connect } from "react-redux";
 
-import { getUserInfo } from "../../utils/common";
-import Link from "next/link";
-import actions from "../../redux/actions";
-import Router, { withRouter } from "next/router";
 import { AutoComplete } from "antd";
 import { debounce, isEmpty } from "lodash";
+import Link from "next/link";
+import Router, { withRouter } from "next/router";
+import actions from "../../redux/actions";
+import { getUserInfo } from "../../utils/common";
 class Header extends Component {
   state = {
     search: "",
@@ -122,11 +122,11 @@ class Header extends Component {
       <React.Fragment>
         <div className="top-header">
           <div>
-            Customer Care: +9779856321452
+            Customer Care: +84987654321
           </div>
           <div>
             <ul>
-              <li>Sell On Kindeem</li>
+              <li>Sell On Quindigo</li>
               <li className="about-top-head">About Us</li>
               <li className="profile-top-head">
                 <Link href="/myprofile/manageAccount">
@@ -154,7 +154,7 @@ class Header extends Component {
                 <Col span={4} className="logo">
                   <Link href="/">
                     <a>
-                      <img src="/images/logo.png" />
+                      <img src="/images/logo.png" /> 
                     </a>
                   </Link>
                 </Col>

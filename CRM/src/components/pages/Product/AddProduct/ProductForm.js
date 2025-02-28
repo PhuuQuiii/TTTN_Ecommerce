@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import {
-  Steps,
   Form,
+  Steps,
 } from "antd";
-import { getCategories, getBrands, addProduct } from "../../../../redux/actions/product_actions";
-import BasicInformation from './BasicInformation'
-import DetailInformation from './DetailInformation'
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { addProduct, getBrands, getCategories } from "../../../../redux/actions/product_actions";
+import BasicInformation from './BasicInformation';
+import DetailInformation from './DetailInformation';
 import PriceAndStock from "./PriceAndStock";
 const layout = {
   labelCol: {
@@ -71,7 +71,7 @@ const ProductForm = ({ getCategories, getBrands, brands, user , addProduct}) => 
   useEffect(() => {
     getCategories();
     getBrands();
-  }, []);
+  }, [getBrands, getCategories]);
 
   const next = () => {
     setCurrent(current + 1);

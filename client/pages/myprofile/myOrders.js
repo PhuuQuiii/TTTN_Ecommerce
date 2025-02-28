@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { Col, Drawer, Empty, Input, Row, Select, Spin, Table, Tag } from "antd";
 import { capitalize } from "lodash";
-import moment from 'moment'
-import { Input, Row, Col, Select, Table, Tag, Drawer, Spin, Empty } from "antd";
+import moment from 'moment';
+import React, { useEffect, useState } from "react";
 
 // redux
 import { useDispatch, useSelector } from "react-redux";
@@ -11,14 +11,14 @@ import actions from "../../redux/actions";
 import { withRouter } from "next/router";
 
 // utils
-import { IMAGE_BASE_URL } from "../../utils/constants";
 import { previousQuery, scrollToTop } from "../../utils/common";
+import { IMAGE_BASE_URL } from "../../utils/constants";
 
 // includes
 import OrderDetails from "../../src/Includes/MyProfile/Includes/OrderDetails";
 import MyProfile from "../../src/Includes/MyProfile/myProfile";
-import { myOrdersSkeleton } from "../../utils/skeletons";
 import initialize from "../../utils/initialize";
+import { myOrdersSkeleton } from "../../utils/skeletons";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -185,7 +185,7 @@ const MyOrders = (props) => {
             image: (
                 <img
                     src={
-                        IMAGE_BASE_URL + "/" + order.product.images[0].medium
+                        IMAGE_BASE_URL + "/" + (order.product.images[0] ? order.product.images[0].medium : 'default-image.jpg')
                     }
                     className="table-item-img"
                 />

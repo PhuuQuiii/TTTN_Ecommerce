@@ -18,7 +18,7 @@ class AllHelmet extends Component {
                 <meta property="og:title" content={this.props.title || ''} />
                 <meta property="og:locale" content="en_US" />
                 <meta property="og:type" content="article" />
-                <meta property="og:site-name" content="KINDEEM" />
+                <meta property="og:site-name" content="QUINDIGO" />
                 <meta property="og:image" content={this.props.img} />
                 <meta property="og:image:secure_url" content={this.props.img} />
                 <meta property="og:image:width" content="1200" />
