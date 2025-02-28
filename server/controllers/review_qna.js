@@ -35,7 +35,7 @@ exports.postReview = async (req, res) => {
     //ckeck if user has bought this product or not
     const orders = await Order.findOne({
         user: req.user._id,
-        'status.currentStatus': { $in: ['complete', 'return'] },
+        'status.currentStatus': { $in: ['approve', 'return'] },
         product: product._id
     })
     if (!orders) {
