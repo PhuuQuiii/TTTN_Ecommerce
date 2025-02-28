@@ -241,7 +241,7 @@ class OrderSummary extends Component {
                   </Link>
 
                   {
-                    isEmpty(this.props.userResp?.location) &&
+                    isEmpty(this.props.userResp?.location) && // Hiển thị thông báo khi chưa có địa chỉ
                     <div className="checkout-note">Note: Please add address in your profile before proceeding further.</div>
                   }
                 </div>
