@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Table as AntdTable, Input, Button, Space, Avatar, Drawer } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { getOrders, getOrder } from '../../../redux/actions/order_actions';
-import OrderDetail from './OrderDetail';
+import { Table as AntdTable, Avatar, Button, Drawer, Input, Space } from 'antd';
 import moment from 'moment';
+import PropTypes from 'prop-types';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { connect } from 'react-redux';
+import { getOrder, getOrders } from '../../../redux/actions/order_actions';
+import OrderDetail from './OrderDetail';
 
 const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user }) => {
     const [pagination, setPagination] = useState({
@@ -81,7 +81,9 @@ const Table = ({ getOrder, getOrders, multiLoading, orders, totalCount, user }) 
         render: (product) => (
             <>
                 {product.name}{' '}
-                <Avatar shape="square" size="small" src={`${process.env.REACT_APP_SERVER_URL}/uploads/${product.images[0].thumbnail}`} />
+                {product.images && product.images[0] && (
+                    <Avatar shape="square" size="small" src={`${process.env.REACT_APP_SERVER_URL}/uploads/${product.images[0].thumbnail}`} />
+                )}
             </>
         )
     });
