@@ -170,13 +170,13 @@ exports.calculateShippingCharge = async (req, res) => {
 };
 
 exports.createOrder = async (req, res) => {
-  const {products,shipto,shippingCharge,orderID,method} = req.body;
+  const {products,shipto,shippingCharge,orderID,method} = req.body; // Lấy dữ liệu từ request body
   //vaidate address
-  if (!shipto.region || !shipto.area || !shipto.city || !shipto.address || !shipto.phoneno) {
+  if (!shipto.region || !shipto.area || !shipto.city || !shipto.address || !shipto.phoneno) { // Kiểm tra tính hợp lệ của địa chỉ giao hàng
     return res.status(403).json({ error: "Address fields are required." });
   }
   //validate products
-  let p_slugs = products.map(p=>p.p_slug)
+  let p_slugs = products.map(p=>p.p_slug) // Lấy danh sách sản phẩm từ database
   let Products = await Product.find({
     slug: p_slugs, 
     isVerified: { $ne: null },
@@ -184,10 +184,10 @@ exports.createOrder = async (req, res) => {
   }).populate("soldBy", "isBlocked isVerified holidayMode");
 
 
-  if (Products.length !== p_slugs.length) {
+  if (Products.length !== p_slugs.length) { // Kiểm tra sản phẩm có tồn tại hay không
     return res.status(404).json({ error: 'Products not found.' })
   }
-  if (products.find(p => {
+  if (products.find(p => { // Kiểm tra sản phẩm có tồn tại hay không
     if (p.quantity === undefined || +p.quantity < 1) return p
   })) {
     return res.status(403).json({ error: 'Product quantity is required.' })
@@ -195,17 +195,17 @@ exports.createOrder = async (req, res) => {
 
   //validate each product
   let error
-  const isAdminOnHoliday = (first, last) => {
+  const isAdminOnHoliday = (first, last) => { // Kiểm tra trạng thái của người bán và tồn kho
     let week = [0, 1, 2, 3, 4, 5, 6];
     let firstIndex = week.indexOf(first);
     week = week.concat(week.splice(0, firstIndex)); //Shift array so that first day is index 0
     let lastIndex = week.indexOf(last); //Find last day
     //Cut from first day to last day nd check with today day
-    return week.slice(0, lastIndex + 1).some((d) => d === new Date().getDay());
+    return week.slice(0, lastIndex + 1).some((d) => d === new Date().getDay()); // Hàm này kiểm tra xem người bán có đang trong chế độ nghỉ (holidayMode) hay không.
   };
   for (let i = 0; i < Products.length; i++) {
     const product = Products[i];
-    if (product.soldBy.isBlocked || !product.soldBy.isVerified) {
+    if (product.soldBy.isBlocked || !product.soldBy.isVerified) { // Người bán có bị khóa tài khoản (isBlocked) hoặc chưa xác thực (isVerified).
       error = `Seller not available of product ${product.name}`
       break;
     }
@@ -215,7 +215,7 @@ exports.createOrder = async (req, res) => {
         product.soldBy.holidayMode.end
       )
     ) {
-      error = `Seller is on holiday of product ${product.name}. Please order manually ` 
+      error = `Seller is on holiday of product ${product.name}. Please order manually `  // Người bán có đang nghỉ (holidayMode).
       break;
     }
     // if (product.quantity === 0) {
@@ -225,7 +225,8 @@ exports.createOrder = async (req, res) => {
     
 
     if (product.quantity < products.find(p => p.p_slug === product.slug).quantity) {
-      error = `There are only ${product.quantity} quantity of product ${product.name} available.`
+      error = `There are only ${product.quantity} quantity of product ${product.name} available.` // Sản phẩm có đủ số lượng tồn kho để đáp ứng đơn hàng không.
+
       break;
     }
     
@@ -235,7 +236,7 @@ exports.createOrder = async (req, res) => {
   }
 
   //create orders
-  Products = products.map(async product =>{
+  Products = products.map(async product =>{ // Tạo đơn hàng
     // new order
     let thisProduct = Products.find(p => p.slug === product.p_slug)
     const newOrder = new Order();
@@ -255,7 +256,7 @@ exports.createOrder = async (req, res) => {
     if (shipto.lat && shipto.long) {
       let geolocation = {
         type: "Point",
-        coordinates: [shipto.long, shipto.lat],
+        coordinates: [shipto.long, shipto.lat], // Nếu có tọa độ (lat, long), lưu vào geolocation
       };
       newOrder.shipto.geolocation = geolocation;
     }
@@ -265,8 +266,8 @@ exports.createOrder = async (req, res) => {
     };
     newOrder.status = status;
   
-    // new payment
-    const newPayent = new Payment({
+    // new payment 
+    const newPayent = new Payment({ // Tạo thanh toán
       user: req.user._id,
       order: newOrder._id,
       method: method,
@@ -280,7 +281,7 @@ exports.createOrder = async (req, res) => {
     });
     newOrder.payment = newPayent._id;
 
-    //if product is in cart remove from it
+    //if product is in cart remove from it // Xóa sản phẩm khỏi giỏ hàng
     let cart = await Cart.findOne({ product:thisProduct._id, user: req.user._id, isDeleted: null })
     if (cart) {
       let updateCart = cart.toObject()
@@ -292,7 +293,7 @@ exports.createOrder = async (req, res) => {
     // update thisProduct
     // const updateProduct = thisProduct.toObject();
     // updateProduct.quantity = updateProduct.quantity - newOrder.quantity;
-    const results = await task
+    const results = await task // Lưu đơn hàng và thanh toán vào database
       .save(newOrder)
       .save(newPayent)
       // .update(thisProduct, updateProduct)
@@ -720,9 +721,9 @@ exports.returnOrder = async (req, res) => {
   return res.json(results);
 };
 
-exports.toggletobeReturnOrder = async (req, res) => {
+exports.toggletobeReturnOrder = async (req, res) => { // Hàm toggletobeReturnOrder cho phép cập nhật trạng thái của một đơn hàng (order) giữa hai trạng thái "complete" (hoàn thành) và "tobereturned" (chuẩn bị hoàn trả
   let order = req.order;
-  if (
+  if ( // Kiểm tra trạng thái đơn hàng
     order.status.currentStatus !== "complete" &&
     order.status.currentStatus !== "tobereturned"
   ) {
@@ -730,27 +731,27 @@ exports.toggletobeReturnOrder = async (req, res) => {
       error: `This order is not ready to return or rollback to complete state. Order current status is ${order.status.currentStatus}`,
     });
   }
-  let updateOrder = await Order.findById(order._id)
+  let updateOrder = await Order.findById(order._id) // Lấy dữ liệu đơn hàng và thanh toán
   updateOrder = updateOrder.toObject();
   let payment = await Payment.findById(order.payment._id);
   let updatePayment = payment.toObject();
 
-  if (order.status.currentStatus === "complete") {
+  if (order.status.currentStatus === "complete") { //  Chuyển đơn hàng từ "complete" → "tobereturned"   
     if (!req.body.remark) {
-      return res.status(403).json({error: "Remark is required."})
+      return res.status(403).json({error: "Remark is required."}) // Bắt buộc nhập lý do (remark) nếu chuyển sang trạng thái "tobereturned"
     }
 
     updateOrder.status.currentStatus = "tobereturned";
     updateOrder.status.tobereturnedDate = Date.now();
     
-    let remark = new Remark({
+    let remark = new Remark({ // Tạo một đối tượng ghi chú (Remark) để lưu lại lý do khách hàng muốn trả hàng.
       comment:req.body.remark
     })
     updateOrder.status.returnedDetail.remark.push(remark._id)
 
-    updatePayment.returnedAmount = req.body.returnedAmount;
+    updatePayment.returnedAmount = req.body.returnedAmount; // Cập nhật số tiền hoàn trả (returnedAmount) trong đối tượng thanh toán
 
-    let results = await task
+    let results = await task // Lưu thay đổi vào database
       .update(order, updateOrder)
       .options({ viaSave: true })
       .update(payment, updatePayment)
@@ -763,18 +764,18 @@ exports.toggletobeReturnOrder = async (req, res) => {
     order.status.currentStatus = updateOrder.status.currentStatus
     order.status.tobereturnedDate = updateOrder.status.tobereturnedDate
     order.soldBy = order.soldBy._id
-    return res.json(order);
+    return res.json(order); // Trả về kết quả sau khi cập nhật
   }
-  if (order.status.currentStatus === "tobereturned") {
+  if (order.status.currentStatus === "tobereturned") { // Chuyển đơn hàng từ "tobereturned" → "complete"
     updateOrder.status.currentStatus = "complete";
     updateOrder.status.tobereturnedDate = null;
     let remark = await Remark.findById(order.status.returnedDetail.remark[0])
     let updateRemark = remark.toObject()
-    updateRemark.isDeleted = Date.now()
+    updateRemark.isDeleted = Date.now() // Xóa ghi chú hoàn trả (Remark) bằng cách đánh dấu là isDeleted
+    updatePayment.returnedAmount = undefined; // Xóa số tiền hoàn trả (returnedAmount)
 
-    updatePayment.returnedAmount = undefined;
-    let results = await task
-      .update(order, updateOrder)
+    let results = await task // Lưu thay đổi vào database
+      .update(order, updateOrder) 
       .options({ viaSave: true })
       .update(payment, updatePayment)
       .options({ viaSave: true })
@@ -795,14 +796,14 @@ exports.getOrderStatus = async (req, res) => {
   res.json(allOrderStatus);
 };
 
-exports.editOrderQuantity = async (req, res) => {
-  let order = req.order;
+exports.editOrderQuantity = async (req, res) => { // Sử dụng để chỉnh sửa số lượng sản phẩm trong một đơn hàng (order)
+  let order = req.order; // Nhận đơn hàng từ request
 
   console.log("Current Status:", order.status.currentStatus);
 console.log("Type:", typeof order.status.currentStatus);
 
 
-  if (order.status.currentStatus !== "active") {
+  if (order.status.currentStatus !== "active") { //  Đơn hàng đang trong trạng thái active mới được chỉnh sửa số lượng.
     return res.status(403).json({ error: "User cannot update quantity." });
   }
 
@@ -811,12 +812,12 @@ console.log("Type:", typeof order.status.currentStatus);
     return res.status(404).json({ error: "Payment record not found." });
   }
 
-  let newQuantity = parseInt(req.query.newQuantity, 10);
+  let newQuantity = parseInt(req.query.newQuantity, 10); // Kiểm tra và chuyển đổi số lượng mới
   if (isNaN(newQuantity) || newQuantity <= 0) {
     return res.status(400).json({ error: "Invalid quantity value." });
   }
 
-  let newAmount = Math.round(
+  let newAmount = Math.round( // Tính toán lại số tiền cần thanh toán
     (order.product.price - order.product.price * (order.product.discountRate / 100)) * newQuantity
   );
 
