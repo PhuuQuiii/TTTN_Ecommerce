@@ -20,7 +20,7 @@ export class OrderService {
     return data;
   }
 
-  placeOrder(body) {
+  placeOrder(body) { // Tạo order khi thanh toán Paypal
     let url = `${ORDER_BASE_URL}/create-order`;
     let data = postTokenService(url, "POST", body);
     return data;
@@ -38,4 +38,5 @@ export class OrderService {
     let data = postTokenService(url, "POST", body);
     return data;
   }
+
 }

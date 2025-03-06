@@ -23,6 +23,9 @@ const task = Fawn.Task();
 const mongoose = require("mongoose");
 Fawn.init(mongoose);
 
+const paypal = require('@paypal/checkout-server-sdk'); // SDK của PayPal để thao tác với API thanh toán
+const client = require('../utils/paypal.js'); // Import file cấu hình PayPal Client
+
 const perPage = 10;
 
 exports.order = async (req, res, next) => {
@@ -170,141 +173,149 @@ exports.calculateShippingCharge = async (req, res) => {
 };
 
 exports.createOrder = async (req, res) => {
-  const {products,shipto,shippingCharge,orderID,method} = req.body; // Lấy dữ liệu từ request body
-  //vaidate address
-  if (!shipto.region || !shipto.area || !shipto.city || !shipto.address || !shipto.phoneno) { // Kiểm tra tính hợp lệ của địa chỉ giao hàng
+  const { products, shipto, shippingCharge, method } = req.body; // Lấy dữ liệu từ request body
+
+  // Validate address
+  if (!shipto.region || !shipto.area || !shipto.city || !shipto.address || !shipto.phoneno) {
     return res.status(403).json({ error: "Address fields are required." });
   }
-  //validate products
-  let p_slugs = products.map(p=>p.p_slug) // Lấy danh sách sản phẩm từ database
+
+  // Validate products
+  let p_slugs = products.map(p => p.p_slug);
   let Products = await Product.find({
-    slug: p_slugs, 
+    slug: p_slugs,
     isVerified: { $ne: null },
     isDeleted: null,
   }).populate("soldBy", "isBlocked isVerified holidayMode");
 
-
-  if (Products.length !== p_slugs.length) { // Kiểm tra sản phẩm có tồn tại hay không
-    return res.status(404).json({ error: 'Products not found.' })
+  if (Products.length !== p_slugs.length) {
+    return res.status(404).json({ error: 'Products not found.' });
   }
-  if (products.find(p => { // Kiểm tra sản phẩm có tồn tại hay không
-    if (p.quantity === undefined || +p.quantity < 1) return p
-  })) {
-    return res.status(403).json({ error: 'Product quantity is required.' })
+  if (products.find(p => p.quantity === undefined || +p.quantity < 1)) {
+    return res.status(403).json({ error: 'Product quantity is required.' });
   }
 
-  //validate each product
-  let error
-  const isAdminOnHoliday = (first, last) => { // Kiểm tra trạng thái của người bán và tồn kho
+  // Validate each product
+  let error;
+  const isAdminOnHoliday = (first, last) => {
     let week = [0, 1, 2, 3, 4, 5, 6];
     let firstIndex = week.indexOf(first);
-    week = week.concat(week.splice(0, firstIndex)); //Shift array so that first day is index 0
-    let lastIndex = week.indexOf(last); //Find last day
-    //Cut from first day to last day nd check with today day
-    return week.slice(0, lastIndex + 1).some((d) => d === new Date().getDay()); // Hàm này kiểm tra xem người bán có đang trong chế độ nghỉ (holidayMode) hay không.
+    week = week.concat(week.splice(0, firstIndex));
+    let lastIndex = week.indexOf(last);
+    return week.slice(0, lastIndex + 1).some(d => d === new Date().getDay());
   };
   for (let i = 0; i < Products.length; i++) {
     const product = Products[i];
-    if (product.soldBy.isBlocked || !product.soldBy.isVerified) { // Người bán có bị khóa tài khoản (isBlocked) hoặc chưa xác thực (isVerified).
-      error = `Seller not available of product ${product.name}`
+    if (product.soldBy.isBlocked || !product.soldBy.isVerified) {
+      error = `Seller not available of product ${product.name}`;
       break;
     }
-    if (
-      isAdminOnHoliday(
-        product.soldBy.holidayMode.start,
-        product.soldBy.holidayMode.end
-      )
-    ) {
-      error = `Seller is on holiday of product ${product.name}. Please order manually `  // Người bán có đang nghỉ (holidayMode).
+    if (isAdminOnHoliday(product.soldBy.holidayMode.start, product.soldBy.holidayMode.end)) {
+      error = `Seller is on holiday of product ${product.name}. Please order manually`;
       break;
     }
-    // if (product.quantity === 0) {
-    //   error = `Product ${product.name} is out of the stock.`
-    //   break;
-    // }
-    
-
     if (product.quantity < products.find(p => p.p_slug === product.slug).quantity) {
-      error = `There are only ${product.quantity} quantity of product ${product.name} available.` // Sản phẩm có đủ số lượng tồn kho để đáp ứng đơn hàng không.
-
+      error = `There are only ${product.quantity} quantity of product ${product.name} available.`;
       break;
     }
-    
   }
   if (error) {
-    return res.status(403).json({error})
+    return res.status(403).json({ error });
   }
 
-  //create orders
-  Products = products.map(async product =>{ // Tạo đơn hàng
-    // new order
-    let thisProduct = Products.find(p => p.slug === product.p_slug)
-    const newOrder = new Order();
-    newOrder.orderID = orderID;
-    newOrder.user = req.user._id;
-    newOrder.product = thisProduct._id;
-    newOrder.soldBy = thisProduct.soldBy;
-    newOrder.quantity = product.quantity;
-    newOrder.productAttributes = product.productAttributes;
-    newOrder.shipto = {
-      region: shipto.region,
-      city: shipto.city,
-      area: shipto.area,
-      address: shipto.address,
-      phoneno: shipto.phoneno,
-    };
-    if (shipto.lat && shipto.long) {
-      let geolocation = {
-        type: "Point",
-        coordinates: [shipto.long, shipto.lat], // Nếu có tọa độ (lat, long), lưu vào geolocation
+  // Create PayPal order
+  const PaypalClient = client();
+  const request = new paypal.orders.OrdersCreateRequest();
+  request.headers['prefer'] = 'return=representation';
+  request.requestBody({
+    intent: 'CAPTURE',
+    purchase_units: [{
+      amount: {
+        currency_code: 'USD',
+        value: shippingCharge // Assuming shippingCharge is the total amount
+      }
+    }],
+  });
+
+  try {
+    const paypalResponse = await PaypalClient.execute(request);
+    const orderID = paypalResponse.result.id;
+
+    // Capture PayPal order( Xác minh thanh toán Paypal)
+    const captureRequest = new paypal.orders.OrdersCaptureRequest(orderID);
+    captureRequest.requestBody({});
+    const captureResponse = await PaypalClient.execute(captureRequest);
+
+    if (captureResponse.result.status !== 'COMPLETED') {
+      return res.status(500).json({ message: 'Payment not completed' });
+    }
+
+    // Create orders
+    Products = products.map(async product => {
+      let thisProduct = Products.find(p => p.slug === product.p_slug);
+      const newOrder = new Order();
+      newOrder.orderID = orderID;
+      newOrder.user = req.user._id;
+      newOrder.product = thisProduct._id;
+      newOrder.soldBy = thisProduct.soldBy;
+      newOrder.quantity = product.quantity;
+      newOrder.productAttributes = product.productAttributes;
+      newOrder.shipto = {
+        region: shipto.region,
+        city: shipto.city,
+        area: shipto.area,
+        address: shipto.address,
+        phoneno: shipto.phoneno,
       };
-      newOrder.shipto.geolocation = geolocation;
-    }
-    const status = {
-      currentStatus: "active",
-      activeDate: Date.now(),
-    };
-    newOrder.status = status;
-  
-    // new payment 
-    const newPayent = new Payment({ // Tạo thanh toán
-      user: req.user._id,
-      order: newOrder._id,
-      method: method,
-      shippingCharge: shippingCharge,
-      transactionCode: orderID,
-      amount: Math.round(
-        (thisProduct.price - thisProduct.price * (thisProduct.discountRate / 100)) *
+      if (shipto.lat && shipto.long) {
+        let geolocation = {
+          type: "Point",
+          coordinates: [shipto.long, shipto.lat],
+        };
+        newOrder.shipto.geolocation = geolocation;
+      }
+      const status = {
+        currentStatus: "active",
+        activeDate: Date.now(),
+      };
+      newOrder.status = status;
+      newOrder.isPaid = true; // Đặt isPaid là true khi thanh toán thành công
+
+      const newPayment = new Payment({
+        user: req.user._id,
+        order: newOrder._id,
+        method: method,
+        shippingCharge: shippingCharge,
+        transactionCode: orderID,
+        amount: Math.round(
+          (thisProduct.price - thisProduct.price * (thisProduct.discountRate / 100)) *
           newOrder.quantity
-      ),
-      from: req.user.phone,//esewa type
+        ),
+        from: req.user.phone,
+      });
+      newOrder.payment = newPayment._id;
+
+      let cart = await Cart.findOne({ product: thisProduct._id, user: req.user._id, isDeleted: null });
+      if (cart) {
+        let updateCart = cart.toObject();
+        updateCart.isDeleted = Date.now();
+        task.update(cart, updateCart).options({ viaSave: true });
+      }
+
+      const results = await task
+        .save(newOrder)
+        .save(newPayment)
+        .run({ useMongoose: true });
+      return { order: results[1], payment: results[2] };
     });
-    newOrder.payment = newPayent._id;
 
-    //if product is in cart remove from it // Xóa sản phẩm khỏi giỏ hàng
-    let cart = await Cart.findOne({ product:thisProduct._id, user: req.user._id, isDeleted: null })
-    if (cart) {
-      let updateCart = cart.toObject()
-      updateCart.isDeleted = Date.now()
-      task.update(cart, updateCart)
-        .options({ viaSave: true })
-      
-    }
-    // update thisProduct
-    // const updateProduct = thisProduct.toObject();
-    // updateProduct.quantity = updateProduct.quantity - newOrder.quantity;
-    const results = await task // Lưu đơn hàng và thanh toán vào database
-      .save(newOrder)
-      .save(newPayent)
-      // .update(thisProduct, updateProduct)
-      // .options({ viaSave: true })
-       .run({ useMongoose: true });
-    return { order: results[1], payment: results[2] }
-  })
+    Products = await Promise.all(Products);
 
-  Products = await Promise.all(Products)
-
-  res.json(Products);
+    res.json({ orderID, Products });
+  } catch (error) {
+    console.error('Error creating PayPal order:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
 };
 
 const search_orders = async (page, perPage, keyword = '', query, res, type) => {

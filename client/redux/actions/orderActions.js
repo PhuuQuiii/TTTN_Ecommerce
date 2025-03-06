@@ -49,7 +49,7 @@ const getOrdersStatuses = (ctx) => {
   };
 };
 
-const placeOrder = (body) => {
+const placeOrder = (body) => { // Khi thanh toán Paypal thành công thì chuyển trang profile
   return async (dispatch) => {
     const orderService = new OrderService();
     const response = await orderService.placeOrder(body);

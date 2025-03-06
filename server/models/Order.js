@@ -132,7 +132,7 @@ const orderSchema = new mongoose.Schema({
             max: 9999999999,
         }
     },
-    isPaid:{
+    isPaid:{ // Xác thực order đã thanh toán chưa
         type: Boolean,
         default: false
     },
