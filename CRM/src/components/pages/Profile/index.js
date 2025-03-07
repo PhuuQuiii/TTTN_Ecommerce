@@ -39,15 +39,15 @@ const Profile = ({user}) => {
                                 </div>
                             </div>
                         </TabPane>
-                        <TabPane tab="Seller logo" key="2">
+                        {/* <TabPane tab="Seller logo" key="2">
                             logo
-                </TabPane>
+                        </TabPane>
                         <TabPane tab="Shipping" key="ship">
                             shipping
-                </TabPane>
+                        </TabPane>
                         <TabPane tab="Comissions" key="3">
                             Comissinons
-                </TabPane>
+                        </TabPane> */}
                     </Tabs>
                 </div>
             </div>
