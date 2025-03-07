@@ -156,11 +156,11 @@ class ProductSpecs extends Component {
                     }
                     <div className="new-price">
                       <span className="price">
-                        {" "} vnđ
+                        {" "}
                         {product?.price.$numberDecimal -
                           ((product?.price.$numberDecimal *
                             product?.discountRate) /
-                            100)}
+                            100)} vnđ
                       </span>
                       {
                         product?.discountRate > 0 &&

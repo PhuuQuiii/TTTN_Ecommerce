@@ -121,8 +121,15 @@
   }
 
   .table-item-img {
-    height: 60px;
-  }
+    height: 80px;
+    width: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+}
 
   .my-orders {
     h3 {

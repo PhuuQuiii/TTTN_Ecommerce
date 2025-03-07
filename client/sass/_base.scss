@@ -84,8 +84,13 @@ body {
 }
 
 .ant-select-selector {
-  height: 35px !important;
+  height: 40px !important;
+  border-radius: 15px !important;
+  display: flex !important; /* Sử dụng flexbox */
+  align-items: center !important; /* Căn giữa theo chiều dọc */
+  justify-content: center; /* Căn giữa theo chiều ngang nếu cần */
 }
+
 
 .breadcrumb-all {
   margin: 30px 0;
@@ -501,4 +506,15 @@ input.inputfile + label {
   .latest-cards {
     margin-bottom: 20px;
   }
+}
+
+.ant-modal-content {
+  border-radius: 20px !important;
+  overflow: hidden;
+}
+.ant-modal {
+  border-radius: 20px !important;
+}
+.ant-modal-body {
+  border-radius: 20px !important;
 }

@@ -1,6 +1,8 @@
 .main-carousel {
   .img-text {
     position: relative;
+    border-radius: 20px;
+    overflow: hidden;
     .carousel-text {
       position: absolute;
       top: 25%;

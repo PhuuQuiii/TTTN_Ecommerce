@@ -146,21 +146,6 @@ class Login extends Component {
                 <div id="or">OR</div>
                 <div className="social-title">Sign in with</div>
                 <div className="social-btn-cover">
-                  <FacebookLogin
-                    appId="207764167510635"
-                    autoLoad={false}
-                    fields="name,email,picture"
-                    // onClick={componentClicked}
-                    callback={this.responseFacebook}
-                    render={renderProps => (
-                      <Button
-                        className="social-btn facebook"
-                        onClick={renderProps.onClick}
-                      >
-                        <FacebookFilled /> Login With Facebook
-                      </Button>
-                    )}
-                  />
                   <GoogleLogin
                     clientId="1071225542864-6lcs1i4re8ht257ee47lrg2jr891518o.apps.googleusercontent.com"
                     buttonText="Login"

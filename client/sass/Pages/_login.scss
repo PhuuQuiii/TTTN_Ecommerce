@@ -45,17 +45,24 @@
     .social-btn-cover {
       display: flex;
       align-items: center;
+      
       @media screen and (max-width: 425px) {
         display: block;
       }
+    
       .google {
-        margin-left: 10px;
+        display: flex; /* Đảm bảo nội dung căn giữa */
+        justify-content: center; /* Căn giữa nội dung */
+        align-items: center; /* Căn giữa theo chiều dọc */
+        width: 100%; /* Full chiều rộng */
+        max-width: 100%; /* Đảm bảo không bị giới hạn */
+        
         @media screen and (max-width: 425px) {
           margin-left: 0px;
           margin-top: 10px;
         }
       }
-    }
+    }    
   }
   .welcome-illus {
     img {
