@@ -138,7 +138,7 @@ class QA extends Component {
                   <span className="q-title">
                     <span className="q-text">{qa.answer}</span>
                     <div className="user">
-                      {qa.answerby.shopName} -{" "}
+                    {qa.answerby?.shopName || "Unknown"} -{" "}
                       {convertDateToCurrentTz(qa.answeredDate)}
                     </div>
                   </span>
