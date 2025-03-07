@@ -94,7 +94,7 @@ class Header extends Component {
   }
 
   searchSelectedProduct = debounce((keyword) => {
-    Router.push("/search/[slug]", "/search/" + keyword);
+    Router.push({ pathname: "/search/[slug]", query: { slug: keyword } });
     this.setState({ searchValue: keyword });
   }, 500)
 
