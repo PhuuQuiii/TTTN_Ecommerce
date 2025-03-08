@@ -73,6 +73,30 @@ class OrderSummary extends Component {
       }
     });
 
+    let totalCheckoutItems = 0;
+  if (!this.props.checkoutItems?.totalAmount) {
+    this.props.checkoutItems?.map((items) => {
+      totalCheckoutItems +=
+        items.quantity *
+        getDiscountedPrice(
+          items.product.price.$numberDecimal,
+          items.product.discountRate
+        );
+    });
+  } else {
+    totalCheckoutItems = this.props.checkoutItems.totalAmount;
+  }
+
+  let deliveryCharges =
+    this.props.showShippingAddress === "showDisplay"
+      ? this.props.shippingCharge
+      : this.props.shippingCharge && this.props.checkoutItems.length
+      ? this.props.shippingCharge
+      : 0;
+
+  let totalAmount = (totalCheckoutItems + deliveryCharges).toFixed(2);
+  console.log("Total Amount in OrderSummary.js:", totalAmount); // Thêm câu lệnh console.log
+
     let body = {
       products,
       shipto: {
@@ -87,6 +111,7 @@ class OrderSummary extends Component {
       shippingCharge: this.props.shippingCharge ? this.props.shippingCharge : 0,
       orderID: shortid.generate(),
       method: "Cash on Delivery",
+      totalAmount: (totalCheckoutItems + deliveryCharges).toFixed(2) // Add total amount here
     };
     this.setState(
       {

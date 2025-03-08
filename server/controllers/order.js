@@ -173,7 +173,9 @@ exports.calculateShippingCharge = async (req, res) => {
 };
 
 exports.createOrder = async (req, res) => {
-  const { products, shipto, shippingCharge, method } = req.body; // Lấy dữ liệu từ request body
+  const { products, shipto, shippingCharge, method, totalAmount } = req.body; // Lấy dữ liệu từ request body
+
+  console.log("Total Amount in createOrder API:", totalAmount); 
 
   // Validate address
   if (!shipto.region || !shipto.area || !shipto.city || !shipto.address || !shipto.phoneno) {
@@ -232,7 +234,7 @@ exports.createOrder = async (req, res) => {
     purchase_units: [{
       amount: {
         currency_code: 'USD',
-        value: shippingCharge // Assuming shippingCharge is the total amount
+        value: totalAmount // Tổng tiền truyền từ checkout
       }
     }],
   });
