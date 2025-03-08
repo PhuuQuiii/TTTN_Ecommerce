@@ -10,7 +10,7 @@ const Todo = ({user,completedPercent}) => {
   
   return (
     <div className="col-lg-6 col-xl-12">
-      <div className="card flex-fill w-100">
+      {/* <div className="card flex-fill w-100">
         <div className="card-header">
           <h5 className="card-title mb-0">Namaste! Complete the todos to start your selling journey!
             <Progress
@@ -86,7 +86,7 @@ const Todo = ({user,completedPercent}) => {
             <div className="dashed-line"></div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
     
   );

@@ -27,6 +27,7 @@ class PopularSlider extends Component {
           <PopularCard />
           <PopularCard />
           <PopularCard />
+          <PopularCard />
         </Slider>
       </section>
     );

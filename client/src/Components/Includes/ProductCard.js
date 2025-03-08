@@ -268,7 +268,7 @@ const ProductCard = (props) => {
               </div>
               <div className="prod-name medium-line">{productData.name}</div>
               <div className="prod-price large-line">
-                {!checkSkeleton && "vnđ"} {productData.price.$numberDecimal}
+                {productData.price.$numberDecimal} {!checkSkeleton && "vnđ"}
               </div>
             </div>) : (
               <Link
@@ -315,7 +315,7 @@ const ProductCard = (props) => {
                     </div>
                     <div className="prod-name medium-line">{productData.name}</div>
                     <div className="prod-price large-line">
-                      {!checkSkeleton && "vnđ"} {productData.price.$numberDecimal}
+                      {productData.price.$numberDecimal} {!checkSkeleton && "vnđ"}
                     </div>
                   </div>
                 </a>
