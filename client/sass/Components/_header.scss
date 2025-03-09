@@ -98,9 +98,10 @@
           background: #fff;
           width: 60%;
           box-shadow: variables.$box-shadow;
-          padding: 0 20px;
+          padding: 10px 20px;
           display: none;
           animation: all 0.3s ease-in-out;
+          border-radius: 15px;
         }
         .child-cates-col,
         .child-child-cates-col {

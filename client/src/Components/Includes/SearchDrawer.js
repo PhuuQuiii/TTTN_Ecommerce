@@ -1,8 +1,7 @@
-import React, { Component } from "react";
-import { Drawer } from "antd";
-import _, { debounce } from "lodash";
+import { AutoComplete, Drawer } from "antd";
+import { debounce } from "lodash";
 import Router, { withRouter } from "next/router";
-import { AutoComplete } from "antd";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import actions from "../../../redux/actions";
 
@@ -52,7 +51,7 @@ class SearchDrawer extends Component {
     }
   
     searchSelectedProduct = debounce((keyword) => {
-      Router.push("/search/[slug]", "/search/" + keyword);
+      Router.push({ pathname: "/search/[slug]", query: { slug: keyword } });
       this.setState({ searchValue: keyword });
       this.props.onCloseDrawer();
     }, 1000)

@@ -36,7 +36,7 @@ class ProductSlider extends Component {
   render() {
     const settings = {
       dots: false,
-      infinite: true,
+      infinite: false,
       // autoplay:true,
       speed: 500,
       slidesToShow: 4,

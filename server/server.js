@@ -10,11 +10,9 @@ require("express-async-errors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const socketIO = require("socket.io");
+const paypalRoutes = require("./routes/paypalRoutes.js");
 // Import methods
-const {
-  dbConnection,
-  errorHandler,
-} = require("./middleware/helpers");
+const { dbConnection, errorHandler } = require("./middleware/helpers");
 
 // Database Connection
 dbConnection();
@@ -74,7 +72,7 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
-
+app.use("/api/paypal", paypalRoutes);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // Routes

@@ -1,16 +1,14 @@
-import { Row, Col } from "antd";
-import { connect, useDispatch, useSelector } from "react-redux";
-import MainCarousel from "../src/Components/Carousel";
-import ProductSlider from "../src/Components/ProductSlider";
-import SliderHeader from "../src/Components/SliderHeader";
-import Popular from "../src/Components/Popular";
-import LatestSLider from "../src/Components/LatestSlider";
-import initialize from "../utils/initialize";
-import actions from "../redux/actions";
-import Layout from "../src/Components/Layout";
-import ProductCard from "../src/Components/Includes/ProductCard";
+import { Col, Row } from "antd";
 import { isEmpty } from "lodash";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import actions from "../redux/actions";
+import MainCarousel from "../src/Components/Carousel";
+import ProductCard from "../src/Components/Includes/ProductCard";
+import Layout from "../src/Components/Layout";
+import ProductSlider from "../src/Components/ProductSlider";
+import SliderHeader from "../src/Components/SliderHeader";
+import initialize from "../utils/initialize";
 
 const Index = (props) => {
   let dispatch = useDispatch();
@@ -48,7 +46,7 @@ const Index = (props) => {
     <Layout title="Home">
       <div className="wrapper">
         <Row>
-          <Col lg={6}>
+          {/* <Col lg={6}>
             <ul className="top-categories">
               <li className="title">Top Categories</li>
               <li>Fashion</li>
@@ -58,8 +56,8 @@ const Index = (props) => {
               <li>Music</li>
               <li>Sports</li>
             </ul>
-          </Col>
-          <Col lg={18}>
+          </Col> */}
+          <Col lg={24}>
             <div className="main-carousel">
               <MainCarousel data={bannerImages} />
             </div>
@@ -67,18 +65,19 @@ const Index = (props) => {
         </Row>
         <div className="container">
           {
-            !isEmpty(allProducts.featuredProducts?.products) && 
-              <>
-                <SliderHeader
-                  headTitle="Featured Products"
-                  headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
+            !isEmpty(allProducts.featuredProducts?.products) &&
+            <>
+            {console.log("Danh sách sản phẩm hiển thị:", allProducts.featuredProducts?.products)}
+              <SliderHeader
+                headTitle="Featured Products"
+                headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
+                  removePaddingTop="paddingTopZero"
                   listLink="featuredProducts"
                 />
                 <ProductSlider data={allProducts.featuredProducts} sliderName="featured" />
               </>
-            
           }
-          <section className="latest-popular">
+          {/* <section className="latest-popular">
             <Row>
               <Col lg={12} xs={24} md={12}>
                 <Popular data={allProducts.latestProducts} />
@@ -87,7 +86,7 @@ const Index = (props) => {
                 <LatestSLider data={allProducts.latestProducts} />
               </Col>
             </Row>
-          </section>
+          </section> */}
           {
             !isEmpty(allProducts.trendingProducts?.products) &&
             <>

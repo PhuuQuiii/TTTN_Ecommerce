@@ -7,6 +7,7 @@ class QuickViewModal extends Component {
   render() {
     return (
       <Modal
+        className="quick-view-modal"
         title={this.props.title}
         visible={this.props.visible}
         // onOk={this.handleOk}

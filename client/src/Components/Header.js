@@ -94,7 +94,7 @@ class Header extends Component {
   }
 
   searchSelectedProduct = debounce((keyword) => {
-    Router.push("/search/[slug]", "/search/" + keyword);
+    Router.push({ pathname: "/search/[slug]", query: { slug: keyword } });
     this.setState({ searchValue: keyword });
   }, 500)
 
@@ -122,7 +122,7 @@ class Header extends Component {
       <React.Fragment>
         <div className="top-header">
           <div>
-            Customer Care: +84987654321
+            Customer Care: +84983675437
           </div>
           <div>
             <ul>

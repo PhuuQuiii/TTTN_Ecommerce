@@ -1,7 +1,7 @@
 import {
-    EnvironmentOutlined,
-    MailOutlined,
-    PhoneOutlined,
+  EnvironmentOutlined,
+  MailOutlined,
+  PhoneOutlined,
 } from "@ant-design/icons";
 import { Button } from "antd";
 import { isEmpty } from "lodash";
@@ -14,14 +14,16 @@ import { STORE_CHECKOUT_ITEMS } from "../../../redux/types";
 import { getDiscountedPrice } from "../../../utils/common";
 import EditAddressModal from "../../Components/EditAddressModal";
 
-const shortid = require('shortid');
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+
+const shortid = require("shortid");
 
 class OrderSummary extends Component {
   state = {
     userData: [],
     activeLocation: {},
     showEditAddressModal: false,
-    loading: false
+    loading: false,
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -47,34 +49,53 @@ class OrderSummary extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    if (
-      this.props.orderResp !== prevProps.orderResp &&
-      this.props.orderResp
-    ) {
+    if (this.props.orderResp !== prevProps.orderResp && this.props.orderResp) {
       this.setState({
-        loading: false
-      })
+        loading: false,
+      });
     }
   }
 
   placeOrderItems = () => {
-
     let { checkoutItems, userData } = this.props;
 
     let products = checkoutItems.carts.map((item) => {
-
       return {
         p_slug: item.product.slug,
         quantity: checkoutItems.totalQty || item.quantity,
       };
     });
 
-    let activeAddress = {}
+    let activeAddress = {};
     userData.location.map((loc) => {
       if (loc.isActive) {
-        activeAddress = loc
+        activeAddress = loc;
       }
     });
+
+    let totalCheckoutItems = 0;
+  if (!this.props.checkoutItems?.totalAmount) {
+    this.props.checkoutItems?.map((items) => {
+      totalCheckoutItems +=
+        items.quantity *
+        getDiscountedPrice(
+          items.product.price.$numberDecimal,
+          items.product.discountRate
+        );
+    });
+  } else {
+    totalCheckoutItems = this.props.checkoutItems.totalAmount;
+  }
+
+  let deliveryCharges =
+    this.props.showShippingAddress === "showDisplay"
+      ? this.props.shippingCharge
+      : this.props.shippingCharge && this.props.checkoutItems.length
+      ? this.props.shippingCharge
+      : 0;
+
+  let totalAmount = (totalCheckoutItems + deliveryCharges).toFixed(2);
+  console.log("Total Amount in OrderSummary.js:", totalAmount); // Thêm câu lệnh console.log
 
     let body = {
       products,
@@ -89,13 +110,17 @@ class OrderSummary extends Component {
       },
       shippingCharge: this.props.shippingCharge ? this.props.shippingCharge : 0,
       orderID: shortid.generate(),
-      method: "Cash on Delivery"
+      method: "Cash on Delivery",
+      totalAmount: (totalCheckoutItems + deliveryCharges).toFixed(2) // Add total amount here
     };
-    this.setState({
-      loading: true
-    }, () => {
-      this.props.placeOrder(body)
-    })
+    this.setState(
+      {
+        loading: true,
+      },
+      () => {
+        this.props.placeOrder(body);
+      }
+    );
   };
 
   render() {
@@ -104,18 +129,23 @@ class OrderSummary extends Component {
     let totalCheckoutItems = 0;
     if (!this.props.checkoutItems?.totalAmount) {
       this.props.checkoutItems?.map((items) => {
-        totalCheckoutItems += items.quantity * getDiscountedPrice(
-          items.product.price.$numberDecimal,
-          items.product.discountRate
-        );
+        totalCheckoutItems +=
+          items.quantity *
+          getDiscountedPrice(
+            items.product.price.$numberDecimal,
+            items.product.discountRate
+          );
       });
     } else {
       totalCheckoutItems = this.props.checkoutItems.totalAmount;
     }
 
-    let deliveryCharges = this.props.showShippingAddress === 'showDisplay' ? this.props.shippingCharge : (this.props.shippingCharge && this.props.checkoutItems.length)
-      ? this.props.shippingCharge
-      : 0;
+    let deliveryCharges =
+      this.props.showShippingAddress === "showDisplay"
+        ? this.props.shippingCharge
+        : this.props.shippingCharge && this.props.checkoutItems.length
+        ? this.props.shippingCharge
+        : 0;
     return (
       <div className="order-shipping">
         <EditAddressModal
@@ -133,8 +163,11 @@ class OrderSummary extends Component {
                 <div className="name">
                   <div>{userData?.name}</div>
                   <div className="address">
-                    {activeLocation?.area}{activeLocation?.area ? ',' : ''} {activeLocation?.address}{activeLocation?.address ? ',' : ''} <br />
-                    {activeLocation?.city}{activeLocation?.city ? ',' : ''} {activeLocation?.region}
+                    {activeLocation?.area}
+                    {activeLocation?.area ? "," : ""} {activeLocation?.address}
+                    {activeLocation?.address ? "," : ""} <br />
+                    {activeLocation?.city}
+                    {activeLocation?.city ? "," : ""} {activeLocation?.region}
                   </div>
                 </div>
               </div>
@@ -148,13 +181,12 @@ class OrderSummary extends Component {
           </div>
           <div className="ti-pr">
             <div className="ti">
-              {
-                activeLocation?.phoneno &&
+              {activeLocation?.phoneno && (
                 <div className="name-add">
                   <PhoneOutlined />
                   <div className="name">{activeLocation?.phoneno}</div>
                 </div>
-              }
+              )}
             </div>
             {/* <div className="pr edit">EDIT</div> */}
           </div>
@@ -205,47 +237,66 @@ class OrderSummary extends Component {
 
             {this.props.orderTxt === "PLACE ORDER" ? (
               <div className="order-procced">
-                <Button
-                  className={"btn " + this.props.diableOrderBtn}
-                  onClick={this.placeOrderItems}
-                  disabled={this.state.loading}
+                <PayPalScriptProvider
+                  options={{
+                    "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+                    currency: "USD",
+                    intent: "capture",
+                  }}
                 >
-                  {this.props.orderTxt}
-                </Button>
+                  <div className="space-y-2">
+                    <PayPalButtons
+                      style={{
+                        color: "gold",
+                        shape: "rect",
+                        label: "pay",
+                        height: 50,
+                      }}
+                      onClick={this.placeOrderItems}
+                    />
+                    <div className="text-center">
+                      <button className="w-full bg-black text-white py-3 rounded-md flex items-center justify-center">
+                        <span>Debit or Credit Card</span>
+                      </button>
+                    </div>
+                  </div>
+                </PayPalScriptProvider>
               </div>
             ) : (
-                <div
-                  className="order-procced"
-                  onClick={() =>
-                    this.props.saveCheckoutItems({
-                      carts: this.props.checkoutItems,
-                      totalCount: this.props.checkoutItems.length,
-                      totalAmount: totalCheckoutItems,
-                    })
-                  }
-                >
-                  <Link href="/checkout">
-                    <a>
-                      <Button
-                        className={"btn " + this.props.diableOrderBtn}
-                        disabled={
-                          (this.props.diableOrderBtn === "disableBtn" ||
-                            isEmpty(this.props.userResp?.location))
-                            ? true
-                            : false
-                        }
-                      >
-                        {this.props.orderTxt}
-                      </Button>
-                    </a>
-                  </Link>
+              <div
+                className="order-procced"
+                onClick={() =>
+                  this.props.saveCheckoutItems({
+                    carts: this.props.checkoutItems,
+                    totalCount: this.props.checkoutItems.length,
+                    totalAmount: totalCheckoutItems,
+                  })
+                }
+              >
+                <Link href="/checkout">
+                  <a>
+                    <Button
+                      className={"btn " + this.props.diableOrderBtn}
+                      disabled={
+                        this.props.diableOrderBtn === "disableBtn" ||
+                        isEmpty(this.props.userResp?.location)
+                          ? true
+                          : false
+                      }
+                    >
+                      {this.props.orderTxt}
+                    </Button>
+                  </a>
+                </Link>
 
-                  {
-                    isEmpty(this.props.userResp?.location) && // Hiển thị thông báo khi chưa có địa chỉ
-                    <div className="checkout-note">Note: Please add address in your profile before proceeding further.</div>
-                  }
-                </div>
-              )}
+                {isEmpty(this.props.userResp?.location) && ( // Hiển thị thông báo khi chưa có địa chỉ
+                  <div className="checkout-note">
+                    Note: Please add address in your profile before proceeding
+                    further.
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -256,7 +307,7 @@ class OrderSummary extends Component {
 const mapStatesToProps = (state) => ({
   shippingCharge: state.order.getShippingChargeResp,
   orderResp: state.order.placeOrderResp,
-  userResp: state.user.userProfile
+  userResp: state.user.userProfile,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -264,8 +315,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch({ type: STORE_CHECKOUT_ITEMS, payload: checkoutItems });
   },
   placeOrder: (body) => {
-    dispatch(actions.placeOrder(body))
-  }
+    dispatch(actions.placeOrder(body));
+  },
 });
 
 export default connect(

@@ -1432,6 +1432,28 @@
     "@parcel/watcher-win32-ia32" "2.5.0"
     "@parcel/watcher-win32-x64" "2.5.0"
 
+"@paypal/paypal-js@^8.1.2":
+  version "8.2.0"
+  resolved "https://registry.npmjs.org/@paypal/paypal-js/-/paypal-js-8.2.0.tgz"
+  integrity sha512-hLg5wNORW3WiyMiRNJOm6cN2IqjPlClpxd971bEdm0LNpbbejQZYtesb0/0arTnySSbGcxg7MxjkZ/N5Z5qBNQ==
+  dependencies:
+    promise-polyfill "^8.3.0"
+
+"@paypal/react-paypal-js@^8.8.2":
+  version "8.8.2"
+  resolved "https://registry.npmjs.org/@paypal/react-paypal-js/-/react-paypal-js-8.8.2.tgz"
+  integrity sha512-ffSOb6o2pgdbZVpUgpGuvRApkUfo9D+9KKjZ44if79yjhiYCVXOu2XOCR1+aC1RfuUzwEDV4S3+OA1x0OSeCVw==
+  dependencies:
+    "@paypal/paypal-js" "^8.1.2"
+    "@paypal/sdk-constants" "^1.0.122"
+
+"@paypal/sdk-constants@^1.0.122":
+  version "1.0.153"
+  resolved "https://registry.npmjs.org/@paypal/sdk-constants/-/sdk-constants-1.0.153.tgz"
+  integrity sha512-wrPXK9ckwYBOOLyHfsGGtYjf9vOQgPSOh08DEeGRr/KBamQgvHYEG2soSMPlJuLfker32n1x5wvnWCcYP+ea9w==
+  dependencies:
+    hi-base32 "^0.5.0"
+
 "@types/color-name@^1.1.1":
   version "1.1.1"
   resolved "https://registry.npmjs.org/@types/color-name/-/color-name-1.1.1.tgz"
@@ -2140,7 +2162,7 @@ atob@^2.1.2:
   resolved "https://registry.npmjs.org/atob/-/atob-2.1.2.tgz"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-axios@^0.21.1:
+axios@^0.21.4:
   version "0.21.4"
   resolved "https://registry.npmjs.org/axios/-/axios-0.21.4.tgz"
   integrity sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==
@@ -3412,6 +3434,11 @@ dot-prop@^5.2.0:
   dependencies:
     is-obj "^2.0.0"
 
+dotenv@^16.4.7:
+  version "16.4.7"
+  resolved "https://registry.npmjs.org/dotenv/-/dotenv-16.4.7.tgz"
+  integrity sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==
+
 dunder-proto@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npmjs.org/dunder-proto/-/dunder-proto-1.0.1.tgz"
@@ -4101,6 +4128,11 @@ hex-color-regex@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/hex-color-regex/-/hex-color-regex-1.1.0.tgz"
   integrity sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==
+
+hi-base32@^0.5.0:
+  version "0.5.1"
+  resolved "https://registry.npmjs.org/hi-base32/-/hi-base32-0.5.1.tgz"
+  integrity sha512-EmBBpvdYh/4XxsnUybsPag6VikPYnN30td+vQk+GI3qpahVEG9+gTkG0aXVxTjBqQ5T6ijbWIu77O+C5WFWsnA==
 
 hmac-drbg@^1.0.1:
   version "1.0.1"
@@ -6061,6 +6093,11 @@ promise-inflight@^1.0.1:
   resolved "https://registry.npmjs.org/promise-inflight/-/promise-inflight-1.0.1.tgz"
   integrity sha1-mEcocL8igTL8vdhoEputEsPAKeM=
 
+promise-polyfill@^8.3.0:
+  version "8.3.0"
+  resolved "https://registry.npmjs.org/promise-polyfill/-/promise-polyfill-8.3.0.tgz"
+  integrity sha512-H5oELycFml5yto/atYqmjyigJoAo3+OXwolYiH7OfQuYlAqhxNvTfiNMbV9hsC6Yp83yE5r2KTVmtrG6R9i6Pg==
+
 promise@^7.1.1:
   version "7.3.1"
   resolved "https://registry.npmjs.org/promise/-/promise-7.3.1.tgz"
@@ -6646,7 +6683,7 @@ react-cursor-position@2.5.3:
     object.omit "^3.0.0"
     prop-types "^15.6.0"
 
-react-dom@*, "react-dom@^0.14.0 || ^15.0.1 || ^16.0.0", "react-dom@^15.0.0 || ^16.0.0", "react-dom@^16 || ^17", react-dom@^16.0.0, react-dom@^16.2.0, react-dom@^16.6.0, react-dom@^16.9.0, react-dom@>=15, react-dom@>=15.0.0, react-dom@>=16.9.0, "react-dom@15.x || 16.x", react-dom@16.13.1:
+react-dom@*, "react-dom@^0.14.0 || ^15.0.1 || ^16.0.0", "react-dom@^15.0.0 || ^16.0.0", "react-dom@^16 || ^17", react-dom@^16.0.0, react-dom@^16.2.0, react-dom@^16.6.0, "react-dom@^16.8.0 || ^17 || ^18 || ^19", react-dom@^16.9.0, react-dom@>=15, react-dom@>=15.0.0, react-dom@>=16.9.0, "react-dom@15.x || 16.x", react-dom@16.13.1:
   version "16.13.1"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-16.13.1.tgz"
   integrity sha512-81PIMmVLnCNLO/fFOQxdQkvEq/+Hfpv24XNJfpyZhTRfO0QcmQIF/PgCa1zCOj2w1hrn12MFLyaJ/G0+Mxtfag==
@@ -6820,7 +6857,7 @@ react-tween-state@^0.1.5:
     raf "^3.1.0"
     tween-functions "^1.0.1"
 
-react@*, "react@^0.14.0 || ^15.0.1 || ^16.0.0", "react@^15.0.0 || ^16.0.0", "react@^15.6.2 || ^16.0 || ^17 || ^18", "react@^16 || ^17", react@^16.0.0, react@^16.1.0, react@^16.13.1, react@^16.2.0, react@^16.3.0, react@^16.6.0, react@^16.8.0, react@^16.8.3, react@^16.9.0, "react@>= 16.3.0", react@>=15, react@>=15.0.0, react@>=16.6.0, react@>=16.9.0, "react@~0.14.9 || ^15.0.0 || ^16.0.0", "react@15.x || 16.x", "react@15.x.x || 16.x.x", react@16.13.1, react@16.x:
+react@*, "react@^0.14.0 || ^15.0.1 || ^16.0.0", "react@^15.0.0 || ^16.0.0", "react@^15.6.2 || ^16.0 || ^17 || ^18", "react@^16 || ^17", react@^16.0.0, react@^16.1.0, react@^16.13.1, react@^16.2.0, react@^16.3.0, react@^16.6.0, react@^16.8.0, "react@^16.8.0 || ^17 || ^18 || ^19", react@^16.8.3, react@^16.9.0, "react@>= 16.3.0", react@>=15, react@>=15.0.0, react@>=16.6.0, react@>=16.9.0, "react@~0.14.9 || ^15.0.0 || ^16.0.0", "react@15.x || 16.x", "react@15.x.x || 16.x.x", react@16.13.1, react@16.x:
   version "16.13.1"
   resolved "https://registry.npmjs.org/react/-/react-16.13.1.tgz"
   integrity sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w==
