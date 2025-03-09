@@ -37,6 +37,31 @@ const orderSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref:"admin"
     },
+    isSaleOrder: {
+        type: Boolean,
+        default: false
+    },
+    originalPrice: {
+        type: mongoose.Decimal128,  // Giá gốc của sản phẩm
+        required: true
+    },
+    salePrice: {
+        type: mongoose.Decimal128,  // Giá sau khi áp dụng giảm giá
+        default: null
+    },
+    discountRate: {
+        type: Number,  // Phần trăm giảm giá
+        default: 0
+    },
+    saleStartTime: {
+        type: Date,
+        default: null
+    },
+    saleEndTime: {
+        type: Date,
+        default: null
+    },
+
     status: {
         currentStatus: {
             type: String,
