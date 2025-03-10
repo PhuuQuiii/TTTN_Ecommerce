@@ -27,6 +27,13 @@ const AdminBar = ({adminProfile}) => {
             // }]
         },
         {
+            key:'sales',
+            icon: 'layout',
+            main: 'Sale',
+            path:'/sale',
+        
+        },
+        {
             key:'live-streaming',
             icon: 'layout',
             main: 'Live Stream',
