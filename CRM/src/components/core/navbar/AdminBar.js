@@ -25,7 +25,13 @@ const AdminBar = ({adminProfile}) => {
             //     name: 'Manage Orders',
             //     path: '/order'
             // }]
-        }
+        },
+        {
+            key:'sales',
+            icon: 'layout',
+            main: 'Sale',
+            path:'/sale',
+        },
     ],[])
 
     return (
