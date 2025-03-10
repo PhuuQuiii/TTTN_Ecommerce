@@ -25,6 +25,12 @@ const AdminBar = ({adminProfile}) => {
             //     name: 'Manage Orders',
             //     path: '/order'
             // }]
+        },
+        {
+            key:'live-streaming',
+            icon: 'layout',
+            main: 'Live Stream',
+            path:'/live-stream',
         }
     ],[])
 

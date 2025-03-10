@@ -16,6 +16,7 @@ import Order from '../components/pages/Order'
 import Admin from "../components/pages/SuperAdmin/Admin";
 import SProduct from "../components/pages/SuperAdmin/Product";
 import ManageUsers from "../components/pages/SuperAdmin/ManageUsers";
+import LiveStream from "../components/pages/Live_Stream";
 
 
 const MainRouter = (props) => {
@@ -26,6 +27,7 @@ const MainRouter = (props) => {
       <AdminRoute exact path="/manage-products" component={Product} />
       <AdminRoute exact path="/add-product" component={AddProduct} />
       <AdminRoute exact path="/order" component= {Order} />
+      <AdminRoute exact path="/live-stream" component= {LiveStream} />
       <SuperAdminRoute exact path="/superadmin" component={Home}/>
       <SuperAdminRoute exact path="/superadmin/manage-products" component={SProduct} />
       <SuperAdminRoute exact path="/manage-admins" component={Admin} />
