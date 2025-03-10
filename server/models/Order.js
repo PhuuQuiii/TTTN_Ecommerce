@@ -43,7 +43,7 @@ const orderSchema = new mongoose.Schema({
     },
     originalPrice: {
         type: mongoose.Decimal128,  // Giá gốc của sản phẩm
-        required: true
+        // required: true
     },
     salePrice: {
         type: mongoose.Decimal128,  // Giá sau khi áp dụng giảm giá
