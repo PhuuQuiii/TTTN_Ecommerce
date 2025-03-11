@@ -5602,6 +5602,11 @@ history@^4.9.0:
     tiny-warning "^1.0.0"
     value-equal "^1.0.1"
 
+hls.js@^1.5.20:
+  version "1.5.20"
+  resolved "https://registry.npmjs.org/hls.js/-/hls.js-1.5.20.tgz"
+  integrity sha512-uu0VXUK52JhihhnN/MVVo1lvqNNuhoxkonqgO3IpjvQiGpJBdIXMGkofjQb/j9zvV7a1SW8U9g1FslWx/1HOiQ==
+
 hmac-drbg@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npmjs.org/hmac-drbg/-/hmac-drbg-1.0.1.tgz"

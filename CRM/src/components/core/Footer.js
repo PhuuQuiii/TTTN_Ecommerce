@@ -24,7 +24,7 @@ const Footer = props => {
                         </div>
                         <div className="col-6 text-right">
                             <p className="mb-0">
-                                &copy; 2019 - <a href="index.html" className="text-muted">AppStack</a>
+                                &copy; 2025 - <a href="index.html" className="text-muted">Quindigo</a>
                             </p>
                         </div>
                     </div>

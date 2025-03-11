@@ -574,7 +574,7 @@ exports.getUsers = async (req, res) => {
 }
 
 exports.category = async (req, res) => {
-    const { displayName, parent_id, category_slug } = req.body
+    const { displayName, parent_id, category_slug, brands } = req.body
     const systemName = shortid.generate()
     let updateCategory;
     if (category_slug) {
@@ -587,6 +587,9 @@ exports.category = async (req, res) => {
         // then update
         updateCategory.displayName = displayName
         updateCategory.parent = parent_id
+        if (brands) {
+            updateCategory.brands = brands
+        }
         await updateCategory.save()
         return res.json(updateCategory)
     }
@@ -594,7 +597,12 @@ exports.category = async (req, res) => {
     if (category) {
         return res.status(403).json({ error: "Category already exist" })
     }
-    category = new Category({ systemName, displayName, parent: parent_id })
+    category = new Category({ 
+        systemName, 
+        displayName, 
+        parent: parent_id,
+        brands: brands || [] 
+    })
     await category.save()
     res.json(category)
 }

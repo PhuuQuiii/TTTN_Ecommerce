@@ -1,0 +1,139 @@
+// Modern Live Stream Styles
+.live-stream-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  background: #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+
+  .live-stream-header {
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to right, #1a1a1a, #2d2d2d);
+
+    h2 {
+      color: #ffffff;
+      font-size: 1.8rem;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .live-dot {
+        width: 12px;
+        height: 12px;
+        background: #ff0000;
+        border-radius: 50%;
+        animation: pulse 1.5s infinite;
+      }
+
+      .live-text {
+        color: #ff0000;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+      }
+    }
+  }
+
+  .live-stream-content {
+    position: relative;
+
+    video {
+      width: 100%;
+      background: #000;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+    }
+
+    .live-stream-info {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      display: flex;
+      gap: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 10px 20px;
+      border-radius: 30px;
+      backdrop-filter: blur(5px);
+
+      .viewer-count,
+      .stream-quality {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #ffffff;
+
+        i {
+          font-size: 1.1rem;
+          color: #ff0000;
+        }
+
+        span {
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+}
+
+// Animation for live dot
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// Custom video controls styling
+video::-webkit-media-controls {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+video::-webkit-media-controls-panel {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+video::-webkit-media-controls-play-button {
+  background-color: #ff0000;
+  border-radius: 50%;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .live-stream-container {
+    margin: 1rem;
+
+    .live-stream-header {
+      padding: 1rem;
+
+      h2 {
+        font-size: 1.4rem;
+      }
+    }
+
+    .live-stream-content {
+      .live-stream-info {
+        bottom: 10px;
+        left: 10px;
+        padding: 8px 15px;
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
