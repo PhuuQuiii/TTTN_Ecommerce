@@ -1,12 +1,19 @@
 import { SearchOutlined } from '@ant-design/icons';
-import { Table as AntdTable, Button, Drawer, Input, Space } from 'antd';
+import { Table as AntdTable, Button, Drawer, Input, Space, Modal } from 'antd';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import { getCategories, getProductBrands } from '../../../../redux/actions/category_action';
+import { getCategories, getProductBrands, flipCategoryAvailability, deleteCategory } from '../../../../redux/actions/category_action';
 
-const Table = ({ getCategories, getProductBrands, categories, brands, totalCount, multiLoading }) => {
+const mapDispatchToProps = {
+    getCategories,
+    getProductBrands,
+    flipCategoryAvailability,
+    deleteCategory
+};
+
+const Table = ({ getCategories, getProductBrands, categories, brands, totalCount, multiLoading, flipCategoryAvailability, deleteCategory }) => {
     const [pagination, setPagination] = useState({
         defaultPageSize: 5,
         total: 0,
@@ -21,7 +28,7 @@ const Table = ({ getCategories, getProductBrands, categories, brands, totalCount
 
     useEffect(() => {
         getCategories(pagination.current, pagination.pageSize);
-        getProductBrands(); // Fetch brands when component mounts
+        getProductBrands();
     }, [])
 
     useEffect(() => {
@@ -38,6 +45,23 @@ const Table = ({ getCategories, getProductBrands, categories, brands, totalCount
 
     const handleReset = clearFilters => {
         clearFilters();
+    };
+
+    const handleToggleStatus = (category) => {
+        flipCategoryAvailability(category.slug);
+    };
+
+    const handleDelete = (category) => {
+        Modal.confirm({
+            title: 'Are you sure you want to delete this category?',
+            content: 'This action cannot be undone.',
+            okText: 'Yes',
+            okType: 'danger',
+            cancelText: 'No',
+            onOk() {
+                deleteCategory(category.slug);
+            }
+        });
     };
 
     const getCategorySearchProps = dataIndex => ({
@@ -86,6 +110,20 @@ const Table = ({ getCategories, getProductBrands, categories, brands, totalCount
         return brand ? brand.brandName : 'Unknown Brand';
     }
 
+    const getParentCategoryName = (parentId) => {
+        // Nếu không có parentId, trả về None
+        if (!parentId) return "None";
+
+        // Tìm category cha trong danh sách categories
+        const parentCategory = categories.find(cat => {
+            // So sánh cả string và ObjectId
+            return cat._id.toString() === parentId.toString();
+        });
+
+        // Trả về tên category cha nếu tìm thấy, ngược lại trả về Unknown Parent
+        return parentCategory ? parentCategory.displayName : "Unknown Parent";
+    };
+
     const columns = useMemo(() => [
         {
             title: 'Display Name',
@@ -103,7 +141,9 @@ const Table = ({ getCategories, getProductBrands, categories, brands, totalCount
             title: 'Parent Category',
             dataIndex: 'parent',
             width: '20%',
-            render: parent => parent ? parent.displayName : '-'
+            render: (parentId, record) => {
+                return getParentCategoryName(parentId);
+            }
         },
         {
             title: 'Brands',
@@ -138,24 +178,27 @@ const Table = ({ getCategories, getProductBrands, categories, brands, totalCount
         {
             title: 'Action',
             key: 'action',
-            width: '10%',
+            width: '15%',
             render: category => (
                 <Space size="small">
-                    <Button 
-                        type="primary" 
-                        size="small" 
-                        onClick={() => openCategory(category)}
-                        icon={<i className="fas fa-edit"></i>}
-                    />
-                    <Button 
-                        type="danger" 
+                    <Button
+                        type={category.isDisabled ? "primary" : "default"}
                         size="small"
+                        onClick={() => handleToggleStatus(category)}
+                        icon={category.isDisabled ? 
+                            <i className="fas fa-eye"></i> : 
+                            <i className="fas fa-eye-slash"></i>}
+                    />
+                    <Button
+                        type="danger"
+                        size="small"
+                        onClick={() => handleDelete(category)}
                         icon={<i className="fas fa-trash"></i>}
                     />
                 </Space>
             ),
         },
-    ], [brands]);
+    ], [categories, brands]);
 
     return (
         <>
@@ -181,7 +224,7 @@ const Table = ({ getCategories, getProductBrands, categories, brands, totalCount
                     <div className="category-details">
                         <h3>{selectedCategory.displayName}</h3>
                         <p><strong>System Name:</strong> {selectedCategory.systemName}</p>
-                        <p><strong>Parent:</strong> {selectedCategory.parent?.displayName || 'None'}</p>
+                        <p><strong>Parent Category:</strong> {getParentCategoryName(selectedCategory.parent)}</p>
                         <p><strong>Status:</strong> {selectedCategory.isDisabled ? 'Disabled' : 'Active'}</p>
                         <div>
                             <strong>Brands:</strong>
@@ -210,6 +253,8 @@ Table.propTypes = {
     totalCount: PropTypes.number,
     getCategories: PropTypes.func.isRequired,
     getProductBrands: PropTypes.func.isRequired,
+    flipCategoryAvailability: PropTypes.func.isRequired,
+    deleteCategory: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -219,4 +264,4 @@ const mapStateToProps = (state) => ({
     totalCount: state.category.totalCount,
 })
 
-export default connect(mapStateToProps, { getCategories, getProductBrands })(Table)
+export default connect(mapStateToProps, mapDispatchToProps)(Table)

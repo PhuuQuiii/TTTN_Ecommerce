@@ -1,7 +1,7 @@
 const express = require("express");
 
 const {
-    getAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, blockUnblockAdmin, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingData, getShippingData, blockUnblockUser, banner, editBanner, deleteBanner, getBanners, getDeletedBanners, getUsers,  getAllDispatchers, addDispatcher,editDispatcher,blockUnbolckDispatcher, toggleProductFeatured, addLead
+    getAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, blockUnblockAdmin, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingData, getShippingData, blockUnblockUser, banner, editBanner, deleteBanner, getBanners, getDeletedBanners, getUsers,  getAllDispatchers, addDispatcher,editDispatcher,blockUnbolckDispatcher, toggleProductFeatured, addLead, deleteCategory
 } = require("../controllers/superadmin");
 const { auth, isSuperAdmin } = require('../controllers/admin_auth')
 const {uploadBannerPhoto} = require("../middleware/helpers")
@@ -48,6 +48,7 @@ router.patch('/block-unblock-dispatcher/:dispatcher_id',auth,isSuperAdmin,blockU
 router.put('/product-category', auth, isSuperAdmin, category)//create and update
 router.get('/product-categories', getCategories)
 router.patch('/flip-category-availablity', auth, isSuperAdmin, flipCategoryAvailablity)
+router.delete('/delete-category/:category_slug', auth, isSuperAdmin, deleteCategory)
 
 // brand's..
 router.put('/product-brand',auth,isSuperAdmin,productBrand)//create and update

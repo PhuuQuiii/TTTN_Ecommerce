@@ -1,52 +1,37 @@
-import { Button, Form, Input, message, Select } from 'antd';
-import axios from 'axios';
+import { Button, Form, Input, Select } from 'antd';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { getProductBrands } from '../../../../redux/actions/category_action';
+import { getProductBrands, getCategories, createCategory } from '../../../../redux/actions/category_action';
 
 const { Option } = Select;
 
-const CreateCategory = ({ getProductBrands, brands }) => {
+const CreateCategory = ({ getProductBrands, getCategories, createCategory, brands, categories, loading }) => {
     const [form] = Form.useForm();
-    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         getProductBrands();
-    }, [getProductBrands]);
+        getCategories(); // Lấy danh sách categories
+    }, [getProductBrands, getCategories]);
 
-    const onFinish = async (values) => {
-        try {
-            setLoading(true);
-            const response = await axios.put('http://localhost:3001/api/superadmin/product-category', {
-                systemName: values.systemName,
-                displayName: values.displayName,
-                slug: values.displayName.toLowerCase().replace(/\s+/g, '-'),
-                brands: values.brands
-            });
+    const onFinish = (values) => {
+        const categoryData = {
+            systemName: values.systemName,
+            displayName: values.displayName,
+            slug: values.displayName.toLowerCase().replace(/\s+/g, '-'),
+            brands: values.brands,
+            parent_id: values.parent_id || null // Gửi parent_id nếu có
+        };
 
-            if (response.data.success) {
-                message.success('Category created successfully');
-                form.resetFields();
-            } else {
-                message.error(response.data.message || 'Failed to create category');
-            }
-        } catch (error) {
-            message.error(error.response?.data?.message || 'An error occurred');
-        } finally {
-            setLoading(false);
-        }
+        createCategory(categoryData, form).then(() => {
+            window.location.reload(); // Reload lại trang sau khi tạo thành công
+        });
     };
 
     return (
         <div className="create-category-container">
             <h2>Create New Category</h2>
-            <Form
-                form={form}
-                layout="vertical"
-                onFinish={onFinish}
-                style={{ maxWidth: 600 }}
-            >
+            <Form form={form} layout="vertical" onFinish={onFinish} style={{ maxWidth: 600 }}>
                 <Form.Item
                     label="System Name"
                     name="systemName"
@@ -64,16 +49,25 @@ const CreateCategory = ({ getProductBrands, brands }) => {
                 </Form.Item>
 
                 <Form.Item
+                    label="Parent Category"
+                    name="parent_id"
+                >
+                    <Select placeholder="Select parent category" allowClear style={{ width: '100%' }}>
+                        {categories.map((category) => (
+                            <Option key={category._id} value={category._id}>
+                                {category.displayName}
+                            </Option>
+                        ))}
+                    </Select>
+                </Form.Item>
+
+                <Form.Item
                     label="Brands"
                     name="brands"
                     rules={[{ required: true, message: 'Please select at least one brand!' }]}
                 >
-                    <Select
-                        mode="multiple"
-                        placeholder="Select brands"
-                        style={{ width: '100%' }}
-                    >
-                        {brands.map(brand => (
+                    <Select mode="multiple" placeholder="Select brands" style={{ width: '100%' }}>
+                        {brands.map((brand) => (
                             <Option key={brand._id} value={brand._id}>
                                 {brand.brandName}
                             </Option>
@@ -93,11 +87,17 @@ const CreateCategory = ({ getProductBrands, brands }) => {
 
 CreateCategory.propTypes = {
     getProductBrands: PropTypes.func.isRequired,
-    brands: PropTypes.array.isRequired
+    getCategories: PropTypes.func.isRequired, // Thêm getCategories
+    createCategory: PropTypes.func.isRequired,
+    brands: PropTypes.array.isRequired,
+    categories: PropTypes.array.isRequired, // Thêm categories
+    loading: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = (state) => ({
-    brands: state.category.brands
+    brands: state.category.brands,
+    categories: state.category.categories, // Lấy categories từ Redux
+    loading: state.category.loading
 });
 
-export default connect(mapStateToProps, { getProductBrands })(CreateCategory); 
+export default connect(mapStateToProps, { getProductBrands, getCategories, createCategory })(CreateCategory);

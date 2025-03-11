@@ -615,6 +615,44 @@ exports.getCategories = async (req, res) => {
     res.json({categories,totalCount})
 }
 
+// Thêm vào file server/controllers/superadmin.js
+exports.deleteCategory = async (req, res) => {
+    try {
+        const category = await Category.findOne({ slug: req.params.category_slug });
+        if (!category) {
+            return res.status(404).json({ error: "Category not found" });
+        }
+
+        // Kiểm tra xem category có phải là parent của category khác không
+        const hasChildren = await Category.findOne({ parent: category._id });
+        if (hasChildren) {
+            return res.status(400).json({ 
+                error: "Cannot delete category with child categories. Please delete or reassign child categories first." 
+            });
+        }
+
+        // Kiểm tra xem category có đang được sử dụng bởi sản phẩm nào không
+        const hasProducts = await Product.findOne({ category: category._id });
+        if (hasProducts) {
+            return res.status(400).json({ 
+                error: "Cannot delete category that has associated products. Please remove or reassign products first." 
+            });
+        }
+
+        await category.deleteOne();
+        res.json({ 
+            message: "Category deleted successfully",
+            deletedCategory: category 
+        });
+    } catch (error) {
+        console.error("Delete category error:", error);
+        res.status(500).json({ 
+            error: "Internal server error", 
+            details: error.message 
+        });
+    }
+};
+
 exports.flipCategoryAvailablity = async (req, res) => {
     let category = await Category.findOne({ slug: req.query.category_slug })
     if (!category) {
