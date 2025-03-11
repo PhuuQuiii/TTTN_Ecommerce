@@ -1,5 +1,5 @@
 import Hls from 'hls.js';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 const LayoutLiveStream = () => {
   const [comments, setComments] = useState([
@@ -21,6 +21,7 @@ const LayoutLiveStream = () => {
     }
   ]);
   const [newComment, setNewComment] = useState('');
+  const commentsRef = useRef(null);
 
   useEffect(() => {
     const video = document.getElementById('video');
@@ -35,12 +36,18 @@ const LayoutLiveStream = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (commentsRef.current) {
+      commentsRef.current.scrollTop = commentsRef.current.scrollHeight;
+    }
+  }, [comments]); // Tự động cuộn khi có bình luận mới
+
   const handleSendComment = () => {
     if (newComment.trim()) {
-      setComments([
-        ...comments,
+      setComments(prevComments => [
+        ...prevComments,
         {
-          id: comments.length + 1,
+          id: prevComments.length + 1,
           user: {
             name: 'Current User',
             avatar: 'https://tintuc.dienthoaigiakho.vn/wp-content/uploads/2024/01/c39af4399a87bc3d7701101b728cddc9.jpg'
@@ -77,7 +84,7 @@ const LayoutLiveStream = () => {
             <h3>Live Chat</h3>
           </div>
           
-          <div className="comments-list">
+          <div className="comments-list" ref={commentsRef}>
             {comments.map(comment => (
               <div key={comment.id} className="comment-item">
                 <div className="comment-avatar">
@@ -98,7 +105,7 @@ const LayoutLiveStream = () => {
                 placeholder="Type a message..." 
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSendComment()}
+                onKeyDown={(e) => e.key === 'Enter' && handleSendComment()}
               />
               <button onClick={handleSendComment}>Send</button>
             </div>
