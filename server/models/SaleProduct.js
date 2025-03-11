@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 const saleSchema = new Schema(
   {
+    name: {
+      type: String,
+      required: true,
+    },
     products: [
       {
         type: Schema.Types.ObjectId,
