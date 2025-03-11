@@ -33,7 +33,7 @@ const AdminBar = ({adminProfile}) => {
             // path: '/sale',
             sub: [{
                 name: 'Manage Sales',
-                path: '/mange-sale'
+                path: '/sale'
             }]
         },
         {
