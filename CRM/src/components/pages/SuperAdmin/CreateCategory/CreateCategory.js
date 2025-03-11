@@ -2,7 +2,7 @@ import { Button, Form, Input, Select } from 'antd';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { getProductBrands, getCategories, createCategory } from '../../../../redux/actions/category_action';
+import { createCategory, getCategories, getProductBrands } from '../../../../redux/actions/category_action';
 
 const { Option } = Select;
 
@@ -11,20 +11,27 @@ const CreateCategory = ({ getProductBrands, getCategories, createCategory, brand
 
     useEffect(() => {
         getProductBrands();
-        getCategories(); // Lấy danh sách categories
+        getCategories();
     }, [getProductBrands, getCategories]);
+
+    // Hàm tạo system name
+    const generateSystemName = () => {
+        const timestamp = Date.now().toString(36);
+        const randomStr = Math.random().toString(36).substring(2, 8);
+        return `${timestamp}-${randomStr}`;
+    };
 
     const onFinish = (values) => {
         const categoryData = {
-            systemName: values.systemName,
+            systemName: generateSystemName(), // Tự động tạo system name
             displayName: values.displayName,
             slug: values.displayName.toLowerCase().replace(/\s+/g, '-'),
             brands: values.brands,
-            parent_id: values.parent_id || null // Gửi parent_id nếu có
+            parent_id: values.parent_id || null
         };
 
         createCategory(categoryData, form).then(() => {
-            window.location.reload(); // Reload lại trang sau khi tạo thành công
+            window.location.reload();
         });
     };
 
@@ -32,14 +39,6 @@ const CreateCategory = ({ getProductBrands, getCategories, createCategory, brand
         <div className="create-category-container">
             <h2>Create New Category</h2>
             <Form form={form} layout="vertical" onFinish={onFinish} style={{ maxWidth: 600 }}>
-                <Form.Item
-                    label="System Name"
-                    name="systemName"
-                    rules={[{ required: true, message: 'Please input system name!' }]}
-                >
-                    <Input placeholder="Enter system name" />
-                </Form.Item>
-
                 <Form.Item
                     label="Display Name"
                     name="displayName"
@@ -53,7 +52,7 @@ const CreateCategory = ({ getProductBrands, getCategories, createCategory, brand
                     name="parent_id"
                 >
                     <Select placeholder="Select parent category" allowClear style={{ width: '100%' }}>
-                        {categories.map((category) => (
+                        {Array.isArray(categories) && categories.map((category) => (
                             <Option key={category._id} value={category._id}>
                                 {category.displayName}
                             </Option>
@@ -67,7 +66,7 @@ const CreateCategory = ({ getProductBrands, getCategories, createCategory, brand
                     rules={[{ required: true, message: 'Please select at least one brand!' }]}
                 >
                     <Select mode="multiple" placeholder="Select brands" style={{ width: '100%' }}>
-                        {brands.map((brand) => (
+                        {Array.isArray(brands) && brands.map((brand) => (
                             <Option key={brand._id} value={brand._id}>
                                 {brand.brandName}
                             </Option>
@@ -87,16 +86,16 @@ const CreateCategory = ({ getProductBrands, getCategories, createCategory, brand
 
 CreateCategory.propTypes = {
     getProductBrands: PropTypes.func.isRequired,
-    getCategories: PropTypes.func.isRequired, // Thêm getCategories
+    getCategories: PropTypes.func.isRequired,
     createCategory: PropTypes.func.isRequired,
-    brands: PropTypes.array.isRequired,
-    categories: PropTypes.array.isRequired, // Thêm categories
+    brands: PropTypes.array,
+    categories: PropTypes.array,
     loading: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = (state) => ({
-    brands: state.category.brands,
-    categories: state.category.categories, // Lấy categories từ Redux
+    brands: state.category.brands || [],
+    categories: state.category.categories || [],
     loading: state.category.loading
 });
 

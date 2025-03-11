@@ -1,10 +1,10 @@
 import { SearchOutlined } from '@ant-design/icons';
-import { Table as AntdTable, Button, Drawer, Input, Space, Modal } from 'antd';
+import { Table as AntdTable, Button, Drawer, Input, Modal, Space } from 'antd';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import { getCategories, getProductBrands, flipCategoryAvailability, deleteCategory } from '../../../../redux/actions/category_action';
+import { deleteCategory, flipCategoryAvailability, getCategories, getProductBrands } from '../../../../redux/actions/category_action';
 
 const mapDispatchToProps = {
     getCategories,
@@ -106,6 +106,8 @@ const Table = ({ getCategories, getProductBrands, categories, brands, totalCount
     }
 
     const getBrandName = (brandId) => {
+        if (!Array.isArray(brands)) return 'Loading...';
+        
         const brand = brands.find(b => b._id === brandId);
         return brand ? brand.brandName : 'Unknown Brand';
     }
@@ -149,9 +151,14 @@ const Table = ({ getCategories, getProductBrands, categories, brands, totalCount
             title: 'Brands',
             dataIndex: 'brands',
             width: '20%',
-            render: brandIds => brandIds && brandIds.length > 0 ? 
-                brandIds.map(id => getBrandName(id)).join(', ') : 
-                'No brands'
+            render: brandIds => {
+                if (!Array.isArray(brandIds) || !Array.isArray(brands)) {
+                    return 'Loading...';
+                }
+                return brandIds.length > 0 ? 
+                    brandIds.map(id => getBrandName(id)).join(', ') : 
+                    'No brands';
+            }
         },
         {
             title: 'Status',

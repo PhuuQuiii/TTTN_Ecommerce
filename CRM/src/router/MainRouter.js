@@ -19,6 +19,7 @@ import ManageUsers from "../components/pages/SuperAdmin/ManageUsers";
 import ManageCategory from "../components/pages/SuperAdmin/ManageCategory";
 import CreateCategory from "../components/pages/SuperAdmin/CreateCategory";
 import ManageBrand from "../components/pages/SuperAdmin/ManageBrand";
+import CreateBrand from "../components/pages/SuperAdmin/CreateBrand";
 import LiveStream from "../components/pages/Live_Stream/";
 import Sale from "../components/pages/Sale";
 import ManageSale from "../components/pages/Sale/ManageSale";
@@ -40,6 +41,7 @@ const MainRouter = (props) => {
       <SuperAdminRoute exact path="/manage-category" component={ManageCategory} />
       <SuperAdminRoute exact path="/create-category" component={CreateCategory} />
       <SuperAdminRoute exact path="/manage-brand" component={ManageBrand} />
+      <SuperAdminRoute exact path="/create-brand" component={CreateBrand} />
       <AdminRoute exact path="/edit-product/:slug?" component={EditProduct} />
       <AdminRoute exact path="/sale" component={Sale} />
       <AdminRoute exact path="/sale-manage" component={ManageSale} />

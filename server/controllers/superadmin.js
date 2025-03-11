@@ -668,6 +668,43 @@ exports.flipCategoryAvailablity = async (req, res) => {
     res.json(category)
 }
 
+exports.flipBrandStatus = async (req, res) => {
+    try {
+        const brand = await ProductBrand.findById(req.params.brand_id);
+        if (!brand) {
+            return res.status(404).json({ error: "Brand not found" });
+        }
+
+        brand.isDisabled = brand.isDisabled ? null : Date.now();
+        await brand.save();
+        res.json(brand);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.deleteBrand = async (req, res) => {
+    try {
+        const brand = await ProductBrand.findById(req.params.brand_id);
+        if (!brand) {
+            return res.status(404).json({ error: "Brand not found" });
+        }
+
+        // Kiểm tra xem brand có đang được sử dụng bởi sản phẩm nào không
+        const hasProducts = await Product.findOne({ brand: brand._id });
+        if (hasProducts) {
+            return res.status(400).json({ 
+                error: "Cannot delete brand that has associated products. Please remove or reassign products first." 
+            });
+        }
+
+        await brand.deleteOne();
+        res.json({ message: "Brand deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 exports.toggleProductFeatured = async (req, res) => {
     let product = await Product.findOne({ slug: req.params.p_slug, isVerified:{$ne:null}, isDeleted:null, isRejected:null })
     if (!product)
