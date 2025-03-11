@@ -30,7 +30,11 @@ const AdminBar = ({adminProfile}) => {
             key:'sales',
             icon: 'layout',
             main: 'Sale',
-            path:'/sale',
+            // path: '/sale',
+            sub: [{
+                name: 'Manage Sales',
+                path: '/sale'
+            }]
         },
     ],[])
 

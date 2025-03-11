@@ -11,6 +11,7 @@ import product from './product_reducer'
 import superadmin from './superadmin_reducer'
 import bank from './bank_reducer';
 import warehouse from './warehouse_reducer';
+import sale from './sale_reducer';
 
 const rootReducer = combineReducers({
   auth,
@@ -24,7 +25,8 @@ const rootReducer = combineReducers({
   superadmin,
   business,
   bank,
-  warehouse
+  warehouse,
+  sale
 });
 
 export default rootReducer;
