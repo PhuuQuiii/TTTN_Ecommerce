@@ -14,6 +14,44 @@ const Index = (props) => {
   let dispatch = useDispatch();
   let allProducts = useSelector((state) => state.products)
   let bannerImages = useSelector((state) => state.other.getBannerImages)
+  let livestreams = [
+    {
+      id: 1,
+      thumbnail: "/images/default-image.jpg",
+      title: "New Summer Collection 2025",
+      description: "Check out our latest summer fashion collection with exclusive deals!",
+      viewerCount: 1234,
+      streamer: {
+        name: "Sarah Johnson",
+        avatar: "/images/default-user.png",
+        role: "Fashion Specialist"
+      }
+    },
+    {
+      id: 2,
+      thumbnail: "/images/default-image.jpg",
+      title: "Tech Gadgets Review",
+      description: "Live review of the newest smartphones and gadgets with special discounts!",
+      viewerCount: 856,
+      streamer: {
+        name: "Mike Chen",
+        avatar: "/images/default-user.png",
+        role: "Tech Expert"
+      }
+    },
+    {
+      id: 3,
+      thumbnail: "/images/default-image.jpg",
+      title: "Home Decor Ideas",
+      description: "Interior design tips and exclusive home decoration items showcase",
+      viewerCount: 567,
+      streamer: {
+        name: "Emily White",
+        avatar: "/images/default-user.png",
+        role: "Interior Designer"
+      }
+    }
+  ];
 
   useEffect(() => {
     if (!props.isServer) {
@@ -64,6 +102,51 @@ const Index = (props) => {
           </Col>
         </Row>
         <div className="container">
+          {/* Livestream Section */}
+          <section className="livestream-section">
+            <div className="livestream-container">
+              <div className="livestream-header">
+                <h2>Live Shopping</h2>
+                <a href="/livestream" className="view-all">View All</a>
+              </div>
+              <div className="livestream-grid">
+                {livestreams.map((stream) => (
+                  <div 
+                  key={stream.id} 
+                  className="livestream-card" 
+                  onClick={() => window.location.href = "http://localhost:3002/livestream"}
+                  style={{ cursor: "pointer" }} 
+                >
+                  <div className="livestream-thumbnail">
+                    <img src={stream.thumbnail} alt={stream.title} />
+                    <div className="live-badge">
+                      <span className="live-dot"></span> LIVE
+                    </div>
+                    <div className="viewer-count">
+                      <i className="fas fa-eye"></i>
+                      <span>{stream.viewerCount}</span>
+                    </div>
+                  </div>
+                  <div className="livestream-info">
+                    <div className="streamer-info">
+                      <div className="streamer-avatar">
+                        <img src={stream.streamer.avatar} alt={stream.streamer.name} />
+                      </div>
+                      <div className="streamer-details">
+                        <h3>{stream.streamer.name}</h3>
+                        <p>{stream.streamer.role}</p>
+                      </div>
+                    </div>
+                    <h4 className="stream-title">{stream.title}</h4>
+                    <p className="stream-description">{stream.description}</p>
+                  </div>
+                </div>                
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Featured Products Section */}
           {
             !isEmpty(allProducts.featuredProducts?.products) &&
             <>
