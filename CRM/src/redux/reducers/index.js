@@ -12,6 +12,7 @@ import socket from './socket_reducer';
 import superadmin from './superadmin_reducer';
 import test from "./test_reducer";
 import warehouse from './warehouse_reducer';
+import sale from './sale_reducer';
 
 const rootReducer = combineReducers({
   auth,
@@ -26,7 +27,8 @@ const rootReducer = combineReducers({
   business,
   bank,
   warehouse,
-  category: categoryReducer
+  category: categoryReducer,
+  sale
 });
 
 export default rootReducer;
