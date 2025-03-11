@@ -28,10 +28,12 @@ const SuberadminBar = ({}) => {
             key:'product',
             icon: 'layout',
             main: 'Product',
-            sub: [{
-                name: 'Add Prodcut',
-                path: '/add-product'
-            }, {
+            sub: [
+            // {
+            //     name: 'Add Prodcut',
+            //     path: '/add-product'
+            // },
+            {
                 name: 'Manage Product',
                 path: '/superadmin/manage-products'
             }]
@@ -44,6 +46,32 @@ const SuberadminBar = ({}) => {
                 name: 'Manage User',
                 path: '/users'
             }, 
+        ]
+        },
+        {
+            key:'category',
+            icon: 'layout',
+            main: 'Category',
+            sub: [{
+                name: 'Manage Category',
+                path: '/manage-category'
+            }, {
+                name: 'Create Category',
+                path: '/create-category'
+            }
+        ]
+        },
+        {
+            key:'brand',
+            icon: 'layout',
+            main: 'Brand',
+            sub: [{
+                name: 'Manage Brand',
+                path: '/manage-brand'
+            }, {
+                name: 'Create Brand',
+                path: '/create-brand'
+            }
         ]
         }
     ],[])

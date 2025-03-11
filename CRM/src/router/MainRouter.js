@@ -16,7 +16,9 @@ import Order from '../components/pages/Order'
 import Admin from "../components/pages/SuperAdmin/Admin";
 import SProduct from "../components/pages/SuperAdmin/Product";
 import ManageUsers from "../components/pages/SuperAdmin/ManageUsers";
-import LiveStream from "../components/pages/Live_Stream";
+import ManageCategory from "../components/pages/SuperAdmin/ManageCategory";
+import ManageBrand from "../components/pages/SuperAdmin/ManageBrand";
+import LiveStream from "../components/pages/Live_Stream/";
 import Sale from "../components/pages/Sale";
 
 
@@ -33,6 +35,8 @@ const MainRouter = (props) => {
       <SuperAdminRoute exact path="/superadmin/manage-products" component={SProduct} />
       <SuperAdminRoute exact path="/manage-admins" component={Admin} />
       <SuperAdminRoute exact path="/users" component={ManageUsers} />
+      <SuperAdminRoute exact path="/manage-category" component={ManageCategory} />
+      <SuperAdminRoute exact path="/manage-brand" component={ManageBrand} />
       <AdminRoute exact path="/edit-product/:slug?" component={EditProduct} />
       <AdminRoute exact path="/sale" component={Sale} />
     </Switch>
