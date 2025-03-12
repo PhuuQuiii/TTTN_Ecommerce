@@ -45,10 +45,19 @@ const BusinessForm = ({ user, business, getBusinessInfo, updateBusinessInfo }) =
     const { name, type } = e.target;
     
     if (type === 'file') {
-      setFiles({
-        ...files,
-        [name]: e.target.files[0] || null
-      });
+      const file = e.target.files[0];
+      if (file) {
+        // Preview for new file
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setFiles(prev => ({
+            ...prev,
+            [`${name}Preview`]: reader.result,
+            [name]: file
+          }));
+        };
+        reader.readAsDataURL(file);
+      }
     } else {
       setBusinessData({
         ...businessData,
@@ -70,7 +79,7 @@ const BusinessForm = ({ user, business, getBusinessInfo, updateBusinessInfo }) =
     
     // Append files
     Object.keys(files).forEach(key => {
-      if (files[key]) {
+      if (files[key] && !key.includes('Preview')) {
         formData.append(key, files[key]);
       }
     });
@@ -88,6 +97,11 @@ const BusinessForm = ({ user, business, getBusinessInfo, updateBusinessInfo }) =
     } finally {
       setLoading(false);
     }
+  };
+
+  const getImageUrl = (path) => {
+    if (!path) return null;
+    return `${path}`;
   };
 
   return (
@@ -169,10 +183,15 @@ const BusinessForm = ({ user, business, getBusinessInfo, updateBusinessInfo }) =
                   onChange={onChange} 
                   accept="image/*"
                 />
-                {business?.citizenshipFront && (
-                  <small className="form-text text-muted">
-                    Current file: {business.citizenshipFront}
-                  </small>
+                {(files.citizenshipFrontPreview || business?.citizenshipFront) && (
+                  <div className="mt-2">
+                    <img 
+                      src={files.citizenshipFrontPreview || getImageUrl(business.citizenshipFront)}
+                      alt="Citizenship Front"
+                      style={{ maxWidth: '200px', height: 'auto' }}
+                      className="img-thumbnail"
+                    />
+                  </div>
                 )}
               </div>
               <div className="form-group col-md-6">
@@ -185,10 +204,15 @@ const BusinessForm = ({ user, business, getBusinessInfo, updateBusinessInfo }) =
                   onChange={onChange} 
                   accept="image/*"
                 />
-                {business?.citizenshipBack && (
-                  <small className="form-text text-muted">
-                    Current file: {business.citizenshipBack}
-                  </small>
+                {(files.citizenshipBackPreview || business?.citizenshipBack) && (
+                  <div className="mt-2">
+                    <img 
+                      src={files.citizenshipBackPreview || getImageUrl(business.citizenshipBack)}
+                      alt="Citizenship Back"
+                      style={{ maxWidth: '200px', height: 'auto' }}
+                      className="img-thumbnail"
+                    />
+                  </div>
                 )}
               </div>
               <div className="form-group col-md-6">
@@ -201,10 +225,15 @@ const BusinessForm = ({ user, business, getBusinessInfo, updateBusinessInfo }) =
                   onChange={onChange} 
                   accept="image/*"
                 />
-                {business?.businessLicence && (
-                  <small className="form-text text-muted">
-                    Current file: {business.businessLicence}
-                  </small>
+                {(files.businessLicencePreview || business?.businessLicence) && (
+                  <div className="mt-2">
+                    <img 
+                      src={files.businessLicencePreview || getImageUrl(business.businessLicence)}
+                      alt="Business Licence"
+                      style={{ maxWidth: '200px', height: 'auto' }}
+                      className="img-thumbnail"
+                    />
+                  </div>
                 )}
               </div>
             </div>
