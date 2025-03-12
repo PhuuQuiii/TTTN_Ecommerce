@@ -3,24 +3,24 @@
       "client": {
         "build": {
           "builder": "nixpacks",
-          "buildCommand": "npm install",
-          "startCommand": "npm run dev"
+          "buildCommand": "cd client && npm install",
+          "startCommand": "cd client && npm run dev"
         },
         "env": ".env.client"
       },
       "CRM": {
         "build": {
           "builder": "nixpacks",
-          "buildCommand": "npm install",
-          "startCommand": "npm start"
+          "buildCommand": "cd CRM && npm install",
+          "startCommand": "cd CRM && npm start"
         },
         "env": ".env.crm"
       },
       "server": {
         "build": {
           "builder": "nixpacks",
-          "buildCommand": "npm install",
-          "startCommand": "npm run dev"
+          "buildCommand": "cd server && npm install",
+          "startCommand": "cd server && npm run dev"
         },
         "env": ".env.server"
       }
