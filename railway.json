@@ -1,16 +1,28 @@
 {
     "services": {
       "client": {
-        "source": "./client",
-        "start": "npm run dev"
+        "build": {
+          "builder": "nixpacks",
+          "buildCommand": "npm install",
+          "startCommand": "npm run dev"
+        },
+        "env": ".env.client"
       },
       "CRM": {
-        "source": "./CRM",
-        "start": "npm start"
+        "build": {
+          "builder": "nixpacks",
+          "buildCommand": "npm install",
+          "startCommand": "npm start"
+        },
+        "env": ".env.crm"
       },
       "server": {
-        "source": "./server",
-        "start": "npm run dev"
+        "build": {
+          "builder": "nixpacks",
+          "buildCommand": "npm install",
+          "startCommand": "npm run dev"
+        },
+        "env": ".env.server"
       }
     }
   }
