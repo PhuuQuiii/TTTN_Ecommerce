@@ -1,0 +1,17 @@
+{
+    "services": {
+      "client": {
+        "source": "./client",
+        "start": "npm run dev"
+      },
+      "CRM": {
+        "source": "./CRM",
+        "start": "npm start"
+      },
+      "server": {
+        "source": "./server",
+        "start": "npm run dev"
+      }
+    }
+  }
+  
