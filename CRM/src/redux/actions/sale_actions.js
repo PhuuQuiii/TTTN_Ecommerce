@@ -60,3 +60,17 @@ export const createSale = (saleData) => async (dispatch) => {
     dispatch(error(response.errorMessage));
   }
 };
+
+export const deleteSale = (saleId) => async (dispatch) => {
+  dispatch(init(SALE_TYPES.DELETE_SALE));
+  const response = await saleService.deleteSale(saleId); // gọi API xóa sale
+
+  dispatch(finish(SALE_TYPES.DELETE_SALE));
+
+  if (response.isSuccess) {
+    dispatch(success(SALE_TYPES.DELETE_SALE, saleId));
+    dispatch(success(SUCCESS, "Xóa sale thành công!"));
+  } else {
+    dispatch(error(response.errorMessage));
+  }
+};

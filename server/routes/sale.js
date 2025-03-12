@@ -6,5 +6,6 @@ router.post("/create", saleController.createSale);
 router.get("/active", saleController.getActiveSales);
 router.get("/admin/:adminId", saleController.getSalesByAdminId);
 router.get("/all", saleController.getAllSales);
+router.delete("/:saleId", saleController.deleteSale);
 
 module.exports = router;
