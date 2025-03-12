@@ -34,7 +34,12 @@ const AdminBar = ({adminProfile}) => {
             sub: [{
                 name: 'Manage Sales',
                 path: '/sale'
-            }]
+            },{
+                name: 'Add Sale',
+                path: '/add-sale'
+            }
+        ]
+
         },
         {
             key:'live-streaming',

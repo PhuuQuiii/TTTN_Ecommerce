@@ -23,6 +23,7 @@ import CreateBrand from "../components/pages/SuperAdmin/CreateBrand";
 import LiveStream from "../components/pages/Live_Stream/";
 import Sale from "../components/pages/Sale";
 import ManageSale from "../components/pages/Sale/ManageSale";
+import AddSale  from "../components/pages/Sale/AddSale/index";
 
 
 const MainRouter = (props) => {
@@ -45,6 +46,7 @@ const MainRouter = (props) => {
       <AdminRoute exact path="/edit-product/:slug?" component={EditProduct} />
       <AdminRoute exact path="/sale" component={Sale} />
       <AdminRoute exact path="/sale-manage" component={ManageSale} />
+      <AdminRoute exact path="/add-sale" component={AddSale} />
     </Switch>
   );
 };
