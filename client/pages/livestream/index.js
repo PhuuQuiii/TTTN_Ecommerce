@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
-import { IoArrowBack, IoEllipsisVertical, IoEye, IoHeart, IoSend, IoShare } from 'react-icons/io5';
-import Layout from '../../src/Components/Layout';
 import { useRouter } from 'next/router';
+import React, { useEffect, useRef, useState } from 'react';
+import { IoArrowBack, IoEye } from 'react-icons/io5';
+import Layout from '../../src/Components/Layout';
 
 export default function LiveStream() {
   const videoRef = useRef(null);
@@ -65,8 +65,10 @@ export default function LiveStream() {
       setIsLoading(true);
       const comment = {
         id: comments.length + 1,
-        name: 'You',
-        avatar: '/images/default-image.jpg',
+        user: {
+          name: 'You',
+          avatar: 'https://res.cloudinary.com/df33snbqj/image/upload/v1741785111/avatar1_xpzunf.png'
+        },
         text: newComment.trim(),
         timestamp: 'Just now'
       };
@@ -100,13 +102,17 @@ export default function LiveStream() {
               <span className="comment-count">{comments.length}</span>
             </div>
             <div className="comments-container" ref={commentsRef}>
-              {comments.map((cmt) => (
-                <div key={cmt.id} className="comment">
-                  <img src={cmt.avatar} alt={cmt.name} className="comment-avatar" />
+              {comments.map((comment) => (
+                <div key={comment.id} className="comment">
+                  <img 
+                    src={comment.user?.avatar || comment.avatar} 
+                    alt={comment.user?.name || comment.name} 
+                    className="comment-avatar" 
+                  />
                   <div className="comment-content">
-                    <p className="comment-author">{cmt.name}</p>
-                    <p className="comment-text">{cmt.text}</p>
-                    <span className="comment-timestamp">{cmt.timestamp}</span>
+                    <p className="comment-author">{comment.user?.name || comment.name}</p>
+                    <p className="comment-text">{comment.text}</p>
+                    <span className="comment-timestamp">{comment.timestamp}</span>
                   </div>
                 </div>
               ))}

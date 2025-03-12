@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
 import Hls from 'hls.js';
+import React, { useEffect, useRef, useState } from 'react';
 
 const LayoutLiveStream = () => {
   const [comments, setComments] = useState([]);
@@ -61,10 +61,11 @@ const LayoutLiveStream = () => {
       const comment = {
         id: comments.length + 1,
         user: {
-          name: 'Shop test',
-          avatar: '../../../../public/img/avatar1.png'
+          name: 'Admin',
+          avatar: 'https://res.cloudinary.com/df33snbqj/image/upload/v1741785111/avatar1_xpzunf.png'
         },
-        text: newComment
+        text: newComment.trim(),
+        timestamp: 'Just now'
       };
       console.log('Sending comment:', comment);
       ws.current.send(JSON.stringify({ type: 'comment', comment }));
@@ -96,17 +97,16 @@ const LayoutLiveStream = () => {
           <div className="comments-list" ref={commentsRef}>
             {comments.map((comment) => (
               <div key={comment.id} className="comment-item">
-                {comment.user && (
-                  <>
-                    <div className="comment-avatar">
-                      <img src={comment.user.avatar} alt={comment.user.name} />
-                    </div>
-                    <div className="comment-content">
-                      <div className="comment-author">{comment.user.name}</div>
-                      <div className="comment-text">{comment.text}</div>
-                    </div>
-                  </>
-                )}
+                <div className="comment-avatar">
+                  <img src={comment.user?.avatar || comment.avatar} alt={comment.user?.name || comment.name} />
+                </div>
+                <div className="comment-content">
+                  <div className="comment-author">{comment.user?.name || comment.name}</div>
+                  <div className="comment-text">{comment.text}</div>
+                  {comment.timestamp && (
+                    <div className="comment-timestamp">{comment.timestamp}</div>
+                  )}
+                </div>
               </div>
             ))}
           </div>
