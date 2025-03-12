@@ -1,7 +1,12 @@
 const express = require('express');
-const app = express();
+const http = require('http');
+const WebSocket = require('ws');
 
-app.use(express.urlencoded());
+const app = express();
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
+
+app.use(express.urlencoded({ extended: true }));
 
 app.post("/auth", function (req, res) {
   /* This server is only available to nginx */
@@ -17,6 +22,41 @@ app.post("/auth", function (req, res) {
   res.status(403).send();
 });
 
-app.listen(8000, function () {
-  console.log("Listening on port 8000!");
+let viewers = -1;
+
+wss.on('connection', (ws) => {
+  viewers++;
+  console.log('New connection, viewers:', viewers);
+  broadcastViewers();
+
+  ws.on('message', (message) => {
+    console.log('Received message:', message);
+    // Broadcast the message to all clients
+    const parsedMessage = JSON.parse(message);
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(parsedMessage));
+      }
+    });
+  });
+
+  ws.on('close', () => {
+    viewers--;
+    console.log('Connection closed, viewers:', viewers);
+    broadcastViewers();
+  });
+});
+
+function broadcastViewers() {
+  const message = JSON.stringify({ type: 'viewers', count: viewers });
+  console.log('Broadcasting viewers:', viewers);
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(message);
+    }
+  });
+}
+
+server.listen(8000, () => {
+  console.log('Server is listening on port 8000');
 });

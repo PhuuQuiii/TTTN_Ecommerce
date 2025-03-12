@@ -1,27 +1,12 @@
-import Hls from 'hls.js';
 import React, { useEffect, useState, useRef } from 'react';
+import Hls from 'hls.js';
 
 const LayoutLiveStream = () => {
-  const [comments, setComments] = useState([
-    {
-      id: 1,
-      user: {
-        name: 'John Doe',
-        avatar: 'https://tintuc.dienthoaigiakho.vn/wp-content/uploads/2024/01/c39af4399a87bc3d7701101b728cddc9.jpg'
-      },
-      text: 'Great stream!'
-    },
-    {
-      id: 2,
-      user: {
-        name: 'Jane Smith',
-        avatar: 'https://tintuc.dienthoaigiakho.vn/wp-content/uploads/2024/01/c39af4399a87bc3d7701101b728cddc9.jpg'
-      },
-      text: 'The quality is amazing!'
-    }
-  ]);
+  const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
+  const [viewers, setViewers] = useState(0);
   const commentsRef = useRef(null);
+  const ws = useRef(null);
 
   useEffect(() => {
     const video = document.getElementById('video');
@@ -34,27 +19,55 @@ const LayoutLiveStream = () => {
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = videoSrc;
     }
+
+    ws.current = new WebSocket('ws://localhost:8000');
+    ws.current.onopen = () => {
+      console.log('WebSocket connection opened');
+    };
+    ws.current.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+        console.log('Received message:', message);
+        if (message.type === 'comment') {
+          setComments((prevComments) => [...prevComments, message.comment]);
+        } else if (message.type === 'viewers') {
+          setViewers(message.count);
+        }
+      } catch (error) {
+        console.error('Error parsing message:', error);
+      }
+    };
+    ws.current.onclose = () => {
+      console.log('WebSocket connection closed');
+    };
+
+    ws.current.onerror = (error) => {
+      console.log('WebSocket error', error);
+    };
+
+    return () => {
+      ws.current.close();
+    };
   }, []);
 
   useEffect(() => {
     if (commentsRef.current) {
       commentsRef.current.scrollTop = commentsRef.current.scrollHeight;
     }
-  }, [comments]); // Tự động cuộn khi có bình luận mới
+  }, [comments]);
 
   const handleSendComment = () => {
     if (newComment.trim()) {
-      setComments(prevComments => [
-        ...prevComments,
-        {
-          id: prevComments.length + 1,
-          user: {
-            name: 'Current User',
-            avatar: 'https://tintuc.dienthoaigiakho.vn/wp-content/uploads/2024/01/c39af4399a87bc3d7701101b728cddc9.jpg'
-          },
-          text: newComment
-        }
-      ]);
+      const comment = {
+        id: comments.length + 1,
+        user: {
+          name: 'Shop test',
+          avatar: '../../../../public/img/avatar1.png'
+        },
+        text: newComment
+      };
+      console.log('Sending comment:', comment);
+      ws.current.send(JSON.stringify({ type: 'comment', comment }));
       setNewComment('');
     }
   };
@@ -67,42 +80,41 @@ const LayoutLiveStream = () => {
           <span className="live-dot"></span>
           <span className="live-text">LIVE</span>
         </div>
+        <div className="viewer-count">
+          <i className="fas fa-eye"></i>
+          <span>{viewers}</span>
+        </div>
       </div>
       <div className="live-stream-main">
         <div className="live-stream-content">
           <video id="video" controls></video>
-          <div className="live-stream-info">
-            <div className="viewer-count">
-              <i className="fas fa-eye"></i>
-              <span>1.2M</span>
-            </div>
-          </div>
         </div>
-
         <div className="live-stream-comments">
           <div className="comments-header">
             <h3>Live Chat</h3>
           </div>
-          
           <div className="comments-list" ref={commentsRef}>
-            {comments.map(comment => (
+            {comments.map((comment) => (
               <div key={comment.id} className="comment-item">
-                <div className="comment-avatar">
-                  <img src={comment.user.avatar} alt={comment.user.name} />
-                </div>
-                <div className="comment-content">
-                  <div className="comment-author">{comment.user.name}</div>
-                  <div className="comment-text">{comment.text}</div>
-                </div>
+                {comment.user && (
+                  <>
+                    <div className="comment-avatar">
+                      <img src={comment.user.avatar} alt={comment.user.name} />
+                    </div>
+                    <div className="comment-content">
+                      <div className="comment-author">{comment.user.name}</div>
+                      <div className="comment-text">{comment.text}</div>
+                    </div>
+                  </>
+                )}
               </div>
             ))}
           </div>
-
           <div className="comments-input">
             <div className="input-wrapper">
-              <input 
-                type="text" 
-                placeholder="Type a message..." 
+              <input
+                type="text"
+                placeholder="Type a message..."
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSendComment()}
