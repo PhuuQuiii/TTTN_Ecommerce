@@ -1212,7 +1212,7 @@ button.no-color:hover {
 }
 
 .livestream-page {
-  min-height: 100vh;
+  min-height: 750px;
   background: var(--background);
   display: flex;
   align-items: center;
@@ -1223,7 +1223,7 @@ button.no-color:hover {
 .livestream-page .livestream-container {
   width: 100%;
   max-width: 1800px;
-  min-height: calc(100vh - 4rem);
+  min-height: calc(80vh - 4rem);
   background: var(--surface);
   border-radius: 1.5rem;
   box-shadow: var(--shadow-xl);
@@ -1357,8 +1357,8 @@ button.no-color:hover {
 }
 .livestream-page .livestream-main .livestream-video {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-height: 750px;
+  object-fit: contain;
   position: relative;
   z-index: 1; /* Video vẫn hiển thị phía dưới */
 }
@@ -1381,7 +1381,7 @@ button.no-color:hover {
   border-left: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  max-height: 100vh;
+  max-height: 750px;
 }
 .livestream-page .comment-section .comment-header {
   padding: 1.5rem;
