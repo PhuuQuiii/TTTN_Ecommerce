@@ -25,4 +25,9 @@ export class SaleService {
     const url = "/sale/all";
     return getService(url);
   }
+
+  async deleteSale(saleId) {
+    const url = `/sale/${saleId}`;
+    return postService(url, undefined, "DELETE");
+  }
 }

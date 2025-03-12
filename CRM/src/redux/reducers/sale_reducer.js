@@ -28,8 +28,13 @@ export default function saleReducer(state = initialState, action) {
 
     case SALE_TYPES.GET_SALES_BY_ADMIN_INIT:
       return { ...state, loading: true };
-    case SALE_TYPES.GET_SALES_BY_ADMIN:
-      return { ...state, loading: false, salesByAdmin: payload };
+      case SALE_TYPES.GET_SALES_BY_ADMIN:
+        return { 
+          ...state, 
+          loading: false, 
+          salesByAdmin: payload,
+          sales: payload // Also update the sales array
+        };
     case SALE_TYPES.GET_SALES_BY_ADMIN_FINISH:
       return { ...state, loading: false };
 
@@ -40,6 +45,18 @@ export default function saleReducer(state = initialState, action) {
     case SALE_TYPES.CREATE_SALE_FINISH:
       return { ...state, loading: false };
 
+    case SALE_TYPES.DELETE_SALE_INIT:
+      return { ...state, loading: true };
+      case SALE_TYPES.DELETE_SALE:
+        return {
+          ...state,
+          loading: false,
+          sales: state.sales.filter(sale => sale._id !== payload),
+          salesByAdmin: state.salesByAdmin.filter(sale => sale._id !== payload), // Add this line
+        };
+    case SALE_TYPES.DELETE_SALE_FINISH:
+      return { ...state, loading: false };
+      
     default:
       return state;
   }
