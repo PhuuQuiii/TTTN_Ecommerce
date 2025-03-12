@@ -1,18 +1,17 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
-import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
+import { connect, useDispatch, useSelector } from 'react-redux';
+import { fetchBankInfo } from '../../../../redux/actions/bank_actions';
+import { getBusinessInfo } from '../../../../redux/actions/business_actions';
 import {
-  flipAdminBusinessApproval,
-  flipAdminBankApproval,
-  flipAdminWarehouseApproval,
-  flipAdminAccountApproval,
   blockUnblockAdmin,
+  flipAdminAccountApproval,
+  flipAdminBankApproval,
+  flipAdminBusinessApproval,
+  flipAdminWarehouseApproval,
   getAdmin
 } from '../../../../redux/actions/superadmin_action';
-import { getBusinessInfo } from '../../../../redux/actions/business_actions';
-import { fetchBankInfo } from '../../../../redux/actions/bank_actions';
 import { fetchWareHouseInfo } from '../../../../redux/actions/warehouse_actions';
 
 const { TabPane } = Tabs;

@@ -1,21 +1,63 @@
-import { BUSINESS_TYPES } from '../types';
-import { BusinessInfoService } from '../api/businessinfo_api';
+import axios from 'axios';
+import { BUSINESS_ERROR, GET_BUSINESS_INFO, UPDATE_BUSINESS_INFO } from '../types';
 
-const businessInfoService = new BusinessInfoService();
+const API_URL = process.env.REACT_APP_SERVER_URL || 'http://localhost:3001';
+
+// Helper function to get auth headers
+const getAuthHeaders = (contentType = 'application/json') => {
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+    return {
+        'Content-Type': contentType,
+        'x-auth-token': ` ${token}`,
+        'userid': userId
+    };
+};
 
 // Get business info
 export const getBusinessInfo = (userId) => async dispatch => {
-  try {
-    const response = await businessInfoService.getBusinessInfo(userId);
-    dispatch({
-      type: BUSINESS_TYPES.GET_BUSINESS_INFO,
-      payload: response.data // Truyền dữ liệu từ response.data
-    });
-  } catch (err) {
-    console.error("Action Error:", err); // Log lỗi nếu có
-    dispatch({
-      type: BUSINESS_TYPES.BUSINESS_ERROR,
-      payload: { msg: err.message, status: err.status }
-    });
-  }
+    try {
+        const config = {
+            headers: getAuthHeaders()
+        };
+
+        const res = await axios.get(`${API_URL}api/admin/businessinfo/${userId}`, config);
+        dispatch({
+            type: GET_BUSINESS_INFO,
+            payload: res.data
+        });
+    } catch (err) {
+        dispatch({
+            type: BUSINESS_ERROR,
+            payload: err.response?.data?.message || 'Error fetching business info'
+        });
+    }
+};
+
+// Update business info
+export const updateBusinessInfo = (formData) => async dispatch => {
+    try {
+        const config = {
+            headers: getAuthHeaders('multipart/form-data')
+        };
+
+        const res = await axios.put(
+            `${API_URL}api/admin/businessinfo/${formData.get('userId')}`, 
+            formData, 
+            config
+        );
+        
+        dispatch({
+            type: UPDATE_BUSINESS_INFO,
+            payload: res.data
+        });
+
+        return Promise.resolve(res.data);
+    } catch (err) {
+        dispatch({
+            type: BUSINESS_ERROR,
+            payload: err.response?.data?.message || 'Error updating business info'
+        });
+        return Promise.reject(err);
+    }
 };
