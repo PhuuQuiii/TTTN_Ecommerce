@@ -1,6 +1,6 @@
-import React, { useState } from "react";
 import { Button } from "antd";
 import axios from "axios";
+import React, { useState } from "react";
 import "../../../styles/_signup.scss";
 
 function SignupForm({ switchToLogin }) {
@@ -26,7 +26,7 @@ function SignupForm({ switchToLogin }) {
     setError(null);
     
     try {
-      await axios.post("http://localhost:3001/api/admin-auth/signup", formData);
+      await axios.post("http://server-tttn.railway.internal:3001/api/admin-auth/signup", formData);
       alert("Registration successful! Please check your email to verify your account.");
       switchToLogin();
     } catch (err) {

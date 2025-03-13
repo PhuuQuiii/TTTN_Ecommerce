@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { signIn } from "../../../redux/actions/auth_actions";
 import SigninForm from "./SigninForm";
 import SignupForm from "./SignupForm";
-import { connect } from "react-redux";
-import { signIn } from "../../../redux/actions/auth_actions";
-import axios from "axios";
-import { useHistory } from "react-router-dom";
 
 const Login = (props) => {
   const [isSignup, setIsSignup] = useState(false);
@@ -41,7 +41,7 @@ const Login = (props) => {
 
     if (token) {
       axios
-        .put(`http://localhost:3001/api/admin-auth/email-verify?token=${token}`)
+        .put(`http://server-tttn.railway.internal:3001/api/admin-auth/email-verify?token=${token}`)
         .then((response) => {
           alert("Email verified successfully!");
           history.push("/");

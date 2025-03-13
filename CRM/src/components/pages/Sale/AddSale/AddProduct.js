@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Select, Button } from 'antd';
+import { Button, Form, Select } from 'antd';
 import axios from 'axios';
 import PropTypes from "prop-types";
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 const { Option } = Select;
@@ -14,7 +14,7 @@ const AddProduct = ({ onSelectProduct, next, adminId }) => {
         // Fetch products from API
         const fetchProducts = async () => {
             try {
-                const response = await axios.get(`http://localhost:3001/api/product/products/${adminId}`);
+                const response = await axios.get(`http://server-tttn.railway.internal:3001/api/product/products/${adminId}`);
                 setProducts(response.data);
             } catch (error) {
                 console.error('Failed to fetch products:', error);

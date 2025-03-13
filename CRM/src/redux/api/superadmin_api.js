@@ -63,7 +63,7 @@ export class SuperadminService {
     const state = store.getState();
     const token = state.auth.token; // Giả sử token được lưu trong state.auth.token
     try {
-      const response = await axios.get('http://localhost:3001/api/superadmin/users', {
+      const response = await axios.get('http://server-tttn.railway.internal:3001/api/superadmin/users', {
         headers: {
           'x-auth-token': token
         },
@@ -85,7 +85,7 @@ export class SuperadminService {
     const state = store.getState();
     const token = state.auth.token; // Giả sử token được lưu trong state.auth.token
     try {
-      const response = await axios.patch(`http://localhost:3001/api/superadmin/block-unblock-user/${userId}`, {
+      const response = await axios.patch(`http://server-tttn.railway.internal:3001/api/superadmin/block-unblock-user/${userId}`, {
         isBlocked
       }, {
         headers: {

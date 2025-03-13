@@ -114,7 +114,7 @@ const Index = (props) => {
                   <div 
                   key={stream.id} 
                   className="livestream-card" 
-                  onClick={() => window.location.href = "http://localhost:3002/livestream"}
+                  onClick={() => window.location.href = "https://clienttttn-production.up.railway.app/livestream"}
                   style={{ cursor: "pointer" }} 
                 >
                   <div className="livestream-thumbnail">

@@ -209,7 +209,7 @@ exports.getBusinessInfo = async (req, res) => {
 
 
         // gửi ảnh với URL đầy đủ
-        const baseUrl = process.env.SERVER_URL || "http://localhost:3001";
+        const baseUrl = process.env.SERVER_URL || "http://server-tttn.railway.internal:3001";
         const formattedData = {
             ...businessinfo._doc,
             citizenshipFront: businessinfo.citizenshipFront ? `${baseUrl}/uploads/${businessinfo.citizenshipFront}` : null,

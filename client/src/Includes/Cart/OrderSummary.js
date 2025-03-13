@@ -1,7 +1,7 @@
 import {
-  EnvironmentOutlined,
-  MailOutlined,
-  PhoneOutlined,
+    EnvironmentOutlined,
+    MailOutlined,
+    PhoneOutlined,
 } from "@ant-design/icons";
 import { Button } from "antd";
 import { isEmpty } from "lodash";
@@ -12,13 +12,12 @@ import { connect } from "react-redux";
 import actions from "../../../redux/actions";
 import { STORE_CHECKOUT_ITEMS } from "../../../redux/types";
 import { getDiscountedPrice } from "../../../utils/common";
+import { postTokenService } from "../../../utils/commonService";
 import EditAddressModal from "../../Components/EditAddressModal";
-import axios from 'axios';
-import { getTokenService, postTokenService } from "../../../utils/commonService";
 
 
 
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 const shortid = require("shortid");
 
@@ -131,7 +130,7 @@ class OrderSummary extends Component {
 
     try {
       const response = await postTokenService(
-        "http://localhost:3001/api/paypal/create-order",
+        "http://server-tttn.railway.internal:3001/api/paypal/create-order",
         "POST",
         { amount: totalAmount }
       );
@@ -149,7 +148,7 @@ class OrderSummary extends Component {
   captureOrder = async (orderID) => {
     try {
       const response = await postTokenService(
-        "http://localhost:3001/api/paypal/capture-order",
+        "http://server-tttn.railway.internal:3001/api/paypal/capture-order",
         "POST",
         { orderID }
       );

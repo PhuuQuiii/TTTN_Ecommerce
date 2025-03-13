@@ -25,9 +25,9 @@ io.origins([`${process.env.ADMIN_CRM_ROUTE}`]);
 
 // Middlewares
 var allowlist = [
-  "http://localhost:3000",
+  "https://crmtttn-production.up.railway.app",
   "http://localhost:3003",
-  "http://localhost:3002",
+  "https://clienttttn-production.up.railway.app",
   "http://157.245.106.101:3000",
   "http://157.245.106.101:3003",
   "http://157.245.106.101:3002",
@@ -64,7 +64,7 @@ const swaggerOptions = {
       contact: {
         name: "Amazing Developer",
       },
-      servers: ["http://localhost:3001/api"],
+      servers: ["http://server-tttn.railway.internal:3001/api"],
     },
   },
   apis: ["./controllers/*.js"],

@@ -44,7 +44,7 @@ const swaggerOptions = {
             contact: {
                 name: "Amazing Developer"
             },
-            servers: ["http://localhost:3001/api"]
+            servers: ["http://server-tttn.railway.internal:3001/api"]
         }
     },
     apis: ['./controllers/*.js']

@@ -1,17 +1,15 @@
-import Router from "next/router";
-import {
-  AUTHENTICATE,
-  DEAUTHENTICATE,
-  AUTHENTICATE_START,
-  GLOBAL_ERROR,
-  REGISTER_FINISH,
-  REGISTER_START,
-  RESET_PASSWORD,
-  AUTHENTICATE_FINISH,
-} from "../types";
-import { setCookie, removeCookie } from "../../utils/cookie";
-import { isTokenExpired, openNotification } from "../../utils/common";
+import { openNotification } from "../../utils/common";
+import { removeCookie, setCookie } from "../../utils/cookie";
 import { AuthService } from "../services/authService";
+import {
+    AUTHENTICATE,
+    AUTHENTICATE_FINISH,
+    AUTHENTICATE_START,
+    DEAUTHENTICATE,
+    GLOBAL_ERROR,
+    REGISTER_FINISH,
+    REGISTER_START
+} from "../types";
 
 //register the user
 const register = (body) => {
@@ -135,7 +133,7 @@ const reauthenticate = (token, refreshToken, ctx) => {
   //         refreshToken,
   //       });
   //       const resp = await fetch(
-  //         `http://localhost:3001/api/user-auth/refresh-token`,
+  //         `http://server-tttn.railway.internal:3001/api/user-auth/refresh-token`,
   //         {
   //           method: "POST",
   //           headers: {
