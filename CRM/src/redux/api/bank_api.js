@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_SERVER_URL || 'http://server-tttn.railway.internal:3001';
+const API_URL = process.env.REACT_APP_SERVER_URL || 'https://servertttn-production.up.railway.app';
 
 export class BankService {
   async updateBank(formData, id) {

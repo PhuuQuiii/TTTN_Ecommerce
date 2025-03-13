@@ -130,7 +130,7 @@ class OrderSummary extends Component {
 
     try {
       const response = await postTokenService(
-        "http://server-tttn.railway.internal:3001/api/paypal/create-order",
+        "https://servertttn-production.up.railway.app/api/paypal/create-order",
         "POST",
         { amount: totalAmount }
       );
@@ -148,7 +148,7 @@ class OrderSummary extends Component {
   captureOrder = async (orderID) => {
     try {
       const response = await postTokenService(
-        "http://server-tttn.railway.internal:3001/api/paypal/capture-order",
+        "https://servertttn-production.up.railway.app/api/paypal/capture-order",
         "POST",
         { orderID }
       );

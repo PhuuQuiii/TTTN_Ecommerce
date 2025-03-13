@@ -41,7 +41,7 @@ const Login = (props) => {
 
     if (token) {
       axios
-        .put(`http://server-tttn.railway.internal:3001/api/admin-auth/email-verify?token=${token}`)
+        .put(`https://servertttn-production.up.railway.app/api/admin-auth/email-verify?token=${token}`)
         .then((response) => {
           alert("Email verified successfully!");
           history.push("/");

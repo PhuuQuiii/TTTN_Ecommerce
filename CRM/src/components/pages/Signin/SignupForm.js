@@ -26,7 +26,7 @@ function SignupForm({ switchToLogin }) {
     setError(null);
     
     try {
-      await axios.post("http://server-tttn.railway.internal:3001/api/admin-auth/signup", formData);
+      await axios.post("https://servertttn-production.up.railway.app/api/admin-auth/signup", formData);
       alert("Registration successful! Please check your email to verify your account.");
       switchToLogin();
     } catch (err) {

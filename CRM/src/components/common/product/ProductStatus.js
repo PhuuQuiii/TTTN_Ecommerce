@@ -30,7 +30,7 @@ export const ProductStatus = ({ isSuperadmin, product, loading , approveProduct,
     
         const token = localStorage.getItem("token");
     
-        axios.put(`http://server-tttn.railway.internal:3001/api/superadmin/featured-product/${product.slug}`, {}, {
+        axios.put(`https://servertttn-production.up.railway.app/api/superadmin/featured-product/${product.slug}`, {}, {
             headers: {
                 "x-auth-token": token,
                 "Content-Type": "application/json"

@@ -14,7 +14,7 @@ const AddProduct = ({ onSelectProduct, next, adminId }) => {
         // Fetch products from API
         const fetchProducts = async () => {
             try {
-                const response = await axios.get(`http://server-tttn.railway.internal:3001/api/product/products/${adminId}`);
+                const response = await axios.get(`https://servertttn-production.up.railway.app/api/product/products/${adminId}`);
                 setProducts(response.data);
             } catch (error) {
                 console.error('Failed to fetch products:', error);

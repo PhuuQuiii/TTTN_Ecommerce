@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { BUSINESS_ERROR, GET_BUSINESS_INFO, UPDATE_BUSINESS_INFO } from '../types';
 
-const API_URL = process.env.REACT_APP_SERVER_URL || 'http://server-tttn.railway.internal:3001';
+const API_URL = process.env.REACT_APP_SERVER_URL || 'https://servertttn-production.up.railway.app';
 
 // Helper function to get auth headers
 const getAuthHeaders = (contentType = 'application/json') => {

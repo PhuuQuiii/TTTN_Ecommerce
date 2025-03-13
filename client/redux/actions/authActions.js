@@ -2,13 +2,13 @@ import { openNotification } from "../../utils/common";
 import { removeCookie, setCookie } from "../../utils/cookie";
 import { AuthService } from "../services/authService";
 import {
-    AUTHENTICATE,
-    AUTHENTICATE_FINISH,
-    AUTHENTICATE_START,
-    DEAUTHENTICATE,
-    GLOBAL_ERROR,
-    REGISTER_FINISH,
-    REGISTER_START
+  AUTHENTICATE,
+  AUTHENTICATE_FINISH,
+  AUTHENTICATE_START,
+  DEAUTHENTICATE,
+  GLOBAL_ERROR,
+  REGISTER_FINISH,
+  REGISTER_START
 } from "../types";
 
 //register the user
@@ -133,7 +133,7 @@ const reauthenticate = (token, refreshToken, ctx) => {
   //         refreshToken,
   //       });
   //       const resp = await fetch(
-  //         `http://server-tttn.railway.internal:3001/api/user-auth/refresh-token`,
+  //         `https://servertttn-production.up.railway.app/api/user-auth/refresh-token`,
   //         {
   //           method: "POST",
   //           headers: {
