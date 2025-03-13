@@ -26,11 +26,8 @@ io.origins([`${process.env.ADMIN_CRM_ROUTE}`]);
 // Middlewares
 var allowlist = [
   "https://crmtttn-production.up.railway.app",
-  "http://localhost:3003",
+  "https://crmtttn-production.up.railway.app/",
   "https://clienttttn-production.up.railway.app",
-  "http://157.245.106.101:3000",
-  "http://157.245.106.101:3003",
-  "http://157.245.106.101:3002",
 ];
 
 var corsOptionsDelegate = function (req, callback) {
