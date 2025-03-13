@@ -26,29 +26,25 @@ exports.createSale = async (req, res) => {
       name,
       products,
       discountRate,
-      startTime, // Giá trị đầu vào dạng giờ VN
-      endTime,   // Giá trị đầu vào dạng giờ VN
+      startTime, // Đầu vào: giờ VN
+      endTime,   // Đầu vào: giờ VN
       createdBy,
     } = req.body;
 
-    // Giả sử startTime/endTime do người dùng truyền đến là giờ Việt Nam (GMT+7).
-    // Ta trừ 7 tiếng để lấy giờ UTC thực sự.
-    const startTimeUTC = new Date(new Date(startTime).getTime() - 7 * 60 * 60 * 1000);
-    const endTimeUTC = new Date(new Date(endTime).getTime() - 7 * 60 * 60 * 1000);
 
     const newSale = new Sale({
       name,
       products,
       discountRate,
-      startTime: startTimeUTC,
-      endTime: endTimeUTC,
+      startTime,
+      endTime,
       createdBy,
     });
 
     await newSale.save();
-    res.status(201).json(newSale);
+    return res.status(201).json(newSale);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
   
@@ -58,8 +54,9 @@ exports.getActiveSales = async (req, res) => {
   try {
     const nowUTC = new Date();
     const nowLocal = new Date(nowUTC.getTime() + 7 * 60 * 60 * 1000); // Giờ Việt Nam
-    const hourLocal = nowLocal.getHours();
+    // const hourLocal = nowLocal.getHours();
     console.log("Giờ VN hiện tại:", nowLocal.toISOString());
+    console.log("Giờ UTC hiện tại:", nowUTC.toISOString());
 
     const allSales = await Sale.find()
       .populate({
@@ -76,10 +73,7 @@ exports.getActiveSales = async (req, res) => {
       const saleEndLocal = new Date(sale.endTime.getTime() + 7 * 60 * 60 * 1000);
       console.log("Giờ saleStart:", saleStartLocal.toISOString());
 
-      return (
-        saleStartLocal.getHours() === hourLocal ||
-        (saleStartLocal <= nowLocal && saleEndLocal >= nowLocal)
-      );
+      return saleStartLocal <= nowLocal && nowLocal <= saleEndLocal;
     });
 
     if (activeSales.length === 0) {
