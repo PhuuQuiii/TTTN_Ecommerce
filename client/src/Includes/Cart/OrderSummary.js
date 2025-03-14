@@ -1,7 +1,7 @@
 import {
-    EnvironmentOutlined,
-    MailOutlined,
-    PhoneOutlined,
+  EnvironmentOutlined,
+  MailOutlined,
+  PhoneOutlined,
 } from "@ant-design/icons";
 import { Button } from "antd";
 import { isEmpty } from "lodash";

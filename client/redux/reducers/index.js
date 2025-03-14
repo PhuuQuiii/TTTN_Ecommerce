@@ -1,14 +1,14 @@
 import { combineReducers } from 'redux';
 import authReducer from './authReducer';
-import cartReducer from './cartReducer';
-import globalErrorReducer from './globalErrorReducer';
-import listingReducer from './listingReducer';
-import menuReducer from './menuReducer';
-import orderReducer from './orderReducer';
-import otherReducer from './otherReducer';
 import productReducer from './productReducer';
+import menuReducer from './menuReducer';
+import listingReducer from './listingReducer';
 import userReducer from './userReducer';
+import globalErrorReducer from './globalErrorReducer';
+import otherReducer from './otherReducer';
+import cartReducer from './cartReducer';
 import wishlistReducer from './wishlistReducer';
+import orderReducer from './orderReducer';
 
 const rootReducer = combineReducers({
   authentication: authReducer,
