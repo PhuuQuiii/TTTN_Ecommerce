@@ -180,12 +180,6 @@ function ManageSale({
                 description={
                   <>
                     <p>
-                      <strong>Brand:</strong> {product.brand}
-                    </p>
-                    <p>
-                      <strong>Category:</strong> {product.category.join(", ")}
-                    </p>
-                    <p>
                       <strong>Price:</strong> {product.price.$numberDecimal}
                     </p>
                   </>
