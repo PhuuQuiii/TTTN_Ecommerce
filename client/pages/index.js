@@ -150,7 +150,7 @@ const Index = (props) => {
           {
             !isEmpty(allProducts.featuredProducts?.products) &&
             <>
-            {console.log("Danh sách sản phẩm hiển thị:", allProducts.featuredProducts?.products)}
+            {/* {console.log("Danh sách sản phẩm hiển thị:", allProducts.featuredProducts?.products)} */}
               <SliderHeader
                 headTitle="Featured Products"
                 headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
