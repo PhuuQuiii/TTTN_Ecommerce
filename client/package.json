@@ -6,6 +6,7 @@
     "dev": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next -p 3002",
     "build": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next build",
     "start": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next start -p 3002",
+    "lint": "next lint",
     "sass": "sass --watch sass/main.scss:public/css/style.css",
     "sass-build": "sass sass/main.scss:public/css/style.css"
   },
