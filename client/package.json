@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider next -p 3002",
-    "build": "yarn sass-build && next build",
-    "start": "cross-env next -p 3002",
+    "dev": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next -p 3002",
+    "build": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next build",
+    "start": "cross-env NODE_OPTIONS='--openssl-legacy-provider' next start -p 3002",
     "sass": "sass --watch sass/main.scss:public/css/style.css",
     "sass-build": "sass sass/main.scss:public/css/style.css"
   },
@@ -58,7 +58,9 @@
     "@babel/preset-react": "^7.26.3",
     "babel-loader": "^9.2.1",
     "cross-env": "^7.0.3",
-    "sass": "^1.82.0"
+    "file-loader": "^6.2.0",
+    "sass": "^1.82.0",
+    "url-loader": "^4.1.1"
   },
   "readme": "ERROR: No README data found!",
   "_id": "client@0.1.0"

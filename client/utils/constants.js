@@ -1,6 +1,6 @@
-export const QUINDIGO_BASE_URL = 'http://157.245.106.101'
+export const QUINDIGO_BASE_URL = 'https://servertttn-production.up.railway.app'
 
-export const BASE_URL = process.env.NODE_ENV === 'production' ? 'http://157.245.106.101:3001' : process.env.SERVER_BASE_URL
+export const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://servertttn-production.up.railway.app' : process.env.SERVER_BASE_URL
 
 export const USER_AUTH_BASE_URL = `${BASE_URL}/api/user-auth`
 export const SUPER_AUTH_BASE_URL = `${BASE_URL}/api/superadmin`

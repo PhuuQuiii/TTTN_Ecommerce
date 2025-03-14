@@ -3,6 +3,7 @@ import App from "next/app";
 import { Provider } from "react-redux";
 import '../node_modules/react-modal-video/scss/modal-video.scss';
 import '../public/css/react-carousel.es.css';
+import '../public/css/slick-override.css';
 import "../public/nprogress.css";
 import { initStore } from "../redux";
 import GlobalErrorComponent from "../src/Components/GlobalErrorComponent";

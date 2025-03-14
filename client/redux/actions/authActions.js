@@ -2,13 +2,13 @@ import { openNotification } from "../../utils/common";
 import { removeCookie, setCookie } from "../../utils/cookie";
 import { AuthService } from "../services/authService";
 import {
-  AUTHENTICATE,
-  AUTHENTICATE_FINISH,
-  AUTHENTICATE_START,
-  DEAUTHENTICATE,
-  GLOBAL_ERROR,
-  REGISTER_FINISH,
-  REGISTER_START
+    AUTHENTICATE,
+    AUTHENTICATE_FINISH,
+    AUTHENTICATE_START,
+    DEAUTHENTICATE,
+    GLOBAL_ERROR,
+    REGISTER_FINISH,
+    REGISTER_START
 } from "../types";
 
 //register the user

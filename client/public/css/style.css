@@ -23,6 +23,10 @@
   font-weight: bold;
   font-style: normal;
 }
+@font-face {
+  font-family: "Slick";
+  src: url("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/fonts/slick.woff") format("woff"), url("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/fonts/slick.ttf") format("truetype");
+}
 body {
   font-family: "Quicksand" !important;
   font-size: 14px !important;

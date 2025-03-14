@@ -26,6 +26,12 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Slick';
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/fonts/slick.woff') format('woff'),
+       url('https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/fonts/slick.ttf') format('truetype');
+}
+
 // @font-face {
 //   font-family: "RobotoDisplay";
 //   src: url("./fonts/roboto/Roboto-Regular.ttf"); /* IE9 Compat Modes */
