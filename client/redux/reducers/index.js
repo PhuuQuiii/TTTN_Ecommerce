@@ -9,6 +9,7 @@ import otherReducer from './otherReducer';
 import cartReducer from './cartReducer';
 import wishlistReducer from './wishlistReducer';
 import orderReducer from './orderReducer';
+import saleReducer from "./saleReducer";
 
 const rootReducer = combineReducers({
   authentication: authReducer,
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
   other: otherReducer,
   cart: cartReducer,
   wishlist: wishlistReducer,
-  order: orderReducer
+  order: orderReducer,
+  sale: saleReducer,
 });
 
 export default rootReducer;
