@@ -28,8 +28,7 @@ class Header extends Component {
     if (isEmpty(this.props.menu.menuCategories)) {
       this.props.productCategories();
     }
-    let loginToken = this.props.authentication.token;
-    let userInfo = getUserInfo(loginToken);
+    this.updateUserInfo(this.props.authentication.token);
 
     let slug = this.props.router.asPath?.split("/")[1];
 
@@ -38,27 +37,15 @@ class Header extends Component {
         searchValue: this.props.router.query.slug,
       });
     }
-
-    this.setState({
-      loginToken,
-      userInfo,
-    });
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.authentication.token !== nextProps.authentication.token) {
-      let userInfo = [];
-      if (nextProps.authentication.token) {
-        userInfo = getUserInfo(this.state.loginToken);
-      }
-      this.setState({
-        loginToken: nextProps.authentication.token,
-        userInfo,
-      });
-    }
   }
 
   componentDidUpdate(prevProps) {
+    // Handle authentication token changes
+    if (this.props.authentication.token !== prevProps.authentication.token) {
+      this.updateUserInfo(this.props.authentication.token);
+    }
+
+    // Handle search keywords changes
     let {
       listing: { getSearchKeywords },
     } = this.props;
@@ -77,6 +64,14 @@ class Header extends Component {
         searchOptions: searchOpts,
       });
     }
+  }
+
+  updateUserInfo = (token) => {
+    let userInfo = token ? getUserInfo(token) : [];
+    this.setState({
+      loginToken: token,
+      userInfo,
+    });
   }
 
   handleSubmit = (e) => {
@@ -154,7 +149,12 @@ class Header extends Component {
                 <Col span={4} className="logo">
                   <Link href="/">
                     <a>
-                      <img src="/images/logo.png" /> 
+                      <img
+                        src="/images/logo.png"
+                        alt="Logo"
+                        style={{ width: '150px' }}
+                        suppressHydrationWarning
+                      />
                     </a>
                   </Link>
                 </Col>

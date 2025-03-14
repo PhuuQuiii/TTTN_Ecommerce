@@ -1,9 +1,9 @@
-import Document, { Head, Main, NextScript } from "next/document";
+import Document, { Head, Html, Main, NextScript } from "next/document";
 
 export default class MyDocument extends Document {
   render() {
     return (
-      <html>
+      <Html>
         <Head>
           <meta charSet="utf-8" />
           <meta
@@ -22,12 +22,35 @@ export default class MyDocument extends Document {
             rel="stylesheet"
             href="/font-awesome-4.7.0/css/font-awesome.min.css"
           />
+          {/* Iubenda Cookie Solution */}
+          <script type="text/javascript" dangerouslySetInnerHTML={{
+            __html: `
+              var _iub = _iub || [];
+              _iub.csConfiguration = {
+                "siteId":3962706,
+                "cookiePolicyId":66875822,
+                "lang":"en",
+                "storage":{"useSiteId":true},
+                "callback": {
+                  onPreferenceExpressed: function(preference) {
+                    if (preference) {
+                      // Initialize GA when consent is given
+                      window.initGAWithConsent && window.initGAWithConsent();
+                    }
+                  }
+                }
+              };
+            `
+          }} />
+          <script type="text/javascript" src="https://cs.iubenda.com/autoblocking/3962706.js" />
+          <script type="text/javascript" src="//cdn.iubenda.com/cs/gpp/stub.js" />
+          <script type="text/javascript" src="//cdn.iubenda.com/cs/iubenda_cs.js" charset="UTF-8" async />
         </Head>
         <body>
           <Main />
           <NextScript />
         </body>
-      </html>
+      </Html>
     );
   }
 }
