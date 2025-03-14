@@ -9,6 +9,7 @@ import Layout from "../src/Components/Layout";
 import ProductSlider from "../src/Components/ProductSlider";
 import SliderHeader from "../src/Components/SliderHeader";
 import initialize from "../utils/initialize";
+import FlashSale from "../src/Components/FlashSale";
 
 const Index = (props) => {
   let dispatch = useDispatch();
@@ -145,6 +146,9 @@ const Index = (props) => {
               </div>
             </div>
           </section>
+
+          {/* Flash Sale Section */}
+          <FlashSale />
 
           {/* Featured Products Section */}
           {

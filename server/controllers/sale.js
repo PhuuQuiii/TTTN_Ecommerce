@@ -54,9 +54,6 @@ exports.getActiveSales = async (req, res) => {
   try {
     const nowUTC = new Date();
     const nowLocal = new Date(nowUTC.getTime() + 7 * 60 * 60 * 1000); // Giờ Việt Nam
-    // const hourLocal = nowLocal.getHours();
-    console.log("Giờ VN hiện tại:", nowLocal.toISOString());
-    console.log("Giờ UTC hiện tại:", nowUTC.toISOString());
 
     const allSales = await Sale.find()
       .populate({
@@ -68,25 +65,32 @@ exports.getActiveSales = async (req, res) => {
       })
       .populate("createdBy");
 
-    const activeSales = allSales.filter(sale => {
+    let activeSales = allSales.filter((sale) => {
       const saleStartLocal = new Date(sale.startTime.getTime() + 7 * 60 * 60 * 1000);
       const saleEndLocal = new Date(sale.endTime.getTime() + 7 * 60 * 60 * 1000);
-      console.log("Giờ saleStart:", saleStartLocal.toISOString());
-
       return saleStartLocal <= nowLocal && nowLocal <= saleEndLocal;
     });
+
+    // Convert to plain objects and filter products that are verified
+    activeSales = activeSales
+      .map((sale) => {
+        const saleObj = sale.toObject();
+        saleObj.products = saleObj.products.filter((product) => product.isVerified);
+        return saleObj;
+      })
+      .filter((saleObj) => saleObj.products.length > 0);
 
     if (activeSales.length === 0) {
       return res.status(200).json({ message: "Không có chương trình diễn ra" });
     }
 
-    const result = activeSales.map(sale => {
-      const saleObj = sale.toObject();
-      saleObj.startTimeVN = new Date(sale.startTime.getTime() + 7 * 60 * 60 * 1000);
-      saleObj.endTimeVN = new Date(sale.endTime.getTime() + 7 * 60 * 60 * 1000);
+    const result = activeSales.map((sale) => {
+      // Use sale directly because it's already a plain object
+      sale.startTimeVN = new Date(sale.startTime.getTime() + 7 * 60 * 60 * 1000);
+      sale.endTimeVN = new Date(sale.endTime.getTime() + 7 * 60 * 60 * 1000);
 
-      const productsWithImageUrls = saleObj.products.map(product => {
-        const imagesWithUrls = product.images.map(imageId => {
+      const productsWithImageUrls = sale.products.map((product) => {
+        const imagesWithUrls = product.images.map((imageId) => {
           const image = ProductImages.findById(imageId);
           return {
             _id: imageId,
@@ -101,7 +105,7 @@ exports.getActiveSales = async (req, res) => {
       });
 
       return {
-        ...saleObj,
+        ...sale,
         products: productsWithImageUrls,
       };
     });

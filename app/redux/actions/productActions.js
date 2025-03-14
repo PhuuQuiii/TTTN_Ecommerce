@@ -157,7 +157,7 @@ export const getProductReviews = (query) => {
 export default {
   getLatestProducts,
   productCategories,
-  // getProductDetails,
+  getProductDetails,
   // getOrders,
   // getQandA,
   // postQuestion,

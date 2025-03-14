@@ -96,6 +96,7 @@ class ProductSpecs extends Component {
     }
     let loginToken = this.props.authentication.token;
     const antIcon = <LoadingOutlined style={{ fontSize: 18, marginRight: 10 }} spin />
+    const originalPrice = parseFloat(product.price?.$numberDecimal) || 0;
 
     let checkSkeleton = product.name === '' ? 'product-detail-skeleton' : ''
     return (
@@ -146,33 +147,45 @@ class ProductSpecs extends Component {
             </div>
             {
               !checkSkeleton ? (
-                <div className="price-wish">
-                  <div className="old-new-price">
-                    {
-                      product?.discountRate > 0 &&
-                      <div className="old-price">
-                        <span> {product.price.$numberDecimal} vnđ</span>
-                      </div>
+                    <div className="price-wish">
+                    <div className="old-new-price">
+                      {this.props.flashSaleInfo ? (
+                        <>
+                          <div className="old-price">
+                            <span style={{ textDecoration: 'line-through' }}>
+                              {originalPrice.toLocaleString()} vnđ
+                            </span>
+                          </div>
+                          <div className="new-price">
+                            <span className="price" style={{ color: 'red', fontSize: '24px' }}>
+                              {parseFloat(this.props.flashSaleInfo.discountedPrice).toLocaleString()} vnđ
+                            </span>
+                          </div>
+                        </>
+                      ) : product?.discountRate > 0 ? (
+                        <>
+                          <div className="old-price">
+                            <span>
+                              {originalPrice.toLocaleString()} vnđ
+                            </span>
+                          </div>
+                          <div className="new-price">
+                            <span className="price">
+                              {(originalPrice - (originalPrice * product.discountRate / 100)).toLocaleString()} vnđ
+                            </span>
+                            <span className="discount">
+                              (SAVE { (originalPrice * product.discountRate / 100).toLocaleString() } | {product.discountRate} %)
+                            </span>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="new-price">
+                          <span className="price">
+                            {originalPrice.toLocaleString()} vnđ
+                          </span>
+                        </div>
+                        )
                     }
-                    <div className="new-price">
-                      <span className="price">
-                        {" "}
-                        {product?.price.$numberDecimal -
-                          ((product?.price.$numberDecimal *
-                            product?.discountRate) /
-                            100)} vnđ
-                      </span>
-                      {
-                        product?.discountRate > 0 &&
-                        <span className="discount">
-                          (Save  {(product?.price.$numberDecimal *
-                            product?.discountRate) /
-                            100} |{" "}
-                          {product.discountRate} vnđ
-                    %)
-                  </span>
-                      }
-                    </div>
                   </div>
                   <div className="wish-btn">
                     {loginToken ? (
