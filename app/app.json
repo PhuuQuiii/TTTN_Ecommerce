@@ -1,8 +1,6 @@
 {
   "expo": {
-    "newArchEnabled": true,
     "name": "kindeem_draft",
-    "main": "node_modules/expo/AppEntry.js",
     "slug": "kindeem_draft",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -15,18 +13,25 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "package": "com.ujjal.kindeem_draft",
-      "versionCode": 1
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": ["NOTIFICATIONS"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-notifications"
+    ],
+    "newArchEnabled": true
   }
 }

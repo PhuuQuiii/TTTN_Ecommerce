@@ -1,15 +1,15 @@
-const tintColor = "#18253f";
+const tintColor = "#48b5dc";
 
 export default {
   tintColor,
-  primaryGreen: "#1f1f1f",
+  primaryGreen: "#61ce70",
   grayColor: "#66727e",
   lightGray: "#DCDCDC",
   chosenFilterBackgroundColor: "#deebff",
-  chosenFilterColor: "#18253f",
+  chosenFilterColor: "#36f",
   backgroundColor: "#86909a",
-  bannerColor: "#18253f",
-  filledColor: "#18253f",
+  bannerColor: "#2978a0",
+  filledColor: "#2978a0",
   initialColor: "#DCDCDC",
   _filledColor: "#77ba99",
   cardColor: "#f1f7ff",

@@ -12,21 +12,18 @@ import Skeleton from "../../components/shared/Skeleton";
 
 const FeaturedProducts = (props) => {
   const dispatch = useDispatch();
-  const {
-    latestProducts: { products },
-    loading,
-  } = useSelector(({ products }) => ({
-    latestProducts: products.latestProducts,
-    loading: products.latestLoading,
-  }));
+
+  // Optimized selectors
+  const latestProducts = useSelector(
+    (state) => state.products.latestProducts.products || []
+  );
+  const loading = useSelector((state) => state.products.latestLoading);
 
   const { type } = props;
 
   useEffect(() => {
     if (type === "latest") dispatch(getLatestProducts());
   }, [type, dispatch]);
-
-  useEffect(() => {}, [products]);
 
   return (
     <View style={styles.container}>
@@ -43,7 +40,7 @@ const FeaturedProducts = (props) => {
           {loading ? (
             <Skeleton />
           ) : (
-            products?.map((product) => (
+            latestProducts?.map((product) => (
               <SingleCard key={product._id} product={product} />
             ))
           )}

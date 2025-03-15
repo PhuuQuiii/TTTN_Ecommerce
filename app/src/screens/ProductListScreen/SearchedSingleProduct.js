@@ -1,24 +1,25 @@
-import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Avatar,
   Button,
   Card,
+  Title,
   Paragraph,
-  Title
+  Colors,
 } from "react-native-paper";
-import { useDispatch, useSelector } from "react-redux";
+import { View, Image, StyleSheet, Alert, Text } from "react-native";
 
-import { AntDesign } from "@expo/vector-icons";
 import {
   TouchableNativeFeedback,
   TouchableWithoutFeedback,
 } from "react-native-gesture-handler";
+import { AntDesign } from "@expo/vector-icons";
 
-import { getProductDetails } from "../../../redux/actions/productActions";
-import { removeFromWishList } from "../../../redux/actions/wishlistActions";
-import { SERVER_BASE_URL } from "../../../utils/common";
 import Constants from "../../constants/Constants";
+import { getProductDetails } from "../../../redux/actions/productActions";
+import { SERVER_BASE_URL } from "../../../utils/common";
+import { removeFromWishList } from "../../../redux/actions/wishlistActions";
 
 const SearchedSingleProduct = (props) => {
   const dispatch = useDispatch();
@@ -149,7 +150,7 @@ const SearchedSingleProduct = (props) => {
                   {props.product.price && (
                     <Paragraph>
                       {" "}
-                      vnđ
+                      Rs
                       {` ${
                         props.product.price.$numberDecimal ||
                         props.product.price

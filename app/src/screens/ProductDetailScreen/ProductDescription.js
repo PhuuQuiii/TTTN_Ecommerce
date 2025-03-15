@@ -1,13 +1,13 @@
 import React from "react";
-import { Text, View } from "react-native";
-import { Avatar, Card, Divider, Paragraph } from "react-native-paper";
 import { useSelector } from "react-redux";
-import { getDiscountedAmount } from "../../../utils/common";
+import { Text, View } from "react-native";
+import { Card, Paragraph, Divider, Avatar } from "react-native-paper";
 import Constants from "../../constants/Constants";
-import ConciseQnA from "./ConciseQnA";
 import ConcideRating from "./ConciseRating";
 import HighlightedInfo from "./HighlightedInfo";
+import ConciseQnA from "./ConciseQnA";
 import YoutubePlayer from "./YoutubePlayer";
+import { getDiscountedAmount } from "../../../utils/common";
 
 const ProductDescription = ({ productDetails }) => {
   const { token } = useSelector((state) => state.authentication);
@@ -26,7 +26,7 @@ const ProductDescription = ({ productDetails }) => {
                   fontWeight: "bold",
                 }}
               >
-                vnđ {getDiscountedAmount(product.price.$numberDecimal, product.discountRate)}
+                Rs {getDiscountedAmount(product.price.$numberDecimal, product.discountRate)}
               </Text>
             }
             subtitle={
@@ -37,7 +37,7 @@ const ProductDescription = ({ productDetails }) => {
                     textDecorationStyle: "solid",
                   }}
                 >
-                  {`vnđ ${product.price.$numberDecimal}`}
+                  {`Rs ${product.price.$numberDecimal}`}
                 </Text>
                 <Text
                   style={{

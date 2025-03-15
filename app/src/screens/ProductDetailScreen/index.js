@@ -3,7 +3,8 @@ import { useSelector } from "react-redux";
 import { View, ScrollView } from "react-native";
 import { TouchableRipple, Divider } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
-import Gallery from "react-native-image-gallery";
+// import Gallery from "react-native-image-gallery";
+import ImageView from "react-native-image-viewing";
 
 import ProductDetailHeader from "./ProductDetailHeader";
 import Constants from "../../constants/Constants";
@@ -21,24 +22,16 @@ const ProductDetailScreen = (props) => {
 
   const { token } = useSelector(({ authentication }) => authentication);
 
-  const [state, setState] = useState({
-    showGallery: false,
-  });
+  const [visible, setVisible] = useState(false);
 
   const handleGalleryToggle = () => {
-    setState((prevState) => {
-      return {
-        showGallery: !prevState.showGallery,
-      };
-    });
+    setVisible(!visible);
   };
 
   const newProps = { ...props, productDetails, loading: productDetailsLoading };
 
-  const galleryImage = productDetails?.product.images.map((prod) => ({
-    source: {
-      uri: `${SERVER_BASE_URL + "/uploads/" + prod.large}`,
-    },
+  const galleryImages = productDetails?.product.images.map((prod) => ({
+    uri: `${SERVER_BASE_URL}/uploads/${prod.large}`,
   }));
 
   if (productDetailsLoading) {
@@ -47,46 +40,40 @@ const ProductDetailScreen = (props) => {
 
   return (
     <View style={{ flex: 1 }}>
-      {state.showGallery ? (
-        <View style={{ flex: 1 }}>
-          <Ionicons
-            name="ios-close-circle"
-            size={30}
-            color={Constants.tintColor}
-            onPress={handleGalleryToggle}
+      <ImageView
+        images={galleryImages}
+        imageIndex={0}
+        visible={visible}
+        onRequestClose={handleGalleryToggle}
+        backgroundColor="#696969"
+        HeaderComponent={({ imageIndex }) => (
+          <View
             style={{
               backgroundColor: "#696969",
               height: 80,
-              padding: 20,
+              paddingTop: 20,
+              paddingHorizontal: 20,
             }}
-          />
-          <Gallery
-            useNativeDriver={true}
-            style={{ flex: 1, backgroundColor: "#696969" }}
-            initialPage={0}
-            images={galleryImage}
-          />
-        </View>
-      ) : (
-        <>
-          <ScrollView
-            contentContainerStyle={{ flexGrow: 1 }}
-            // stickyHeaderIndices={[0]}
           >
-            <TouchableRipple
-              style={{ height: 250 }}
+            <Ionicons
+              name="ios-close-circle"
+              size={30}
+              color={Constants.tintColor}
               onPress={handleGalleryToggle}
-            >
-              <ProductDetailHeader {...newProps} token={token} />
-            </TouchableRipple>
-            <ProductDescription {...newProps} />
-            <View style={{ height: 250, marginTop: 0 }}>
-              <FeaturedProducts title={"Similar Products"} />
-            </View>
-          </ScrollView>
-          <ProductDetailFooter {...newProps} />
-        </>
-      )}
+            />
+          </View>
+        )}
+      />
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <TouchableRipple style={{ height: 250 }} onPress={handleGalleryToggle}>
+          <ProductDetailHeader {...newProps} token={token} />
+        </TouchableRipple>
+        <ProductDescription {...newProps} />
+        <View style={{ height: 250, marginTop: 0 }}>
+          <FeaturedProducts title={"Similar Products"} />
+        </View>
+      </ScrollView>
+      <ProductDetailFooter {...newProps} />
     </View>
   );
 };

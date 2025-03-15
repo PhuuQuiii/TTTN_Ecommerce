@@ -1,12 +1,18 @@
+import "react-native-gesture-handler";
+import "react-native-reanimated";
+import { Platform } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
-import { StatusBar, Text, Platform } from "react-native";
+import { StatusBar, Text, AppRegistry } from "react-native";
 import { Provider } from "react-redux";
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
-
+import * as Permissions from "expo-permissions";
+import { name as appName } from "./app.json";
 import Main from "./src";
+
 import store from "./redux";
 import { default as Constant } from "./src/constants/Constants";
+
 import NetInfo from "@react-native-community/netinfo";
 
 Notifications.setNotificationHandler({
@@ -29,37 +35,46 @@ const App = () => {
     });
 
     // This listener is fired whenever a notification is received while the app is foregrounded
-    notificationListener.current = Notifications.addNotificationReceivedListener(
-      (notification) => {
+    const notificationListenerSubscription =
+      Notifications.addNotificationReceivedListener((notification) => {
         setNotification(notification);
         console.warn(notification);
-      }
-    );
+      });
 
-    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(
-      (response) => {
+    // This listener is fired whenever a user taps on or interacts with a notification
+    const responseListenerSubscription =
+      Notifications.addNotificationResponseReceivedListener((response) => {
         console.log(response);
-      }
-    );
+      });
 
-    // Subscribe
+    // Subscribe to network state
     const unsubscribeInternet = NetInfo.addEventListener((state) => {
       console.log("Connection type", state.type);
       console.log("Is connected?", state.isConnected);
     });
 
-    // UnsubscribeInternet
     return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
+      if (notificationListenerSubscription) {
+        Notifications.removeNotificationSubscription(
+          notificationListenerSubscription
+        );
+      }
+      if (responseListenerSubscription) {
+        Notifications.removeNotificationSubscription(
+          responseListenerSubscription
+        );
+      }
       unsubscribeInternet();
     };
   }, []);
 
   return (
     <Provider store={store}>
-      <StatusBar backgroundColor={Constant.tintColor} barStyle="light-content" />
+      <StatusBar
+        backgroundColor={Constant.tintColor}
+        barStyle="light-content"
+      />
+      {/* <Text>Your expo push token: {expoPushToken}</Text> */}
       <Main />
     </Provider>
   );
@@ -68,10 +83,12 @@ const App = () => {
 async function registerForPushNotificationsAsync() {
   let token;
   if (Constants.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus.status;
-    if (existingStatus.status !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.NOTIFICATIONS
+    );
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
       finalStatus = status;
     }
     if (finalStatus !== "granted") {
@@ -95,6 +112,8 @@ async function registerForPushNotificationsAsync() {
 
   return token;
 }
+
+AppRegistry.registerComponent(appName, () => App);
 
 export default App;
 

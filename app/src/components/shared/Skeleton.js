@@ -1,28 +1,72 @@
 import React from "react";
-import { View, Text } from "react-native";
-// import SkeletonContent from "react-native-skeleton-content";
-import SkeletonContent from 'react-native-skeleton-content-nonexpo';
-
-
+import { View, StyleSheet } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Skeleton = () => {
   return (
-    <SkeletonContent
-      containerStyle={{ flex: 1, width: 300 }}
-      isLoading={true}
-      layout={[
-        { width: 300, height: 20, margin: 6 },
-        { width: 260, height: 20, margin: 6 },
-        { width: 220, height: 20, margin: 6 },
-        { width: 180, height: 20, margin: 6 },
-        { width: 140, height: 20, marginTop: 6 },
-      ]}
-      animationDirection="horizontalLeft"
-    >
-      <Text>Your content</Text>
-      <Text>Other content</Text>
-    </SkeletonContent>
+    <View style={styles.container}>
+      <View style={styles.skeletonItem}>
+        <LinearGradient
+          colors={["#f2f2f2", "#e6e6e6", "#f2f2f2"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.gradient}
+        />
+      </View>
+      <View style={[styles.skeletonItem, { width: 260 }]}>
+        <LinearGradient
+          colors={["#f2f2f2", "#e6e6e6", "#f2f2f2"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.gradient}
+        />
+      </View>
+      <View style={[styles.skeletonItem, { width: 220 }]}>
+        <LinearGradient
+          colors={["#f2f2f2", "#e6e6e6", "#f2f2f2"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.gradient}
+        />
+      </View>
+      <View style={[styles.skeletonItem, { width: 180 }]}>
+        <LinearGradient
+          colors={["#f2f2f2", "#e6e6e6", "#f2f2f2"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.gradient}
+        />
+      </View>
+      <View style={[styles.skeletonItem, { width: 140 }]}>
+        <LinearGradient
+          colors={["#f2f2f2", "#e6e6e6", "#f2f2f2"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.gradient}
+        />
+      </View>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "column",
+    alignItems: "center",
+    padding: 10,
+  },
+  skeletonItem: {
+    width: 300,
+    height: 20,
+    marginVertical: 6,
+    borderRadius: 4,
+    overflow: "hidden",
+  },
+  gradient: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
+});
 
 export default Skeleton;

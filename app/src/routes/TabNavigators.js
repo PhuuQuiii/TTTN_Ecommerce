@@ -42,7 +42,7 @@ export default function TabNavigators() {
           if (route.name === "Home") {
             iconName = `home`;
           } else if (route.name === "Profile") {
-            iconName = `face-profile`;
+            iconName = `account`;
           } else if (route.name === "Notifications") {
             iconName = `notification`;
           } else if (route.name === "Cart") {
@@ -60,17 +60,15 @@ export default function TabNavigators() {
 
           return <AntDesign name={iconName} size={size} color={color} />;
         },
-      })}
-      tabBarOptions={{
-        inactiveTintColor: Constants.grayColor,
-        activeTintColor: Constants.activeTintColor,
-        showLabel: false,
-        // activeBackgroundColor:'#00194b',
-        inactiveBackgroundColor: Constants.noticeText,
-        style: {
+        tabBarActiveTintColor: Constants.activeTintColor,
+        tabBarInactiveTintColor: Constants.grayColor,
+        tabBarShowLabel: false,
+        tabBarInactiveBackgroundColor: Constants.noticeText,
+        tabBarStyle: {
           backgroundColor: Constants.noticeText,
+          display: "flex",
         },
-      }}
+      })}
     >
       <Tab.Screen name="Home" component={HomeStack} />
       <Tab.Screen name="Notifications" component={NotificationStack} />

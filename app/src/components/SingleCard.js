@@ -1,13 +1,13 @@
-import React from "react";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
-import { useNavigation } from "@react-navigation/native";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Text, View, StyleSheet, Image } from "react-native";
 import { Card } from "react-native-paper";
-import { getProductDetails } from "../../redux/actions/productActions";
-import { nameWithTripleDots, SERVER_BASE_URL } from "../../utils/common";
+import { useNavigation } from "@react-navigation/native";
 import Constants from "../constants/Constants";
+import { nameWithTripleDots, SERVER_BASE_URL } from "../../utils/common";
+import { getProductDetails } from "../../redux/actions/productActions";
 
 const SingleCard = ({ product }) => {
   const navigation = useNavigation();
@@ -38,7 +38,7 @@ const SingleCard = ({ product }) => {
             <Text style={styles.name}>{nameWithTripleDots(product.name)}</Text>
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.price}>vnđ {product.price.$numberDecimal}</Text>
+            <Text style={styles.price}>Rs {product.price.$numberDecimal}</Text>
           </View>
         </Card>
         <View style={{ flex: 0.25 }}></View>
