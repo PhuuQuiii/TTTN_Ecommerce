@@ -1,0 +1,368 @@
+{
+    "intents": [
+      {
+        "tag": "carts",
+        "patterns": [
+            "carts",
+          "What items are in my cart?",
+          "Show me my shopping cart details",
+          "Do I have any products in my cart?"
+        ],
+        "responses": [
+          "Your cart contains multiple products with different quantities. Each item has an associated product ID and was added at a specific time.",
+          "You have items in your cart. To get detailed information, please check your account cart section."
+        ]
+      },
+      {
+        "tag": "categories",
+        "patterns": [
+            "categories",
+          "What categories do you have?",
+          "List all product categories available",
+          "Do you have electronic devices category?",
+            "Which categories are available on your platform?",
+            "What are the main product categories?",
+            "Can you list the product categories?",
+            "What are the different categories?",
+            "Which categories do you offer?",
+            "What are the available categories?"
+        ],
+        "responses": [
+          "We offer multiple categories, including Electronic Devices, Mobiles, Tablets, Laptops, Cameras, and more.",
+          "Yes, we have an Electronic Devices category along with various subcategories like Mobiles and Laptops.",
+            "Categories available on our platform include Electronic Devices, Mobiles, Tablets, Laptops, Cameras, and more.",
+            "Main product categories include Electronic Devices, Mobiles, Tablets, Laptops, Cameras, and more.",
+            "We offer categories such as Electronic Devices, Mobiles, Tablets, Laptops, Cameras, and, more.",
+            "Available categories include Electronic Devices, Mobiles, Tablets, Laptops, Cameras, and more.",
+            "We have a wide range of categories, including Electronic Devices, Mobiles, Tablets, Laptops, Cameras, and more.",
+            "The available categories are Electronic Devices, Mobiles, Tablets, Laptops, Cameras, and more.",
+            "We offer categories such as Electronic Devices, Mobiles, Tablets, Laptops, Cameras",
+            "Available categories include Electronic Devices, Mobiles, Tablets, Laptops, Cameras"
+        ]
+      },
+      {
+        "tag": "productbrands",
+        "patterns": [
+            "productbrands",
+          "Which brands do you sell?",
+          "List all available product brands",
+          "Do you have Apple products?",
+            "Do you sell Samsung products?",
+            "What brands are available for mobiles?",
+            "Which brands are popular on your platform?"
+        ],
+        "responses": [
+          "We offer products from brands such as Samsung, Apple, Oppo, Huawei, Lenovo, Nokia, and more.",
+          "Yes, we have Apple products, including mobiles and tablets under the Apple brand.",
+            "Samsung products are available on our platform, including mobiles, tablets, and accessories.",
+            "We have a wide range of mobile brands, including Samsung, Apple, Oppo, Vivo, Xiaomi, and more.",
+            "Popular brands on our platform include Samsung, Apple, Oppo, and Xiaomi."
+
+        ]
+      },
+      {
+        "tag": "orders",
+        "patterns": [
+            "orders",
+          "How many days does it take to deliver an order?",
+            "When will I receive my order?",
+            "What is the estimated delivery time for an order?",
+            "How long does it take to ship an order?",
+            "When can I expect my order to arrive?"
+        ],
+        "responses": [
+        "Depending on the time the seller prepares the goods and delivery time is from 3-5 days",
+        "The estimated delivery time for an order is 3-5 days.",
+        "Orders are usually delivered within 3-5 days.",
+        "The shipping time for an order is 3-5 days."
+        ]
+      },
+      {
+        "tag": "payments",
+        "patterns": [
+            "payments",
+          "What payment methods do you accept?",
+          "Can I pay by card? (payments)",
+          "Tell me about the payment options. (payments)",
+          "Which payment methods are available? (payments)",
+          "Do you accept cash on delivery? (payments)",
+          "Is PayPal an option for payments? (payments)",
+            "Can I pay in installments? (payments)"
+        ],
+        "responses": [
+          "We accept for 2 payments. Paypal and cash on delivery",
+          "You can use paypal",
+        "We accept Paypal and cash on delivery",
+        "We accept Paypal, credit card, and cash on delivery"
+        ]
+      },
+      {
+        "tag": "reviews",
+        "patterns": [
+            "reviews",
+            "How to rate a product?",
+            "Can I leave a review for a product?",
+            "Where can I find product reviews?",
+            "How to write a review for a product?",
+            "How to rate a product after purchase?"
+        ],
+        "responses": [
+            "You can rate the product after successfully purchasing.",
+            "Go to product details and reviews if you have purchased",
+            "You can leave a review for a product after purchasing it.",
+            "You can find product reviews on the product page.",
+            "To write a review for a product, go to the product page and click on the review section.",
+            "You can rate a product after purchasing it by going to the product page and clicking on the review section."
+        ]
+      },
+      {
+        "tag": "sales",
+        "patterns": [
+            "sales",
+          "how many types of sales do you have?",
+            "What are the different types of sales?",
+            "Do you have flash sales?",
+            "What is the difference between direct sales and flash sales?",
+            "How often do you have sales?",
+            "When do you have sales?",
+            "What are the sales available?",
+            "What are the current sales?", 
+            "What are the upcoming sales?"
+        ],
+        "responses": [
+            "We have 2 types of sales: direct sales and flash sales.",
+            "We have direct sales and flash sales.",
+            "Yes, we have flash sales.",
+            "Direct sales are regular sales, while flash sales are limited-time sales with higher discounts.",
+            "We have sales regularly, including direct sales and flash sales.",
+            "We have sales throughout the year, including direct sales and flash sales.",
+            "We have direct sales and flash sales available.",
+            "The current sales include direct sales and flash sales.",
+            "The upcoming sales include direct sales and flash sales."
+        ]
+      },
+      {
+        "tag": "wishlist",
+        "patterns": [
+            "wishlist",
+            "How to add a product to the wishlist?",
+            "How to view the wishlist?",
+            "How to remove a product from the wishlist?",
+            "How to clear the wishlist?",
+            "How to manage the wishlist?",
+            "Can you explain how the wishlist works?",
+            "Can you guide me on using the wishlist?"
+        ],
+        "responses": [
+            "You can add a product to the wishlist by clicking the heart icon on the product page.",
+            "To view the wishlist, go to your account and click on the wishlist tab.",
+            "To remove a product from the wishlist, click the heart icon again.",
+            "To clear the wishlist, remove all products from the wishlist.",
+            "You can manage the wishlist by adding, removing, or clearing products from it.",
+            "To add a product to the wishlist, click on the heart icon on the product page. To view the wishlist, go to your account and click on the wishlist tab. To remove a product from the wishlist, click the heart icon again. To clear the wishlist, remove all products from the wishlist. You can manage the wishlist by adding, removing, or clearing products from it.",
+            "To use the wishlist, click on the heart icon on the product page to add a product. You can view the wishlist in your account settings. To remove a product, click the heart icon again. You can manage the wishlist by adding, removing, or clearing products."
+        ]
+      },
+        {
+            "tag": "contact",
+            "patterns": [
+                "contact",
+                "How can I contact customer support?",
+                "What is the customer support email?",
+                "Do you have a customer service number?",
+                "How to reach customer service?",
+                "How to get in touch with customer support?",
+                "Can I contact you for assistance?",
+                "How to ask for help?"
+            ],
+            "responses": [
+                "You can contact customer support via email at Contact@quindigo.com or by phone at (099) 8776 543 21.",
+                "Our customer support email is",
+                "You can reach customer service by calling (099) 8776 543 21 or emailing",
+                "To get in touch with customer support, you can call (099) 8776 543 21 or email Contact@quindigo.com",
+                "You can contact us for assistance by calling (099) 8776 543 21 or emailing Contact@quindigo.com",
+                "To ask for help, you can contact customer support by calling (099) 8776 543 21 or emailing Contact@quindigo.com"
+            ]
+        },
+        {
+            "tag": "shipping",
+            "patterns": [
+                "shipping",
+                "How long does shipping take?",
+                "When will my order be shipped?",
+                "What is the shipping time?",
+                "How many days does it take to ship?",
+                "When can I expect my order to be shipped?",
+                "What is the estimated shipping time?"
+            ],
+            "responses": [
+                "Shipping usually takes 3-5 days from the date of order placement.",
+                "Your order will be shipped within 3-5 days.",
+                "The estimated shipping time is 3-5 days.",
+                "Orders are typically shipped within 3-5 days."
+            ]
+        },
+        {
+            "tag": "returns",
+            "patterns": [
+                "returns",
+                "How do I return a product?",
+                "What is your return policy?",
+                "Can I exchange a product?",
+                "Do you accept returns?",
+                "What is the process for returning an item?",
+                "How to request a return?",
+                "Can I return a product if I'm not satisfied?"
+            ],
+            "responses": [
+                "You can return a product within 30 days of purchase by contacting customer support.",
+                "Our return policy allows you to return products within 30 days of purchase.",
+                "Yes, you can exchange a product within 30 days of purchase.",
+                "We accept returns within 30 days of purchase.",
+                "To return an item, contact customer support and follow the return process.",
+                "To request a return, contact customer support within 30 days of purchase.",
+                "If you're not satisfied, you can return the product within 30 days of purchase."
+            ]
+        },
+        {
+            "tag": "products",
+            "patterns": [
+                "products",
+                "What products do you sell?",
+                "Can you show me your product range?",
+                "Tell me about your product offerings",
+                "What types of products do you offer?",
+                "Do you have a product catalog?",
+                "Can you list your products?",
+                "What are your popular products?",
+                "What are your best-selling products?"
+            ],
+            "responses": [
+                "We sell a wide range of products, including electronics, accessories, and more.",
+                "Our product range includes electronics, accessories, and more.",
+                "We offer various products, including electronics, accessories, and more",
+                "Our product offerings include electronics, accessories, and more.",
+                "We have a product catalog with electronics, accessories, and more.",
+                "Our products include electronics, accessories, and more.",
+                "We sell popular products such as smartphones, laptops, and accessories.",
+                "Our best-selling products include smartphones, laptops, and accessories."
+            ]
+        },
+        {
+            "tag": "about",
+            "patterns": [
+                "about",
+                "Tell me about your company",
+                "What is your company's mission?",
+                "Can you provide information about your company?",
+                "What are your values?",
+                "Do you have an 'About Us' page?",
+                "Can you tell me about your brand?",
+                "What makes your company unique?"
+            ],
+            "responses": [
+                "Our company is dedicated to providing high-quality products and excellent customer service.",
+                "Our mission is to offer innovative products and exceptional service to our customers.",
+                "We strive to provide the best products and services to our customers.",
+                "Our values include integrity, quality, and customer satisfaction.",
+                "Yes, we have an 'About Us' page on our website.",
+                "Our brand focuses on quality, innovation, and customer satisfaction.",
+                "What makes us unique is our commitment to quality, innovation, and customer care."
+            ]
+        },
+        {
+            "tag": "help",
+            "patterns": [
+                "help",
+                "I need help",
+                "Can you assist me?",
+                "How can I get help?",
+                "Help me with my order",
+                "I require assistance",
+                "Can you help me with a product issue?",
+                "I need support"
+            ],
+            "responses": [
+                "How can I help you today?",
+                "I'm here to assist you. What do you need help with?",
+                "Sure, I can help. What do you need assistance with?",
+                "I'm here to help. What can I assist you with?",
+                "How can I support you today?",
+                "I'm here to help. Please let me know how I can assist you.",
+                "Of course, I'm here to help. What do you need assistance with?",
+                "I'm here to provide support. How can I assist you?"
+            ]
+        },
+        {
+            "tag": "greetings",
+            "patterns": [
+                "hi",
+                "hello",
+                "hey",
+                "good morning",
+                "good afternoon",
+                "good evening"
+            ],
+            "responses": [
+                "Hello! How can I help you today?",
+                "Hi! What can I assist you with?",
+                "Hey! How can I support you today?",
+                "Good morning! How can I help you?",
+                "Good afternoon! What do you need assistance with?",
+                "Good evening! How can I assist you today?"
+            ]
+        },
+        {
+            "tag": "goodbye",
+            "patterns": [
+                "goodbye",
+                "bye",
+                "see you later",
+                "take care",
+                "have a good day",
+                "have a great day"
+            ],
+            "responses": [
+                "Goodbye! Have a great day!",
+                "Bye! Take care.",
+                "See you later! Have a good day.",
+                "Take care! Goodbye.",
+                "Have a good day! Goodbye.",
+                "Have a great day! Goodbye."
+            ]
+        },
+        {
+            "tag": "thanks",
+            "patterns": [
+                "thanks",
+                "thank you",
+                "thanks a lot",
+                "thank you very much",
+                "appreciate it",
+                "grateful"
+            ],
+            "responses": [
+                "You're welcome! How can I assist you further?",
+                "Happy to help! Let me know if you need anything else.",
+                "Anytime! Feel free to ask if you have more questions.",
+                "My pleasure! Let me know if there's anything else I can do for you.",
+                "Glad to assist you! If you need more help, just ask.",
+                "You're welcome! If you have any other questions, feel free to ask."
+            ]
+        },
+        {
+            "tag": "default",
+            "patterns": [
+                "default"
+            ],
+            "responses": [
+                "I'm sorry, I didn't understand that. Can you please rephrase your question?",
+                "I'm not sure I follow. Can you provide more details or ask a different question?",
+                "I'm still learning. Can you ask me something else?",
+                "I'm not sure what you're asking. Can you try phrasing it differently?",
+                "I'm still learning and may not have an answer to that. Can you ask something else?"
+            ]
+        }
+    ]
+  }
+  
