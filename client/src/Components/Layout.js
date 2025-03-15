@@ -8,6 +8,7 @@ import { Component } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import MobileHeader from "./MobileHeader";
+import Chatbot from "./Chatbot";
 import { initGA, logPageView } from "../../utils/analytics";
 
 Router.onRouteChangeStart = (url) => NProgress.start();
@@ -43,6 +44,7 @@ class Layout extends Component {
         <div className="has-text-centered body-wrap">{children}</div>
 
         <Footer />
+        <Chatbot />
       </div>
     );
   }

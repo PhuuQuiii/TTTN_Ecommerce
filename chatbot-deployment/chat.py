@@ -1,6 +1,6 @@
 import random
 import json
-
+import os
 import torch
 
 from model import NeuralNet
@@ -8,10 +8,16 @@ from nltk_utils import bag_of_words, tokenize
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-with open('intents.json', 'r') as json_data:
+# Lấy đường dẫn tuyệt đối đến thư mục hiện tại
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Đọc file intents.json với đường dẫn tuyệt đối
+intents_path = os.path.join(current_dir, 'intents.json')
+with open(intents_path, 'r') as json_data:
     intents = json.load(json_data)
 
-FILE = "data.pth"
+# Đọc file data.pth với đường dẫn tuyệt đối
+FILE = os.path.join(current_dir, 'data.pth')
 data = torch.load(FILE)
 
 input_size = data["input_size"]
