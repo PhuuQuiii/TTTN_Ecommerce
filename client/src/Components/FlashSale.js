@@ -136,9 +136,13 @@ const FlashSale = () => {
   if (error) return <div>Lỗi: {error}</div>;
 
   // Gom sale + product
-  const allItems = activeSales?.flatMap((sale) =>
-    (sale.products || []).map((product) => ({ sale, product }))
-  );
+  const allItems = Array.isArray(activeSales)
+  ? activeSales
+      .map((sale) =>
+        (sale.products || []).map((product) => ({ sale, product }))
+      )
+      .flat()
+  : [];
 
   return (
     <div className="flash-sale-container" style={{ padding: '20px 0' }}>
