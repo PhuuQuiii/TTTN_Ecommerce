@@ -1,97 +1,123 @@
-import React from "react";
-import { Row, Col, Card, Progress } from "antd";
 import {
-  CheckCircleTwoTone,
-  CloseCircleTwoTone
+  InfoCircleTwoTone
 } from "@ant-design/icons";
+import { Card, Col, Progress, Row, Tag, Tooltip } from "antd";
+import PropTypes from "prop-types";
+import React from "react";
 import { Link } from "react-router-dom";
+import './Todo.css';
 
-const Todo = ({user,completedPercent}) => {
-  
+const Todo = ({ user, completedPercent }) => {
+  const getStatus = (condition) => {
+    if (condition) {
+      return {
+        // icon: <CheckCircleTwoTone twoToneColor="#52c41a" />,
+        text: "Completed",
+        color: "success",
+        hoverable: false
+      };
+    } else {
+      return {
+        // icon: <ClockCircleTwoTone twoToneColor="#faad14" />,
+        text: "Pending",
+        color: "warning",
+        hoverable: true
+      };
+    }
+  };
+
+  const todoItems = [
+    {
+      title: "Profile",
+      description: "Complete your profile",
+      link: '/profile',
+      condition: user?.shopName,
+      details: "Add your shop name and basic information"
+    },
+    {
+      title: "Business Info",
+      description: "Verify your business information",
+      link: '/profile',
+      condition: user?.businessInfo,
+      details: "Add your business registration and tax information"
+    },
+    {
+      title: "Bank Details",
+      description: "To receive your money",
+      link: '/profile',
+      condition: user?.adminBank,
+      details: "Add your bank account for receiving payments"
+    },
+    {
+      title: "WareHouse",
+      description: "To dispatch/return your product",
+      link: '/profile',
+      condition: user?.adminWareHouse,
+      details: "Add your warehouse location and details"
+    }
+  ];
+
   return (
-    <div className="col-lg-6 col-xl-12">
-      {/* <div className="card flex-fill w-100">
-        <div className="card-header">
-          <h5 className="card-title mb-0">Namaste! Complete the todos to start your selling journey!
-            <Progress
-              className="card-title mb-0 float-right"
-              format={percent => `${percent}% done`}
-              style={{ width: 200 }}
-              strokeColor={{
-                '0%': '#108ee9',
-                '100%': '#87d068',
-              }}
-              trailColor='#354052'
-              percent={completedPercent}
-              status="active"
-            />
-            </h5>          
+    <div className="todo-container">
+      <div className="todo-card">
+        <div className="todo-header">
+          <h5 className="todo-title">Setup Progress</h5>
+          <Progress
+            className="todo-progress"
+            format={percent => `${percent}%`}
+            strokeColor={{
+              '0%': '#4888FFFF',
+              '100%': '#B592F5FF',
+            }}
+            trailColor='#354052'
+            percent={completedPercent}
+            status="active"
+          />
         </div>
-        <div className="card-body p-2">
-          <div className="all-cards">
-            <Row >
-
-              <Col lg={6} >
-            <Link to={!(user?.shopName)?'/profile':''} >
-                <Card
-                  title="Profile"
-                    extra={<CheckCircleTwoTone twoToneColor="#52c41a" />}
-                    hoverable={!(user?.shopName) ?true: false}
-                  className="todoCard"
-                >
-                  <p>Complete your profile</p>
-                </Card>
-            </Link>
-              </Col>
-
-              <Col lg={6}>
-                <Link to={(user?.businessInfo) ? '/profile' : ''}>
-                <Card
-                  title="Business Info"
-                  className="todoCard"
-                    extra={<CloseCircleTwoTone twoToneColor="#f44455"/>}
-                  hoverable={(user?.businessInfo) ? true : false}
-                >
-                  <p>Verify your business information</p>
-                </Card>
-                </Link>
-              </Col>
-
-              <Col lg={6}>
-                <Link to={!(user?.adminBank) ? '/profile' : ''}>
-                <Card
-                  title="Bank Details"
-                  className="todoCard"
-                  extra={<CloseCircleTwoTone twoToneColor="#f44455"/>}
-                  hoverable={!(user?.adminBank) ? true : false}
-                >
-                  <p>To receive your money</p>
-                </Card>
-                </Link>
-              </Col>
-
-              <Col lg={6}>
-                <Link to={!(user?.adminWareHouse) ? '/profile' : ''}>
-                <Card
-                  title="WareHouse"
-                  className="todoCard"
-                  extra={<CloseCircleTwoTone twoToneColor="#f44455"/>}
-                  hoverable={!(user?.adminWareHouse) ? true : false}
-                >
-                  <p>To dispatch/return your product</p>
-                </Card>
-                </Link>
-              </Col>
-            </Row>
-            <div className="dashed-line"></div>
-          </div>
+        <div className="todo-body">
+          <Row gutter={[16, 16]}>
+            {todoItems.map((item, index) => {
+              const status = getStatus(item.condition);
+              return (
+                <Col xs={24} sm={12} md={12} lg={6} key={index}>
+                  <Link to={status.hoverable ? item.link : '#'} className="todo-item-link">
+                    <Card
+                      className={`todo-item-card ${status.hoverable ? 'hoverable' : ''}`}
+                      title={
+                        <div className="todo-item-title">
+                          <span>{item.title}</span>
+                          <Tooltip title={status.text}>
+                            {status.icon}
+                          </Tooltip>
+                        </div>
+                      }
+                      extra={
+                        <Tooltip title={item.details}>
+                          <InfoCircleTwoTone twoToneColor="#1890ff" />
+                        </Tooltip>
+                      }
+                    >
+                      <div className="todo-item-content">
+                        <p className="todo-item-description">{item.description}</p>
+                        <Tag color={status.color} className="todo-item-tag">
+                          {status.text}
+                        </Tag>
+                      </div>
+                    </Card>
+                  </Link>
+                </Col>
+              );
+            })}
+          </Row>
         </div>
-      </div> */}
+      </div>
     </div>
-    
   );
 };
 
-Todo.propTypes = {};
+Todo.propTypes = {
+  user: PropTypes.object.isRequired,
+  completedPercent: PropTypes.number.isRequired
+};
 
 export default Todo;

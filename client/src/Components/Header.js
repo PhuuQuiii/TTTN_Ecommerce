@@ -1,14 +1,13 @@
 import { SearchOutlined } from '@ant-design/icons';
-import { Col, Row } from "antd";
-import React, { Component } from "react";
-import { connect } from "react-redux";
-
-import { AutoComplete } from "antd";
+import { AutoComplete, Col, Row, message } from "antd";
 import { debounce, isEmpty } from "lodash";
 import Link from "next/link";
 import Router, { withRouter } from "next/router";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import actions from "../../redux/actions";
 import { getUserInfo } from "../../utils/common";
+
 class Header extends Component {
   state = {
     search: "",
@@ -21,7 +20,8 @@ class Header extends Component {
     allCategories: [],
     currentChildCate: [],
     currentChildChildCate: [],
-    handleDelay: ''
+    handleDelay: '',
+    loading: false
   };
 
   componentDidMount() {
@@ -79,32 +79,65 @@ class Header extends Component {
     }
   }
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
-    this.searchSelectedProduct(this.state.searchValue);
-  };
-
-  searchProducts = (e, slug, cateId) => {
-    e.stopPropagation();
-    Router.push("/category/[slug]/[cate]", `/category/${slug}/${cateId}`);
+    const searchValue = this.state.searchValue.trim();
+    if (searchValue) {
+      this.setState({ loading: true });
+      try {
+        // Gọi action searchProducts từ Redux
+        await this.props.searchProducts(searchValue);
+        Router.push({
+          pathname: '/search/[slug]',
+          query: { slug: searchValue }
+        }, `/search/${encodeURIComponent(searchValue)}`);
+      } catch (error) {
+        console.error('Search error:', error);
+        message.error('Search failed. Please try again.');
+      } finally {
+        this.setState({ loading: false });
+      }
+    }
   };
 
   selectKeyword = (keyword) => {
-    this.searchSelectedProduct(keyword)
+    if (keyword) {
+      this.setState({ searchValue: keyword });
+      this.handleSubmit({ preventDefault: () => {} });
+    }
   }
 
   searchSelectedProduct = debounce((keyword) => {
-    Router.push({ pathname: "/search/[slug]", query: { slug: keyword } });
-    this.setState({ searchValue: keyword });
+    if (keyword) {
+      this.setState({ loading: true });
+      this.props.searchProducts(keyword)
+        .then(() => {
+          Router.push({
+            pathname: '/search/[slug]',
+            query: { slug: keyword }
+          }, `/search/${encodeURIComponent(keyword)}`);
+        })
+        .catch(error => {
+          console.error('Search error:', error);
+          message.error('Search failed. Please try again.');
+        })
+        .finally(() => {
+          this.setState({ loading: false });
+        });
+    }
   }, 500)
 
   getSearchKeywordsDeb = (search) => {
     this.setState({ searchValue: search });
-    this.debouceSearchKeywords(search)
+    if (search.trim()) {
+      this.debouceSearchKeywords(search);
+    }
   }
 
   debouceSearchKeywords = debounce((keyword) => {
-    this.props.getSearchKeywords(keyword);
+    if (keyword.trim()) {
+      this.props.getSearchKeywords(keyword);
+    }
   }, 500)
 
   getCurrentChildCates = (cate) => {
@@ -115,8 +148,16 @@ class Header extends Component {
     this.setState({ currentChildChildCate: cate.childCate, currentActiveChildId: cate._id })
   }
 
+  searchProducts = (e, slug, id) => {
+    e.preventDefault();
+    Router.push({
+      pathname: '/search/[slug]',
+      query: { slug }
+    }, `/search/${slug}`);
+  }
+
   render() {
-    let { loginToken } = this.state;
+    let { loginToken, loading } = this.state;
     let parentCate = this.props.menu.menuCategories || []
     return (
       <React.Fragment>
@@ -164,9 +205,6 @@ class Header extends Component {
                       <AutoComplete
                         value={this.state.searchValue}
                         options={this.state.searchOptions}
-                        // style={{
-                        //   width: 400,
-                        // }}
                         className="auto-search"
                         onSelect={(select) => {
                           this.selectKeyword(select)
@@ -175,17 +213,15 @@ class Header extends Component {
                           this.getSearchKeywordsDeb(search)
                         }}
                         placeholder="Search for products, brands and more"
-                      >
-                        {/* <SearchOutlined /> */}
-                        {/* <Input size="large" placeholder="Search for products, brands and more"/> */}
-                      </AutoComplete>
+                        loading={loading}
+                        notFoundContent={null}
+                        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                      />
                       <div className="search-btn" onClick={() => this.selectKeyword(this.state.searchValue)}>
                         <SearchOutlined />
                       </div>
                     </div>
-                    {/* <img src="/images/search-icon.png" /> */}
                   </form>
-
                 </Col>
               </Row>
             </Col>
@@ -243,12 +279,6 @@ class Header extends Component {
               <div className="parent-cate-cover">
                 <div
                   className={"parent-cate "}
-                  // onMouseEnter={() => {
-                  //   this.getCurrentChildCates(cate);
-                  //   this.setState({
-                  //     currentActiveChildId: ''
-                  //   })
-                  // }}
                 >
                   Home
                 </div>
@@ -285,7 +315,6 @@ class Header extends Component {
                           this.state.currentChildCate?.map((cate, i) => {
                             return (
                               <div
-                                // id={"child"+i}
                                 className={"child-cate " + (cate._id === this.state.currentActiveChildId ? 'active' : '')}
                                 key={i}
                                 onClick={(e) =>
@@ -340,12 +369,10 @@ class Header extends Component {
                       <div><img src="/images/elect-imag.jpg" /></div>
                     </Col>
                   </Row>
-
                 </div>
               }
             </div>
           </div>
-
         </div>
       </React.Fragment>
     );

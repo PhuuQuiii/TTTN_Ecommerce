@@ -2,7 +2,7 @@ const express = require("express");
 const multer = require('multer');
 
 const {
-    getProfile, updateProfile, profile, businessinfo, bankinfo, warehouse, getBusinessInfo, getBankInfo, getWareHouse, uploadPhoto, adminFile, deleteFileById, getNotifications, readNotification, uploadCheque
+    getProfile, updateProfile, profile, businessinfo, bankinfo, warehouse, getBusinessInfo, getBankInfo, getWareHouse, uploadPhoto, adminFile, deleteFileById, getNotifications, readNotification, uploadCheque, getAnalytics, getRevenue
 } = require("../controllers/admin");
 const { auth, hasAuthorization } = require('../controllers/admin_auth')
 
@@ -39,6 +39,10 @@ const businessUpload = upload.fields([
     { name: 'businessLicence', maxCount: 1 }
 ]);
 
+// Analytics and Revenue routes (moved to top)
+router.get('/analytics', auth, getAnalytics);
+router.get('/revenue', auth, getRevenue);
+
 //notification..
 router.get('/notifications',auth, getNotifications)
 router.patch('/read-notification/:notification_id', auth, readNotification)
@@ -68,7 +72,8 @@ router.route('/bank/:id')
 router.route('/warehouse/:id')
     .put(auth, hasAuthorization, validateWareHouse, warehouse)//update or create
     .get(auth, hasAuthorization, getWareHouse)
-router.param('id', profile)
 
+// This middleware should be after all routes that use :id parameter
+router.param('id', profile)
 
 module.exports = router;

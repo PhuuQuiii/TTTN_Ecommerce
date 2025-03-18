@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 import alert from './alert_reducer';
+import analytics from './analytics_reducer';
 import auth from "./auth_reducer";
 import bank from './bank_reducer';
 import brandReducer from './brand_reducer';
@@ -30,7 +31,8 @@ const rootReducer = combineReducers({
   warehouse,
   category: categoryReducer,
   brand: brandReducer,
-  sale
+  sale,
+  analytics
 });
 
 export default rootReducer;

@@ -1,6 +1,5 @@
-import fetch from "isomorphic-unfetch";
-import { SEARCH_PRODUCTS, SEARCH_FILTER, SEARCH_ERROR, GLOBAL_ERROR, SEARCH_KEYWORD, SEARCH_PRODUCTS_START, SEARCH_PRODUCTS_FINISH } from "../types";
 import { SearchService } from "../services/searchService";
+import { SEARCH_FILTER, SEARCH_KEYWORD, SEARCH_PRODUCTS, SEARCH_PRODUCTS_FINISH, SEARCH_PRODUCTS_START } from "../types";
 
 const getSearchKeywords = (query) => {
   return async (dispatch) => {
@@ -8,11 +7,6 @@ const getSearchKeywords = (query) => {
     const response = await searchService.getSearchKeywords(query);
     if (response.isSuccess) {
       dispatch({ type: SEARCH_KEYWORD, payload: response.data });
-    } else if (!response.isSuccess) {
-      dispatch({
-        type: GLOBAL_ERROR,
-        payload: response.errorMessage,
-      });
     }
   };
 };
@@ -25,12 +19,8 @@ const searchProducts = (query, body) => {
     if (response.isSuccess) {
       dispatch({type: SEARCH_PRODUCTS_FINISH})
       dispatch({ type: SEARCH_PRODUCTS, payload: response.data });
-    } else if (!response.isSuccess) {
+    } else {
       dispatch({type: SEARCH_PRODUCTS_FINISH})
-      dispatch({
-        type: GLOBAL_ERROR,
-        payload: response.errorMessage,
-      });
     }
   };
 };
@@ -43,12 +33,8 @@ const getProductsByCategory = (query, ctx) => {
     if (response.isSuccess) {
       dispatch({type: SEARCH_PRODUCTS_FINISH})
       dispatch({ type: SEARCH_PRODUCTS, payload: response.data });
-    } else if (!response.isSuccess) {
+    } else {
       dispatch({type: SEARCH_PRODUCTS_FINISH})
-      dispatch({
-        type: GLOBAL_ERROR,
-        payload: response.errorMessage,
-      });
     }
   };
 };
@@ -59,11 +45,6 @@ const searchFilter = (query) => {
     const response = await searchService.searchFilter(query);
     if (response.isSuccess) {
       dispatch({ type: SEARCH_FILTER, payload: response.data });
-    } else if (!response.isSuccess) {
-      dispatch({
-        type: GLOBAL_ERROR,
-        payload: response.errorMessage,
-      });
     }
   };
 };

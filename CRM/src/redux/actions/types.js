@@ -43,3 +43,8 @@ export const CATEGORY_TYPES = {
     UPDATE_BRAND_FAILURE: 'UPDATE_BRAND_FAILURE'
 };
 
+// Analytics Types
+export const GET_ANALYTICS = 'GET_ANALYTICS';
+export const GET_REVENUE = 'GET_REVENUE';
+export const ANALYTICS_ERROR = 'ANALYTICS_ERROR';
+

@@ -1,68 +1,76 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { Line, Bar, Doughnut } from 'react-chartjs-2';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Bar, Doughnut } from 'react-chartjs-2';
+import { FaChartBar, FaChartPie, FaClock, FaShoppingCart, FaTimesCircle, FaUndo, FaUsers } from 'react-icons/fa';
 
-const Graph = props => {
-    const completedData = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-            {
-                label: 'Completed T dataset',
-                fill: false,
-                lineTension: 0.1,
-                backgroundColor: 'rgba(75,192,192,0.4)',
-                borderColor: 'rgba(75,192,192,1)',
-                borderCapStyle: 'butt',
-                borderDash: [],
-                borderDashOffset: 0.0,
-                borderJoinStyle: 'miter',
-                pointBorderColor: 'rgba(75,192,192,1)',
-                pointBackgroundColor: '#fff',
-                pointBorderWidth: 1,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-                pointHoverBorderColor: 'rgba(220,220,220,1)',
-                pointHoverBorderWidth: 2,
-                pointRadius: 1,
-                pointHitRadius: 10,
-                data: [65, 59, 80, 81, 56, 10, 65]
-            }
-        ]
-    };
+const Graph = ({ analytics, isSuperAdmin }) => {
+    // Calculate percentages for daily data
+    const totalDailyOrders = (analytics?.daily?.completedOrders || 0) + 
+                            (analytics?.daily?.pendingOrders || 0) + 
+                            (analytics?.daily?.cancelledOrders || 0);
+    const completedDailyPercentage = totalDailyOrders > 0 ? 
+        Math.round((analytics?.daily?.completedOrders / totalDailyOrders) * 100) : 0;
+    const pendingDailyPercentage = totalDailyOrders > 0 ? 
+        Math.round((analytics?.daily?.pendingOrders / totalDailyOrders) * 100) : 0;
+    const cancelledDailyPercentage = totalDailyOrders > 0 ? 
+        Math.round((analytics?.daily?.cancelledOrders / totalDailyOrders) * 100) : 0;
+
+    // Calculate percentages for monthly data
+    const totalMonthlyOrders = (analytics?.monthly?.completedOrders || 0) + 
+                              (analytics?.monthly?.pendingOrders || 0) + 
+                              (analytics?.monthly?.cancelledOrders || 0);
+    const completedMonthlyPercentage = totalMonthlyOrders > 0 ? 
+        Math.round((analytics?.monthly?.completedOrders / totalMonthlyOrders) * 100) : 0;
+    const pendingMonthlyPercentage = totalMonthlyOrders > 0 ? 
+        Math.round((analytics?.monthly?.pendingOrders / totalMonthlyOrders) * 100) : 0;
+    const cancelledMonthlyPercentage = totalMonthlyOrders > 0 ? 
+        Math.round((analytics?.monthly?.cancelledOrders / totalMonthlyOrders) * 100) : 0;
+
+    // Calculate customer growth percentage (only for superadmin)
+    const customerGrowthPercentage = isSuperAdmin && analytics?.monthly?.newCustomers > 0 ? 
+        Math.round((analytics?.monthly?.newCustomers / analytics?.daily?.newCustomers) * 100) : 0;
+
     const salesData = {
         datasets: [{
-            label: 'Sales',
+            label: 'Revenue',
             type: 'line',
-            data: [51, 65, 40, 49, 60, 37, 40],
+            data: [analytics?.daily?.totalSales || 0, analytics?.monthly?.totalSales || 0],
             fill: false,
-            borderColor: '#EC932F',
-            backgroundColor: '#EC932F',
-            pointBorderColor: '#EC932F',
-            pointBackgroundColor: '#EC932F',
-            pointHoverBackgroundColor: '#EC932F',
-            pointHoverBorderColor: '#EC932F',
-            yAxisID: 'y-axis-2'
-        }, {
-            type: 'bar',
-            label: 'Visitor',
-            data: [200, 185, 590, 621, 250, 400, 95],
-            fill: false,
-            backgroundColor: '#71B37C',
-            borderColor: '#71B37C',
-            hoverBackgroundColor: '#71B37C',
-            hoverBorderColor: '#71B37C',
-            yAxisID: 'y-axis-1'
+            borderColor: '#4e73df',
+            backgroundColor: '#4e73df',
+            pointBorderColor: '#4e73df',
+            pointBackgroundColor: '#4e73df',
+            pointHoverBackgroundColor: '#4e73df',
+            pointHoverBorderColor: '#4e73df',
+            yAxisID: 'y-axis-2',
+            tension: 0.4
         }]
     };
+
+    if (isSuperAdmin) {
+        salesData.datasets.push({
+            type: 'bar',
+            label: 'Customers',
+            data: [analytics?.daily?.newCustomers || 0, analytics?.monthly?.newCustomers || 0],
+            fill: false,
+            backgroundColor: '#1cc88a',
+            borderColor: '#1cc88a',
+            hoverBackgroundColor: '#1cc88a',
+            hoverBorderColor: '#1cc88a',
+            yAxisID: 'y-axis-1'
+        });
+    }
+
     const salesOptions = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
         responsive: true,
-        tooltips: {
-            mode: 'label'
-        },
-        elements: {
-            line: {
-                fill: false
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'top',
+                labels: {
+                    usePointStyle: true,
+                    padding: 20
+                }
             }
         },
         scales: {
@@ -72,20 +80,17 @@ const Graph = props => {
                     gridLines: {
                         display: false
                     },
-                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July']
+                    labels: ['Today', 'This Month']
                 }
             ],
             yAxes: [
                 {
                     type: 'linear',
-                    display: true,
+                    display: isSuperAdmin,
                     position: 'left',
                     id: 'y-axis-1',
                     gridLines: {
                         display: false
-                    },
-                    labels: {
-                        show: true
                     }
                 },
                 {
@@ -95,9 +100,6 @@ const Graph = props => {
                     id: 'y-axis-2',
                     gridLines: {
                         display: false
-                    },
-                    labels: {
-                        show: true
                     }
                 }
             ]
@@ -105,133 +107,138 @@ const Graph = props => {
     };
 
     const doughnutData = {
-        labels: [
-            'Pending',
-            'Completed',
-            'Cancelled'
-        ],
+        labels: ['Pending', 'Completed', 'Cancelled'],
         datasets: [{
-            data: [300, 50, 100],
+            data: [
+                analytics?.daily?.pendingOrders || 0,
+                analytics?.daily?.completedOrders || 0,
+                analytics?.daily?.cancelledOrders || 0
+            ],
             backgroundColor: [
-                '#FF6384',
-                '#36A2EB',
-                '#FFCE56'
+                '#4e73df',
+                '#1cc88a',
+                '#e74a3b'
             ],
             hoverBackgroundColor: [
-                '#FF6384',
-                '#36A2EB',
-                '#FFCE56'
-            ]
+                '#4e73df',
+                '#1cc88a',
+                '#e74a3b'
+            ],
+            borderWidth: 0
         }]
     };
 
-    const returnedProduct = {
-        labels: ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'],
+    const doughnutOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    usePointStyle: true,
+                    padding: 20
+                }
+            },
+            title: {
+                display: true,
+                text: 'Daily Order Status',
+                position: 'top',
+                font: {
+                    size: 16
+                }
+            }
+        },
+        cutout: '70%'
+    };
+
+    const returnedProductData = {
+        labels: analytics?.daily?.topReturnedProducts?.map(item => item.product?.name || 'Unknown') || [],
         datasets: [
             {
-                label: 'top 6 return product dataset',
-                backgroundColor: 'rgba(255,99,132,0.2)',
-                borderColor: 'rgba(255,99,132,1)',
+                label: 'Top 6 Returned Products',
+                backgroundColor: 'rgba(78, 115, 223, 0.2)',
+                borderColor: 'rgba(78, 115, 223, 1)',
                 borderWidth: 1,
-                hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-                hoverBorderColor: 'rgba(255,99,132,1)',
-                data: [65, 59, 80, 81, 56, 55, 40]
+                hoverBackgroundColor: 'rgba(78, 115, 223, 0.4)',
+                hoverBorderColor: 'rgba(78, 115, 223, 1)',
+                data: analytics?.daily?.topReturnedProducts?.map(item => item.returnCount) || []
             }
         ]
     };
+
     return (
         <>
             <div className="col-lg-6 col-xl-5 d-flex">
                 <div className="w-100">
                     <div className="row">
                         <div className="col-sm-6">
-                            <div className="card flex-fill">
-                                <div className="card-header">
-                                    <span className="badge badge-primary float-right">Today</span>
-                                    <h5 className="card-title mb-0">completed orders</h5>
-                                </div>
-                                <div className="card-body my-2">
-                                    <div className="row d-flex align-items-center mb-4">
-                                        <div className="col-8">
-                                            <h2 className="d-flex align-items-center mb-0 font-weight-light">
-                                                500
-														</h2>
+                            <div className="card flex-fill stat-card">
+                                <div className="card-body">
+                                    <div className="d-flex align-items-center mb-3">
+                                        <div className="stat-icon bg-primary">
+                                            <FaShoppingCart />
                                         </div>
-                                        <div className="col-4 text-right">
-                                            <span className="text-muted">57%</span>
+                                        <div className="ms-3">
+                                            <h6 className="text-muted mb-1">Completed Orders</h6>
+                                            <h4 className="mb-0">{analytics?.daily?.completedOrders || 0}</h4>
+                                            <small className="text-muted">Daily</small>
                                         </div>
                                     </div>
-
-                                    <div className="progress progress-sm shadow-sm mb-1">
-                                        <div className="progress-bar bg-primary" role="progressbar" style={{ width: "57%" }}></div>
+                                    <div className="progress">
+                                        <div className="progress-bar bg-primary" role="progressbar" style={{ width: `${completedDailyPercentage}%` }}></div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="card flex-fill">
-                                <div className="card-header">
-                                    <span className="badge badge-info float-right">Monthly</span>
-                                    <h5 className="card-title mb-0">Pending Orders</h5>
-                                </div>
-                                <div className="card-body my-2">
-                                    <div className="row d-flex align-items-center mb-4">
-                                        <div className="col-8">
-                                            <h2 className="d-flex align-items-center mb-0 font-weight-light">
-                                                1.856
-														</h2>
+                            <div className="card flex-fill stat-card">
+                                <div className="card-body">
+                                    <div className="d-flex align-items-center mb-3">
+                                        <div className="stat-icon bg-info">
+                                            <FaClock />
                                         </div>
-                                        <div className="col-4 text-right">
-                                            <span className="text-muted">64%</span>
+                                        <div className="ms-3">
+                                            <h6 className="text-muted mb-1">Pending Orders</h6>
+                                            <h4 className="mb-0">{analytics?.daily?.pendingOrders || 0}</h4>
+                                            <small className="text-muted">Daily</small>
                                         </div>
                                     </div>
-
-                                    <div className="progress progress-sm shadow-sm mb-1">
-                                        <div className="progress-bar bg-info" role="progressbar" style={{ width: "64%" }}></div>
+                                    <div className="progress">
+                                        <div className="progress-bar bg-info" role="progressbar" style={{ width: `${pendingDailyPercentage}%` }}></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div className="col-sm-6">
-                            <div className="card flex-fill">
-                                <div className="card-header">
-                                    <span className="badge badge-warning float-right">Today</span>
-                                    <h5 className="card-title mb-0">New Customers</h5>
-                                </div>
-                                <div className="card-body my-2">
-                                    <div className="row d-flex align-items-center mb-4">
-                                        <div className="col-8">
-                                            <h2 className="d-flex align-items-center mb-0 font-weight-light">
-                                                15
-														</h2>
+                            <div className="card flex-fill stat-card">
+                                <div className="card-body">
+                                    <div className="d-flex align-items-center mb-3">
+                                        <div className="stat-icon bg-warning">
+                                            <FaUsers />
                                         </div>
-                                        <div className="col-4 text-right">
-                                            <span className="text-muted">82%</span>
+                                        <div className="ms-3">
+                                            <h6 className="text-muted mb-1">New Customers</h6>
+                                            <h4 className="mb-0">{analytics?.monthly?.newCustomers || 0}</h4>
+                                            <small className="text-muted">Monthly</small>
                                         </div>
                                     </div>
-
-                                    <div className="progress progress-sm shadow-sm mb-1">
-                                        <div className="progress-bar bg-warning" role="progressbar" style={{ width: "82%" }}></div>
+                                    <div className="progress">
+                                        <div className="progress-bar bg-warning" role="progressbar" style={{ width: `${customerGrowthPercentage}%` }}></div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="card flex-fill">
-                                <div className="card-header">
-                                    <span className="badge badge-danger float-right">Monthly</span>
-                                    <h5 className="card-title mb-0">Cancelled Orders</h5>
-                                </div>
-                                <div className="card-body my-2">
-                                    <div className="row d-flex align-items-center mb-4">
-                                        <div className="col-8">
-                                            <h2 className="d-flex align-items-center mb-0 font-weight-light">
-                                                57.300
-														</h2>
+                            <div className="card flex-fill stat-card">
+                                <div className="card-body">
+                                    <div className="d-flex align-items-center mb-3">
+                                        <div className="stat-icon bg-danger">
+                                            <FaTimesCircle />
                                         </div>
-                                        <div className="col-4 text-right">
-                                            <span className="text-muted">32%</span>
+                                        <div className="ms-3">
+                                            <h6 className="text-muted mb-1">Cancelled Orders</h6>
+                                            <h4 className="mb-0">{analytics?.daily?.cancelledOrders || 0}</h4>
+                                            <small className="text-muted">Daily</small>
                                         </div>
                                     </div>
-
-                                    <div className="progress progress-sm shadow-sm mb-1">
-                                        <div className="progress-bar bg-danger" role="progressbar" style={{ width: "32%" }}></div>
+                                    <div className="progress">
+                                        <div className="progress-bar bg-danger" role="progressbar" style={{ width: `${cancelledDailyPercentage}%` }}></div>
                                     </div>
                                 </div>
                             </div>
@@ -240,108 +247,57 @@ const Graph = props => {
                 </div>
             </div>
             <div className="col-lg-6 col-xl-7">
-                <div className="card flex-fill w-100">
-                    <div className="card-header">
-                        <div className="card-actions float-right">
-                            <div className="dropdown">
-                                <a href="#!" data-toggle="dropdown" data-display="static" aria-expanded="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-more-horizontal align-middle"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
-                                </a>
-
-                                <div className="dropdown-menu dropdown-menu-right">
-                                    <a className="dropdown-item" href="#!">Action</a>
-                                    <a className="dropdown-item" href="#!">Another action</a>
-                                    <a className="dropdown-item" href="#!">Something else here</a>
-                                </div>
+                <div className="card flex-fill w-100 chart-card">
+                    <div className="card-body">
+                        <div className="d-flex align-items-center mb-4">
+                            <div className="chart-icon bg-primary">
+                                <FaChartBar />
                             </div>
+                            <h5 className="mb-0 ms-3">Revenue {isSuperAdmin ? 'VS Customers' : ''}</h5>
                         </div>
-                        <h5 className="card-title mb-0">Sales VS Customers</h5>
-                    </div>
-                    <div className="card-body p-2">
-                        <Bar
-                            data={salesData}
-                            options={salesOptions}
-                        />
-                    </div>
-                </div>
-            </div>
-            <div className="col-lg-6 col-xl-7">
-                <div className="card flex-fill w-100">
-                    <div className="card-header">
-                        <div className="card-actions float-right">
-                            <div className="dropdown">
-                                <a href="#!" data-toggle="dropdown" data-display="static" aria-expanded="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-more-horizontal align-middle"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
-                                </a>
-
-                                <div className="dropdown-menu dropdown-menu-right">
-                                    <a className="dropdown-item" href="#!">Action</a>
-                                    <a className="dropdown-item" href="#!">Another action</a>
-                                    <a className="dropdown-item" href="#!">Something else here</a>
-                                </div>
-                            </div>
+                        <div style={{ height: '300px' }}>
+                            <Bar data={salesData} options={salesOptions} />
                         </div>
-                        <h5 className="card-title mb-0">Sales</h5>
-                    </div>
-                    <div className="card-body p-2">
-                        <Line data={completedData} />
                     </div>
                 </div>
             </div>
             <div className="col-lg-6 col-xl-5">
-                <div className="card flex-fill w-100">
-                    <div className="card-header">
-                        <div className="card-actions float-right">
-                            <div className="dropdown">
-                                <a href="#!" data-toggle="dropdown" data-display="static" aria-expanded="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-more-horizontal align-middle"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
-                                </a>
-
-                                <div className="dropdown-menu dropdown-menu-right">
-                                    <a className="dropdown-item" href="#!">Action</a>
-                                    <a className="dropdown-item" href="#!">Another action</a>
-                                    <a className="dropdown-item" href="#!">Something else here</a>
-                                </div>
+                <div className="card flex-fill w-100 chart-card">
+                    <div className="card-body">
+                        <div className="d-flex align-items-center mb-4">
+                            <div className="chart-icon bg-success">
+                                <FaChartPie />
                             </div>
+                            <h5 className="mb-0 ms-3">Order Status</h5>
                         </div>
-                        <h5 className="card-title mb-0">Tasks</h5>
-                    </div>
-                    <div className="card-body p-2">
-                        <Doughnut data={doughnutData} />
+                        <div style={{ height: '300px' }}>
+                            <Doughnut data={doughnutData} options={doughnutOptions} />
+                        </div>
                     </div>
                 </div>
             </div>
             <div className="col-lg-6 col-xl-7">
-                <div className="card flex-fill w-100">
-                    <div className="card-header">
-                        <div className="card-actions float-right">
-                            <div className="dropdown">
-                                <a href="#!" data-toggle="dropdown" data-display="static" aria-expanded="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-more-horizontal align-middle"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
-                                </a>
-
-                                <div className="dropdown-menu dropdown-menu-right">
-                                    <a className="dropdown-item" href="#!">Action</a>
-                                    <a className="dropdown-item" href="#!">Another action</a>
-                                    <a className="dropdown-item" href="#!">Something else here</a>
-                                </div>
+                <div className="card flex-fill w-100 chart-card">
+                    <div className="card-body">
+                        <div className="d-flex align-items-center mb-4">
+                            <div className="chart-icon bg-warning">
+                                <FaUndo />
                             </div>
+                            <h5 className="mb-0 ms-3">Top 6 Returned Products</h5>
                         </div>
-                        <h5 className="card-title mb-0">Top 6 returned Product</h5>
-                    </div>
-                    <div className="card-body p-2">
-                        <Bar
-                            data={returnedProduct}
-                        />
+                        <div style={{ height: '100%' }}>
+                            <Bar data={returnedProductData} />
+                        </div>
                     </div>
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
 
 Graph.propTypes = {
+    analytics: PropTypes.object,
+    isSuperAdmin: PropTypes.bool
+};
 
-}
-
-export default Graph
+export default Graph;

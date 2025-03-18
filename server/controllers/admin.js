@@ -12,6 +12,7 @@ const _ = require('lodash');
 const Fawn = require("fawn");
 const task = Fawn.Task();
 const multer = require('multer');
+const Order = require("../models/Order");
 
 // Configure multer for cheque upload
 const storage = multer.diskStorage({
@@ -450,3 +451,307 @@ exports.readNotification = async(req,res) => {
     }
     res.json(adminNotification)
 }
+
+exports.getAnalytics = async (req, res) => {
+    try {
+        // Get admin from req.admin instead of req.profile
+        if (!req.admin || !req.admin._id) {
+            console.error('Admin not found in request');
+            return res.status(401).json({ error: "Unauthorized - Admin not found" });
+        }
+
+        console.log('Admin ID:', req.admin._id);
+        
+        const today = new Date();
+        const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+        const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+        
+        // Get start and end of month
+        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999);
+
+        // Base query for orders
+        const baseQuery = { soldBy: req.admin._id };
+        console.log('Base query:', baseQuery);
+
+        // Get completed orders for today
+        const completedOrdersToday = await Order.countDocuments({
+            ...baseQuery,
+            "status.currentStatus": "complete",
+            createdAt: { $gte: startOfDay, $lte: endOfDay }
+        });
+
+        // Get completed orders for month
+        const completedOrdersMonth = await Order.countDocuments({
+            ...baseQuery,
+            "status.currentStatus": "complete",
+            createdAt: { $gte: startOfMonth, $lte: endOfMonth }
+        });
+
+        // Get pending orders for today
+        const pendingOrdersToday = await Order.countDocuments({
+            ...baseQuery,
+            "status.currentStatus": "active",
+            createdAt: { $gte: startOfDay, $lte: endOfDay }
+        });
+
+        // Get pending orders for month
+        const pendingOrdersMonth = await Order.countDocuments({
+            ...baseQuery,
+            "status.currentStatus": "active",
+            createdAt: { $gte: startOfMonth, $lte: endOfMonth }
+        });
+
+        // Get cancelled orders for today
+        const cancelledOrdersToday = await Order.countDocuments({
+            ...baseQuery,
+            "status.currentStatus": "cancel",
+            createdAt: { $gte: startOfDay, $lte: endOfDay }
+        });
+
+        // Get cancelled orders for month
+        const cancelledOrdersMonth = await Order.countDocuments({
+            ...baseQuery,
+            "status.currentStatus": "cancel",
+            createdAt: { $gte: startOfMonth, $lte: endOfMonth }
+        });
+
+        // Get total sales for today
+        const totalSalesToday = await Order.aggregate([
+            {
+                $match: {
+                    ...baseQuery,
+                    "status.currentStatus": "complete",
+                    createdAt: { $gte: startOfDay, $lte: endOfDay }
+                }
+            },
+            {
+                $lookup: {
+                    from: "payments",
+                    localField: "payment",
+                    foreignField: "_id",
+                    as: "paymentDetails"
+                }
+            },
+            {
+                $unwind: "$paymentDetails"
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: "$paymentDetails.amount" }
+                }
+            }
+        ]);
+
+        // Get total sales for month
+        const totalSalesMonth = await Order.aggregate([
+            {
+                $match: {
+                    ...baseQuery,
+                    "status.currentStatus": "complete",
+                    createdAt: { $gte: startOfMonth, $lte: endOfMonth }
+                }
+            },
+            {
+                $lookup: {
+                    from: "payments",
+                    localField: "payment",
+                    foreignField: "_id",
+                    as: "paymentDetails"
+                }
+            },
+            {
+                $unwind: "$paymentDetails"
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: "$paymentDetails.amount" }
+                }
+            }
+        ]);
+
+        // Get top 6 returned products for today
+        const topReturnedProductsToday = await Order.aggregate([
+            {
+                $match: {
+                    ...baseQuery,
+                    "status.currentStatus": "return",
+                    createdAt: { $gte: startOfDay, $lte: endOfDay }
+                }
+            },
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "product",
+                    foreignField: "_id",
+                    as: "productDetails"
+                }
+            },
+            {
+                $unwind: "$productDetails"
+            },
+            {
+                $group: {
+                    _id: "$product",
+                    returnCount: { $sum: 1 },
+                    product: { $first: "$productDetails" }
+                }
+            },
+            {
+                $sort: { returnCount: -1 }
+            },
+            {
+                $limit: 6
+            }
+        ]);
+
+        // Get top 6 returned products for month
+        const topReturnedProductsMonth = await Order.aggregate([
+            {
+                $match: {
+                    ...baseQuery,
+                    "status.currentStatus": "return",
+                    createdAt: { $gte: startOfMonth, $lte: endOfMonth }
+                }
+            },
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "product",
+                    foreignField: "_id",
+                    as: "productDetails"
+                }
+            },
+            {
+                $unwind: "$productDetails"
+            },
+            {
+                $group: {
+                    _id: "$product",
+                    returnCount: { $sum: 1 },
+                    product: { $first: "$productDetails" }
+                }
+            },
+            {
+                $sort: { returnCount: -1 }
+            },
+            {
+                $limit: 6
+            }
+        ]);
+
+        const analytics = {
+            daily: {
+                completedOrders: completedOrdersToday || 0,
+                pendingOrders: pendingOrdersToday || 0,
+                cancelledOrders: cancelledOrdersToday || 0,
+                totalSales: totalSalesToday[0]?.total || 0,
+                topReturnedProducts: topReturnedProductsToday || []
+            },
+            monthly: {
+                completedOrders: completedOrdersMonth || 0,
+                pendingOrders: pendingOrdersMonth || 0,
+                cancelledOrders: cancelledOrdersMonth || 0,
+                totalSales: totalSalesMonth[0]?.total || 0,
+                topReturnedProducts: topReturnedProductsMonth || []
+            }
+        };
+
+        res.json(analytics);
+    } catch (error) {
+        console.error('Analytics error:', error);
+        res.status(500).json({ 
+            error: "Internal server error",
+            details: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
+    }
+};
+
+exports.getRevenue = async (req, res) => {
+    try {
+        // Get admin from req.admin instead of req.profile
+        if (!req.admin || !req.admin._id) {
+            console.error('Admin not found in request');
+            return res.status(401).json({ error: "Unauthorized - Admin not found" });
+        }
+
+        console.log('Admin ID:', req.admin._id);
+        
+        const { period } = req.query;
+        console.log('Period:', period);
+
+        let query = {
+            "status.currentStatus": "complete",
+            soldBy: req.admin._id
+        };
+
+        // Set date range based on period
+        const today = new Date();
+        switch (period) {
+            case 'day':
+                query.createdAt = {
+                    $gte: new Date(today.setHours(0, 0, 0, 0)),
+                    $lte: new Date(today.setHours(23, 59, 59, 999))
+                };
+                break;
+            case 'month':
+                query.createdAt = {
+                    $gte: new Date(today.getFullYear(), today.getMonth(), 1),
+                    $lte: new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999)
+                };
+                break;
+            case 'year':
+                query.createdAt = {
+                    $gte: new Date(today.getFullYear(), 0, 1),
+                    $lte: new Date(today.getFullYear(), 11, 31, 23, 59, 59, 999)
+                };
+                break;
+            case 'all':
+                // For all time, we don't need to set any date range
+                delete query.createdAt;
+                break;
+            default:
+                return res.status(400).json({ error: "Invalid period parameter" });
+        }
+
+        console.log('Final query:', query);
+
+        // Calculate total revenue
+        const totalRevenue = await Order.aggregate([
+            {
+                $match: query
+            },
+            {
+                $lookup: {
+                    from: "payments",
+                    localField: "payment",
+                    foreignField: "_id",
+                    as: "paymentDetails"
+                }
+            },
+            {
+                $unwind: "$paymentDetails"
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: "$paymentDetails.amount" }
+                }
+            }
+        ]);
+
+        console.log('Total revenue result:', totalRevenue);
+
+        res.json(totalRevenue[0]?.total || 0);
+    } catch (error) {
+        console.error('Revenue error:', error);
+        res.status(500).json({ 
+            error: "Internal server error",
+            details: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
+    }
+};

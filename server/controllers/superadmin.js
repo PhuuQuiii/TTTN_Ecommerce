@@ -20,6 +20,8 @@ const Districts = require("../models/Districts");
 const { fileRemover, imageCompressor } = require("../middleware/helpers");
 const task = Fawn.Task();
 const mongoose = require("mongoose");
+const Analytics = require("../models/Analytics");
+const Order = require("../models/Order");
 
 // const perPage = 10;
 
@@ -919,3 +921,279 @@ exports.getProductBrands = async (req, res) => {
     res.json(productbrands)
 
 }
+
+// Analytics functions
+exports.getAnalytics = async (req, res) => {
+    try {
+        const today = new Date();
+        const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+        const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+        
+        // Get start and end of month
+        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999);
+
+        // Get completed orders for today
+        const completedOrdersToday = await Order.countDocuments({
+            "status.currentStatus": "complete",
+            createdAt: { $gte: startOfDay, $lte: endOfDay }
+        });
+
+        // Get completed orders for month
+        const completedOrdersMonth = await Order.countDocuments({
+            "status.currentStatus": "complete",
+            createdAt: { $gte: startOfMonth, $lte: endOfMonth }
+        });
+
+        // Get new customers for today
+        const newCustomersToday = await User.countDocuments({
+            createdAt: { $gte: startOfDay, $lte: endOfDay }
+        });
+
+        // Get new customers for month
+        const newCustomersMonth = await User.countDocuments({
+            createdAt: { $gte: startOfMonth, $lte: endOfMonth }
+        });
+
+        // Get pending orders for today
+        const pendingOrdersToday = await Order.countDocuments({
+            "status.currentStatus": "active",
+            createdAt: { $gte: startOfDay, $lte: endOfDay }
+        });
+
+        // Get pending orders for month
+        const pendingOrdersMonth = await Order.countDocuments({
+            "status.currentStatus": "active",
+            createdAt: { $gte: startOfMonth, $lte: endOfMonth }
+        });
+
+        // Get cancelled orders for today
+        const cancelledOrdersToday = await Order.countDocuments({
+            "status.currentStatus": "cancel",
+            createdAt: { $gte: startOfDay, $lte: endOfDay }
+        });
+
+        // Get cancelled orders for month
+        const cancelledOrdersMonth = await Order.countDocuments({
+            "status.currentStatus": "cancel",
+            createdAt: { $gte: startOfMonth, $lte: endOfMonth }
+        });
+
+        // Get total sales for today
+        const totalSalesToday = await Order.aggregate([
+            {
+                $match: {
+                    "status.currentStatus": "complete",
+                    createdAt: { $gte: startOfDay, $lte: endOfDay }
+                }
+            },
+            {
+                $lookup: {
+                    from: "payments",
+                    localField: "payment",
+                    foreignField: "_id",
+                    as: "paymentDetails"
+                }
+            },
+            {
+                $unwind: "$paymentDetails"
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: "$paymentDetails.amount" }
+                }
+            }
+        ]);
+
+        // Get total sales for month
+        const totalSalesMonth = await Order.aggregate([
+            {
+                $match: {
+                    "status.currentStatus": "complete",
+                    createdAt: { $gte: startOfMonth, $lte: endOfMonth }
+                }
+            },
+            {
+                $lookup: {
+                    from: "payments",
+                    localField: "payment",
+                    foreignField: "_id",
+                    as: "paymentDetails"
+                }
+            },
+            {
+                $unwind: "$paymentDetails"
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: "$paymentDetails.amount" }
+                }
+            }
+        ]);
+
+        // Get top 6 returned products for today
+        const topReturnedProductsToday = await Order.aggregate([
+            {
+                $match: {
+                    "status.currentStatus": "return",
+                    createdAt: { $gte: startOfDay, $lte: endOfDay }
+                }
+            },
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "product",
+                    foreignField: "_id",
+                    as: "productDetails"
+                }
+            },
+            {
+                $unwind: "$productDetails"
+            },
+            {
+                $group: {
+                    _id: "$product",
+                    returnCount: { $sum: 1 },
+                    product: { $first: "$productDetails" }
+                }
+            },
+            {
+                $sort: { returnCount: -1 }
+            },
+            {
+                $limit: 6
+            }
+        ]);
+
+        // Get top 6 returned products for month
+        const topReturnedProductsMonth = await Order.aggregate([
+            {
+                $match: {
+                    "status.currentStatus": "return",
+                    createdAt: { $gte: startOfMonth, $lte: endOfMonth }
+                }
+            },
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "product",
+                    foreignField: "_id",
+                    as: "productDetails"
+                }
+            },
+            {
+                $unwind: "$productDetails"
+            },
+            {
+                $group: {
+                    _id: "$product",
+                    returnCount: { $sum: 1 },
+                    product: { $first: "$productDetails" }
+                }
+            },
+            {
+                $sort: { returnCount: -1 }
+            },
+            {
+                $limit: 6
+            }
+        ]);
+
+        const analytics = {
+            daily: {
+                completedOrders: completedOrdersToday,
+                newCustomers: newCustomersToday,
+                pendingOrders: pendingOrdersToday,
+                cancelledOrders: cancelledOrdersToday,
+                totalSales: totalSalesToday[0]?.total || 0,
+                salesVsCustomers: newCustomersToday > 0 ? (totalSalesToday[0]?.total || 0) / newCustomersToday : 0,
+                topReturnedProducts: topReturnedProductsToday
+            },
+            monthly: {
+                completedOrders: completedOrdersMonth,
+                newCustomers: newCustomersMonth,
+                pendingOrders: pendingOrdersMonth,
+                cancelledOrders: cancelledOrdersMonth,
+                totalSales: totalSalesMonth[0]?.total || 0,
+                salesVsCustomers: newCustomersMonth > 0 ? (totalSalesMonth[0]?.total || 0) / newCustomersMonth : 0,
+                topReturnedProducts: topReturnedProductsMonth
+            }
+        };
+
+        res.json(analytics);
+    } catch (error) {
+        console.error('Analytics error:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.getRevenue = async (req, res) => {
+    try {
+        const { period, startDate, endDate } = req.query;
+        let query = {
+            "status.currentStatus": "complete"
+        };
+
+        // Set date range based on period
+        const today = new Date();
+        switch (period) {
+            case 'day':
+                query.createdAt = {
+                    $gte: new Date(today.setHours(0, 0, 0, 0)),
+                    $lte: new Date(today.setHours(23, 59, 59, 999))
+                };
+                break;
+            case 'month':
+                query.createdAt = {
+                    $gte: new Date(today.getFullYear(), today.getMonth(), 1),
+                    $lte: new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999)
+                };
+                break;
+            case 'year':
+                query.createdAt = {
+                    $gte: new Date(today.getFullYear(), 0, 1),
+                    $lte: new Date(today.getFullYear(), 11, 31, 23, 59, 59, 999)
+                };
+                break;
+            case 'custom':
+                if (startDate && endDate) {
+                    query.createdAt = {
+                        $gte: new Date(startDate),
+                        $lte: new Date(endDate)
+                    };
+                }
+                break;
+        }
+
+        // Calculate total revenue
+        const totalRevenue = await Order.aggregate([
+            {
+                $match: query
+            },
+            {
+                $lookup: {
+                    from: "payments",
+                    localField: "payment",
+                    foreignField: "_id",
+                    as: "paymentDetails"
+                }
+            },
+            {
+                $unwind: "$paymentDetails"
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: "$paymentDetails.amount" }
+                }
+            }
+        ]);
+
+        res.json(totalRevenue[0]?.total || 0);
+    } catch (error) {
+        console.error('Revenue error:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
