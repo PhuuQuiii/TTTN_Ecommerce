@@ -72,7 +72,7 @@ const AddProduct = ({ adminId, products, totalCount, multiLoading, getProducts, 
                       />
                     </Col>
                     <Col span={5}>
-                      {product.images ? (
+                    {product.images && product.images.length > 0 ?(
                         <img 
                           src={`${process.env.REACT_APP_SERVER_URL}uploads/${product.images[0].thumbnail}`} 
                           alt={product.name} 
