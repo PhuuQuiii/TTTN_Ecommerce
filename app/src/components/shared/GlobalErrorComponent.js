@@ -5,12 +5,15 @@ import { connect } from "react-redux";
 
 const GlobalErrorComponent = ({ globalError }) => {
   const openNotification = (alert) => {
+    const message = typeof alert.errorMessage === "string" ? alert.errorMessage : "Error";
+    
     ToastAndroid.showWithGravity(
-      alert.errorMessage || "Error",
+      message,
       ToastAndroid.SHORT,
       ToastAndroid.CENTER
     );
   };
+  
   useEffect(() => {
     globalError.hasError && openNotification(globalError);
     globalError.hasSuccess && openNotification(globalError);
