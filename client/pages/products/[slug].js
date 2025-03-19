@@ -49,16 +49,16 @@ const Details = (props) => {
   // Determine if product is on flash sale and compute discounted price
   const product = productDetails?.product;
   let flashSaleInfo = null;
-  if (flashSales && product) {
+  
+  if (Array.isArray(flashSales) && product) {
     flashSales.forEach((sale) => {
-      // Assumes product slug can be used to check membership
       const saleProduct = sale.products.find((p) => p.slug === product.slug);
       if (saleProduct) {
         const discountRate = sale.discountRate || 20;
         const originalPrice = parseFloat(product.price?.$numberDecimal) || 999000;
         flashSaleInfo = {
           discountRate,
-          discountedPrice: originalPrice * (1 - discountRate / 100)
+          discountedPrice: originalPrice * (1 - discountRate / 100),
         };
       }
     });
