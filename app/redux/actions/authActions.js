@@ -46,7 +46,7 @@ export const register = (userData) => async (dispatch) => {
 };
 
 // gets token from the api and stores it in the redux store and in asyncstorage
-export const authenticate = (body, type, redirectUrl) => {
+export const authenticate = (body, type, redirectUrl, navigation) => {
   return async (dispatch) => {
     try {
       dispatch({ type: AUTHENTICATE_INIT });
@@ -105,3 +105,4 @@ export default {
   deauthenticate,
   register,
 };
+
