@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Digital-7&display=swap');
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fc;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Card styles */
+.card {
+  border: none;
+  border-radius: 0.35rem;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+  margin-bottom: 1.5rem;
+}
+
+.card-header {
+  background-color: #f8f9fc;
+  border-bottom: 1px solid #e3e6f0;
+}
+
+/* Revenue component styles */
+.revenue-card {
+  background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+  color: white;
+}
+
+.revenue-card .text-primary {
+  color: white !important;
+}
+
+.revenue-card .text-muted {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.revenue-card .period-selector .btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.revenue-card .period-selector .btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.revenue-card .period-selector .btn-primary {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.revenue-display {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.revenue-display .display-4 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.period-label {
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+
+/* Stat card styles */
+.stat-card {
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.stat-icon.bg-primary { background-color: #4e73df; }
+.stat-icon.bg-info { background-color: #36b9cc; }
+.stat-icon.bg-warning { background-color: #f6c23e; }
+.stat-icon.bg-danger { background-color: #e74a3b; }
+.stat-icon.bg-success { background-color: #1cc88a; }
+
+/* Chart card styles */
+.chart-card {
+  background: white;
+}
+
+.chart-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: white;
+}
+
+/* Progress bar styles */
+.progress {
+  height: 0.5rem;
+  background-color: #eaecf4;
+  border-radius: 0.35rem;
+}
+
+.progress-bar {
+  border-radius: 0.35rem;
+}
+
+/* Digital counter effect */
+@font-face {
+  font-family: 'Digital-7';
+  src: url('https://fonts.googleapis.com/css2?family=Digital-7&display=swap');
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .display-4 {
+    font-size: 2rem;
+  }
+  
+  .revenue-display .display-4 {
+    font-size: 1.8rem;
+  }
+  
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+} 
