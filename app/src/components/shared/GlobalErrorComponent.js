@@ -59,6 +59,7 @@ const GlobalErrorComponent = ({ globalError }) => {
     }, 3000);
   };  
 
+
   useEffect(() => {
     if (globalError && (globalError.hasError || globalError.hasSuccess)) {
       openNotification(globalError);
