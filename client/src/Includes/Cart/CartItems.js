@@ -7,8 +7,8 @@ import ProductListView from "../../Components/ProductListView";
 
 // utils
 import {
-    previousQuery,
-    scrollToTop,
+  previousQuery,
+  scrollToTop,
 } from "../../../utils/common";
 import { myCartsSkeleton } from "../../../utils/skeletons";
 
@@ -60,15 +60,17 @@ const CartItems = (props) => {
   const onChangePageInStock = (page) => {
     let pageNum = (page - 1) * perPage;
 
-    let newInStockProducts = {
-      ...inStockProducts,
-      carts: [...allinStockProducts.carts].slice(
-        pageNum,
-        pageNum + perPage
-      ),
-    };
+    if (props.cartData?.inStockProducts?.carts) {
+      let newInStockProducts = {
+        ...inStockProducts,
+        carts: [...props.cartData.inStockProducts.carts].slice(
+          pageNum,
+          pageNum + perPage
+        ),
+      };
 
-    setInStockProducts(newInStockProducts);
+      setInStockProducts(newInStockProducts);
+    }
   };
   
   let checkSkeleton = !props.cartData?.carts[0]?.product?.name ? true : false

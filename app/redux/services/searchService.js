@@ -1,6 +1,6 @@
 import queryString from "query-string";
-import { getService, postService } from "../../utils/commonService";
 import { SERVER_BASE_URL } from "../../utils/common";
+import { getService, postService } from "../../utils/commonService";
 
 export class SearchService {
   async getSearchKeywords(query) {
@@ -11,7 +11,7 @@ export class SearchService {
 
   async searchProducts(query, body) {
     let url = `${SERVER_BASE_URL}/api/product/search${query}`;
-    let data = postService(url, "POST", body);
+    let data = postService(url, "POST", body); 
     return data;
   }
 

@@ -1,0 +1,120 @@
+.todo-container {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.todo-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.todo-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.todo-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #1f1f1f;
+}
+
+.todo-progress {
+  min-width: 200px;
+}
+
+.todo-body {
+  padding: 24px;
+}
+
+.todo-item-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.todo-item-card {
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.todo-item-card.hoverable:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.todo-item-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.todo-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.todo-item-description {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.todo-item-tag {
+  align-self: flex-start;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 1200px) {
+  .todo-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .todo-progress {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .todo-body {
+    padding: 16px;
+  }
+  
+  .todo-header {
+    padding: 16px;
+  }
+  
+  .todo-title {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .todo-container {
+    margin-bottom: 16px;
+  }
+  
+  .todo-body {
+    padding: 12px;
+  }
+  
+  .todo-item-title {
+    font-size: 14px;
+  }
+  
+  .todo-item-description {
+    font-size: 12px;
+  }
+} 

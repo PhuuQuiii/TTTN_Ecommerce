@@ -1,7 +1,7 @@
 const express = require("express");
 
 const {
-    getAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, blockUnblockAdmin, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingData, getShippingData, blockUnblockUser, banner, editBanner, deleteBanner, getBanners, getDeletedBanners, getUsers,  getAllDispatchers, addDispatcher,editDispatcher,blockUnbolckDispatcher, toggleProductFeatured, addLead, deleteCategory, flipBrandStatus, deleteBrand
+    getAdmins, flipAdminBankApproval, flipAdminBusinessApproval, flipAdminWarehouseApproval, flipAdminAccountApproval, flipCategoryAvailablity, category, getCategories, approveProduct, disApproveProduct, blockUnblockAdmin, getProducts, productBrand, getProductBrands, geoLocation, getGeoLocation, shippingData, getShippingData, blockUnblockUser, banner, editBanner, deleteBanner, getBanners, getDeletedBanners, getUsers,  getAllDispatchers, addDispatcher,editDispatcher,blockUnbolckDispatcher, toggleProductFeatured, addLead, deleteCategory, flipBrandStatus, deleteBrand, getAnalytics, getRevenue
 } = require("../controllers/superadmin");
 const { auth, isSuperAdmin } = require('../controllers/admin_auth')
 const {uploadBannerPhoto} = require("../middleware/helpers")
@@ -65,5 +65,8 @@ router.get("/products", auth, isSuperAdmin, getProducts)
 //lead's..
 router.post('/add-lead',validateLead, addLead)
 
+// Analytics routes
+router.get('/analytics', auth, isSuperAdmin, getAnalytics);
+router.get('/revenue', auth, isSuperAdmin, getRevenue);
 
 module.exports = router;
