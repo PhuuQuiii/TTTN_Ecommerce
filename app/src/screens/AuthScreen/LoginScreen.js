@@ -30,10 +30,9 @@ const LoginScreen = ({ navigation, ...props }) => {
       return;
     }
 
-    // navigation.navigate('Dashboard');
+    // navigation.navigate('HomeScreen');
     // props.signIn("fdf");
-    dispatch(authenticate({email: email.value, password: password.value}));
-  };
+    dispatch(authenticate({ email: email.value, password: password.value }, navigation));  };
 
   return (
     <Background>

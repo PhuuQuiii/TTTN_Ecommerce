@@ -9,22 +9,39 @@ import {
 } from "../types";
 import { decodeToken, isTokenExpired } from "../../utils/common";
 import { AuthService } from "../services/authService";
-import { AsyncStorage } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getUserProfile } from "./userActions";
 
 // gets token from the api and stores it in the redux store and in asyncstorage
-export const authenticate = (body, type, redirectUrl) => {
+export const authenticate = (body, type, redirectUrl, navigation) => {
   return async (dispatch) => {
+    console.log("Login request body:", body);
     dispatch({ type: AUTHENTICATE_INIT });
     dispatch({ type: USER_PROFILE_INIT });
+
     const authService = new AuthService();
     const response = await authService.loginUser(body);
 
+    console.log("Login response:", response);
+
     if (response.isSuccess) {
-      await AsyncStorage.setItem("token", response.data.accessToken);
+      try {
+        await AsyncStorage.setItem("token", response.data.accessToken);
+      } catch (error) {
+        console.log("Lỗi khi lưu token:", error);
+        dispatch({ type: GLOBAL_ERROR, payload: "Lỗi lưu trữ token" });
+        return;
+      }      
       dispatch({ type: AUTHENTICATE, payload: response.data.accessToken });
+      dispatch({ type: AUTHENTICATE_ERROR, payload: null }); 
       const _id = decodeToken(response.data.accessToken);
+      console.log("Decoded user ID:", _id);
+      if (!_id) {
+        dispatch({ type: GLOBAL_ERROR, payload: "Lỗi giải mã token" });
+        return;
+      }
       dispatch(getUserProfile(_id));
+      navigation.navigate("ProfileStack");
     } else if (!response.isSuccess) {
       dispatch({ type: GLOBAL_ERROR, payload: response.errorMessage });
       dispatch({ type: AUTHENTICATE_ERROR, payload: response.errorMessage });
