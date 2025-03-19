@@ -58,37 +58,37 @@ export const productData = [
         id: 1,
         title: "Redmi Note 8 Pro",
         image: "https://fdn2.gsmarena.com/vv/pics/xiaomi/xiaomi-redmi-note-8-pro-0.jpg",
-        price: "Rs 1600",
+        price: "1600 đ",
     },
     {
         id: 2,
         title: "New Nokia",
         image: "https://images.ctfassets.net/wcfotm6rrl7u/2Q7BnbvNCo2m4BCrgboczN/e7fb7cf228712c0bc75a77499eaef522/pds-lander-hero-8_2--mobile.png",
-        price: "Rs 2000",
+        price: "2000 đ",
     },
     {
         id: 3,
         title: "Samsun M31",
         image: "https://www.elavocatomobile.com/wp-content/uploads/Samsung-Galaxy-M31-240.jpg",
-        price: "Rs 1400",
+        price: "1400 đ",
     },
     {
         id: 4,
         title: "TP Link Router",
         image: "https://5.imimg.com/data5/NY/IW/MY-1022901/tp-link-wireless-router-500x500.jpg",
-        price: "Rs 1000",
+        price: "1000 đ",
     },
     {
         id: 5,
         title: "Water Bottle",
         image: "https://www.ikea.com/gb/en/images/products/ikea-365--water-bottle__0711280_PE728118_S5.JPG",
-        price: "Rs 100",
+        price: "100 đ",
     },
     {
         id: 6,
         title: "Gaming Mouse",
         image: "https://image.made-in-china.com/2f0j00asCEjBDdhUgH/Computer-Mouse-Mini-Size.jpg",
-        price: "Rs 1200",
+        price: "1200 đ",
     },
 ]
 

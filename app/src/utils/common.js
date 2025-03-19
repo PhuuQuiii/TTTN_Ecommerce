@@ -35,3 +35,9 @@ export const passwordValidator = (password) => {
   if (!password) return "Password is required";
   return false;
 }
+
+export const nameValidator = (name) => {
+  if (!name) return "Name is required";
+  return false;
+}
+

@@ -38,7 +38,7 @@ const SingleCard = ({ product }) => {
             <Text style={styles.name}>{nameWithTripleDots(product.name)}</Text>
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.price}>Rs {product.price.$numberDecimal}</Text>
+            <Text style={styles.price}>{product.price.$numberDecimal} đ</Text>
           </View>
         </Card>
         <View style={{ flex: 0.25 }}></View>

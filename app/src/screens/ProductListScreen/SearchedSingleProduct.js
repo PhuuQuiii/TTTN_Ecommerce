@@ -149,12 +149,12 @@ const SearchedSingleProduct = (props) => {
                   <Title>{props.product.title || props.product.name}</Title>
                   {props.product.price && (
                     <Paragraph>
-                      {" "}
-                      Rs
                       {` ${
                         props.product.price.$numberDecimal ||
                         props.product.price
                       }`}
+                      {" "}
+                      đ
                     </Paragraph>
                   )}
                   {props.type !== "myorders" && props.type !== "searched" && (

@@ -85,13 +85,8 @@ const CartScreen = (props) => {
   };
 
   const showToastWithGravityAndOffset = () => {
-    ToastAndroid.showWithGravityAndOffset(
-      "Can not checkout without any product!",
-      ToastAndroid.LONG,
-      ToastAndroid.BOTTOM,
-      25,
-      50
-    );
+    const message = "Can not checkout without any product!"; // Đảm bảo là string
+    ToastAndroid.showWithGravityAndOffset(message, ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
   };
 
   const isCartStack = props.route.name === "CartStack";
@@ -107,7 +102,7 @@ const CartScreen = (props) => {
         // stickyHeaderIndices={[1]}
         showsVerticalScrollIndicator={false}
       >
-        <View style={{ height: 50 }}>
+        <View style={{ height: 0 }}>
           <Appbar.Header statusBarHeight={0}>
             {isCartStack && (
               <Appbar.BackAction
@@ -280,8 +275,8 @@ const CartScreen = (props) => {
                   justifyContent: "center",
                 }}
               >
-                <Text style={{ fontSize: 10 }}>{"Shipping: Rs 0"}</Text>
-                <Text style={{ fontSize: 13 }}>{"Total: Rs 0"}</Text>
+                <Text style={{ fontSize: 10 }}>{"Shipping: 0 đ"}</Text>
+                <Text style={{ fontSize: 13 }}>{"Total: 0 đ"}</Text>
               </View>
               <View style={{ flex: 0.7, ...styles.footer }}>
                 <Button

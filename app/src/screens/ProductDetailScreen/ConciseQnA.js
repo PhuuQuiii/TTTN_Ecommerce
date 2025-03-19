@@ -1,15 +1,15 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Text, View } from "react-native";
-import { Card } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Moment from "moment";
+import React, { useEffect } from "react";
+import { Text, View } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import Moment from "moment"
+import { Card } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
 import Constants from "../../constants/Constants";
 
 import { useNavigation } from "@react-navigation/native";
-import Skeleton from "../../components/shared/Skeleton";
 import { getQandA } from "../../../redux/actions/productActions";
+import Skeleton from "../../components/shared/Skeleton";
 
 const ConciseQnA = ({ viewAll, token, slug }) => {
   const navigation = useNavigation();
@@ -37,6 +37,7 @@ const ConciseQnA = ({ viewAll, token, slug }) => {
 
       {productQA.QnA.qna.map((data, i) => (
         <Card.Content
+          key={i}
           style={{ marginBottom: 20, paddingTop: viewAll ? 20 : 0 }}
         >
           <View style={{ flex: 1, flexDirection: "row" }}>

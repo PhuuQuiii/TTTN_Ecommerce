@@ -1,70 +1,61 @@
-import {
-  USER_PROFILE,
-  GLOBAL_ERROR,
-  EDIT_ADDRESS,
-  ADD_ADDRESS,
-  TOGGLE_ACTIVE_ADDRESS,
-  UPDATE_PROFILE_PICTURE,
-  MY_PROFILE_REVIEWS,
-} from "../types";
-import { UserService } from "../services/userService";
 import { decodeToken } from "../../utils/common";
+import { UserService } from "../services/userService";
+import {
+  GLOBAL_ERROR,
+  MY_PROFILE_REVIEWS,
+  UPDATE_PROFILE_PICTURE,
+  USER_PROFILE,
+} from "../types";
 
 export const getUserProfile = (id) => {
   return async (dispatch) => {
-    const userService = new UserService();
-    const response = await userService.getUserProfile(id);
-    if (response.isSuccess) {
-      dispatch({ type: USER_PROFILE, payload: response.data });
-    } else if (!response.isSuccess) {
+    try {
+      // console.log("Fetching user profile for ID:", id);
+      const userService = new UserService();
+      const response = await userService.getUserProfile(id);
+      // console.log("User profile response:", response);
+      
+      if (response.isSuccess) {
+        dispatch({ type: USER_PROFILE, payload: response.data });
+      } else {
+        // console.error("Failed to fetch user profile:", response.errorMessage);
+        dispatch({
+          type: GLOBAL_ERROR,
+          payload: response.errorMessage || "Failed to fetch user profile",
+        });
+      }
+    } catch (error) {
+      // console.error("Error in getUserProfile:", error);
       dispatch({
         type: GLOBAL_ERROR,
-        payload: response.errorMessage,
+        payload: error.message || "An error occurred while fetching user profile",
       });
     }
   };
 };
 
-const addAddress = (body) => {
+export const updateProfile = (profile, id) => {
   return async (dispatch) => {
-    const userService = new UserService();
-    const response = await userService.addAddress(body);
-    if (response.isSuccess) {
-      dispatch({ type: ADD_ADDRESS, payload: response.data });
-    } else if (!response.isSuccess) {
+    try {
+      // console.log("Updating profile for ID:", id);
+      const userService = new UserService();
+      const response = await userService.updateProfile(profile, id);
+      // console.log("Update profile response:", response);
+      
+      if (response.isSuccess) {
+        dispatch({ type: USER_PROFILE, payload: response.data });
+      } else {
+        // console.error("Failed to update profile:", response.errorMessage);
+        dispatch({
+          type: GLOBAL_ERROR,
+          payload: response.errorMessage || "Failed to update profile",
+        });
+      }
+    } catch (error) {
+      // console.error("Error in updateProfile:", error);
       dispatch({
         type: GLOBAL_ERROR,
-        payload: response.errorMessage,
-      });
-    }
-  };
-};
-
-const editAddress = (id, body) => {
-  return async (dispatch) => {
-    const userService = new UserService();
-    const response = await userService.editAddress(id, body);
-    if (response.isSuccess) {
-      dispatch({ type: EDIT_ADDRESS, payload: response.data });
-    } else if (!response.isSuccess) {
-      dispatch({
-        type: GLOBAL_ERROR,
-        payload: response.errorMessage,
-      });
-    }
-  };
-};
-
-const toggleActiveAddress = (query) => {
-  return async (dispatch) => {
-    const userService = new UserService();
-    const response = await userService.toggleActiveAddress(query);
-    if (response.isSuccess) {
-      dispatch({ type: TOGGLE_ACTIVE_ADDRESS, payload: response.data });
-    } else if (!response.isSuccess) {
-      dispatch({
-        type: GLOBAL_ERROR,
-        payload: response.errorMessage,
+        payload: error.message || "An error occurred while updating profile",
       });
     }
   };
@@ -104,9 +95,7 @@ export const getMyReviews = (query, token) => {
 
 export default {
   getUserProfile,
-  editAddress,
-  addAddress,
-  toggleActiveAddress,
   updateProfilePicture,
   getMyReviews,
+  updateProfile,
 };

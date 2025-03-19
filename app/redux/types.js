@@ -44,6 +44,8 @@ export const MY_PROFILE_REVIEWS = "MY_PROFILE_REVIEWS"
 
 // error
 export const GLOBAL_ERROR = "GLOBAL_ERROR"
+export const GLOBAL_SUCCESS = "GLOBAL_SUCCESS"
+export const GLOBAL_LOADING = "GLOBAL_LOADING"
 
 //loading
 export const LATEST_LOADING = 'LATEST_LOADING'
@@ -71,4 +73,13 @@ export const GET_ORDERS_NEXT = 'GET_ORDERS_NEXT'
 export const GET_ORDERS_STATUSES = 'GET_ORDERS_STATUSES'
 export const PLACE_ORDER = 'PLACE_ORDER'
 export const GET_SHIPPING_CHARGE = 'GET_SHIPPING_CHARGE'
+
+// Register action types
+export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
+export const REGISTER_FAIL = "REGISTER_FAIL";
+
+// Login action types
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const LOGIN_FAIL = "LOGIN_FAIL";
+export const LOGOUT = "LOGOUT";
 

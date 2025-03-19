@@ -1,5 +1,3 @@
-// import cookie from "js-cookie";
-// import { getCookie } from "./cookie";
 
 export const postTokenService = async (url, method, body, token) => {
   try {

@@ -30,7 +30,7 @@ const HomeScreen = (props) => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      <View style={{ height: 50 }}>
+      <View style={{ height: 0 }}>
         <HomeHeader headerTitle="" {...props} />
       </View>
       <View style={{ height: 60 }}>

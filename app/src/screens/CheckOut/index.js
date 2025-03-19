@@ -253,7 +253,7 @@ export class CheckOutScreen extends Component {
                   justifyContent: "center",
                 }}
               >
-                <Text style={{ fontSize: 13 }}>{"Total: Rs 199"}</Text>
+                <Text style={{ fontSize: 13 }}>{"Total: 199 đ"}</Text>
               </View>
               <View style={{ flex: 0.7, ...styles.footer }}>
                 <Button

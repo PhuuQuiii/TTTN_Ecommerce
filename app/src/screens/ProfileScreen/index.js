@@ -1,18 +1,15 @@
 import React, { useEffect } from "react";
-
+import { ScrollView, StyleSheet, View } from "react-native";
+import { Button } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import { Appbar } from "react-native-paper";
 
-import Constants from "../../constants/Constants";
-
-import UserInfo from "./UserInfo";
-import MyActions from "./MyActions";
-import { ScrollView } from "react-native";
 import { deauthenticate } from "../../../redux/actions/authActions";
-import { getMyReviews } from "../../../redux/actions/userActions";
-import Skeleton from "../../components/shared/Skeleton";
-import { getWishListItems } from "../../../redux/actions/wishlistActions";
 import { getOrders } from "../../../redux/actions/orderActions";
+import { getMyReviews } from "../../../redux/actions/userActions";
+import { getWishListItems } from "../../../redux/actions/wishlistActions";
+import Skeleton from "../../components/shared/Skeleton";
+import MyActions from "./MyActions";
+import UserInfo from "./UserInfo";
 
 const ProfileScreen = () => {
   const dispatch = useDispatch();
@@ -37,17 +34,53 @@ const ProfileScreen = () => {
   };
 
   return (
-    <>
-      <Appbar.Header statusBarHeight={0}>
-        <Appbar.Content title="Profile" color={Constants.headerTintColor} />
-        <Appbar.Action icon="logout" color="white" onPress={handleLogout} />
-      </Appbar.Header>
-      <ScrollView>
+    <View style={styles.container}>
+      <ScrollView style={styles.scrollView}>
         <UserInfo />
-        {(!myReviews || !wishlistItems || !myOrders) ? <Skeleton /> : <MyActions myReviews={myReviews} wishlistItems={wishlistItems} myOrders={myOrders}/>}
+        {(!myReviews || !wishlistItems || !myOrders) ? (
+          <Skeleton />
+        ) : (
+          <MyActions 
+            myReviews={myReviews} 
+            wishlistItems={wishlistItems} 
+            myOrders={myOrders}
+          />
+        )}
+        <View style={styles.logoutContainer}>
+          <Button 
+            mode="contained" 
+            onPress={handleLogout}
+            style={styles.logoutButton}
+            labelStyle={styles.logoutButtonLabel}
+          >
+            Logout
+          </Button>
+        </View>
       </ScrollView>
-    </>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  logoutContainer: {
+    padding: 16,
+    marginTop: 8,
+  },
+  logoutButton: {
+    backgroundColor: '#C20A00FF',
+    borderRadius: 8,
+  },
+  logoutButtonLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
 
 export default ProfileScreen;

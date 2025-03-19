@@ -1,13 +1,22 @@
-import React, { Component } from "react";
+import React from "react";
 import { Dimensions } from "react-native";
-import HTML from "react-native-render-html";
 import { Card } from "react-native-paper";
+import HTML from "react-native-render-html";
 
 const HighlightedInfo = ({ highlights }) => {
+  if (!highlights) {
+    return null;
+  }
+
   return (
     <Card style={{ flex: 1 }}>
       <Card.Title title="Highlighted Info" />
-      <HTML html={highlights} imagesMaxWidth={Dimensions.get("window").width} />
+      <Card.Content>
+        <HTML 
+          source={{ html: highlights }} 
+          contentWidth={Dimensions.get("window").width} 
+        />
+      </Card.Content>
     </Card>
   );
 };
