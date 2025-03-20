@@ -1,32 +1,77 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
+
 const notificationSchema = new mongoose.Schema({
+    // For user notifications
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    },
+    // For admin notifications
     admin: {
         type: Schema.Types.ObjectId,
-        ref: "admin",
+        ref: "admin"
     },
+    title: {
+        type: String,
+        required: true
+    },
+    body: {
+        type: String,
+        required: true
+    },
+    data: {
+        type: Object,
+        default: {}
+    },
+    status: {
+        type: String,
+        enum: ['pending', 'sent', 'failed'],
+        default: 'pending'
+    },
+    isRead: {
+        type: Boolean,
+        default: false
+    },
+    type: {
+        type: String,
+        enum: ['order', 'order_status', 'payment', 'system', 'question_on_product', 'answer_on_product', 'review'],
+        required: true
+    },
+    orderId: {
+        type: Schema.Types.ObjectId,
+        ref: "Order"
+    },
+    // For admin notifications
     notifications: [{
-        notificationType: String, //order, question_on_product, answer_on_product, review
-        notificationDetail: Object, //details in key/value
+        notificationType: String,
+        notificationDetail: Object,
         hasRead: {
             type: Boolean,
             default: false
         },
         date: {
-            type: Date
-        },
-        // hasSeen: {
-        //     type: Boolean,
-        //     default: false
-        // }
+            type: Date,
+            default: Date.now
+        }
     }],
     noOfUnseen: {
         type: Number,
         default: 0
     }
-    
+}, {
+    timestamps: true
 });
-module.exports = mongoose.model('notification', notificationSchema);
+
+// Ensure either user or admin is set, but not both
+notificationSchema.pre('save', function(next) {
+    if ((!this.user && !this.admin) || (this.user && this.admin)) {
+        next(new Error('Notification must have either a user or an admin, but not both'));
+    }
+    next();
+});
+
+module.exports = mongoose.model('Notification', notificationSchema);
 
 
 // admin:

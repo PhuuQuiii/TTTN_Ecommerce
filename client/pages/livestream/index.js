@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import Hls from 'hls.js';
-import { useRouter } from 'next/router';
-import React, { useEffect, useRef, useState } from 'react';
-import { IoArrowBack, IoEye } from 'react-icons/io5';
-import Layout from '../../src/Components/Layout';
+import Hls from "hls.js";
+import { useRouter } from "next/router";
+import React, { useEffect, useRef, useState } from "react";
+import { IoArrowBack, IoEye } from "react-icons/io5";
+import Layout from "../../src/Components/Layout";
 
 export default function LiveStream() {
   const videoRef = useRef(null);
   const commentsRef = useRef(null);
   const router = useRouter();
-  const videoSrc = 'http://localhost:8080/hls/test.m3u8';
+  const videoSrc = "http://localhost:8080/hls/test.m3u8";
   const ws = useRef(null);
 
   const [viewers, setViewers] = useState(0);
   const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState('');
+  const [newComment, setNewComment] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -24,34 +24,36 @@ export default function LiveStream() {
         const hls = new Hls();
         hls.loadSource(videoSrc);
         hls.attachMedia(videoRef.current);
-      } else if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
+      } else if (
+        videoRef.current.canPlayType("application/vnd.apple.mpegurl")
+      ) {
         videoRef.current.src = videoSrc;
       }
     }
 
-    ws.current = new WebSocket('ws://localhost:8000');
+    ws.current = new WebSocket("ws://localhost:3001");
     ws.current.onopen = () => {
-      console.log('WebSocket connection opened');
+      console.log("WebSocket connection opened");
     };
     ws.current.onmessage = (event) => {
       try {
         const message = JSON.parse(event.data);
-        console.log('Received message:', message);
-        if (message.type === 'comment') {
+        console.log("Received message:", message);
+        if (message.type === "comment") {
           setComments((prevComments) => [...prevComments, message.comment]);
-        } else if (message.type === 'viewers') {
+        } else if (message.type === "viewers") {
           setViewers(message.count);
         }
       } catch (error) {
-        console.error('Error parsing message:', error);
+        console.error("Error parsing message:", error);
       }
     };
     ws.current.onclose = () => {
-      console.log('WebSocket connection closed');
+      console.log("WebSocket connection closed");
     };
 
     ws.current.onerror = (error) => {
-      console.log('WebSocket error', error);
+      console.log("WebSocket error", error);
     };
 
     return () => {
@@ -66,15 +68,20 @@ export default function LiveStream() {
       const comment = {
         id: comments.length + 1,
         user: {
-          name: 'You',
-          avatar: 'https://res.cloudinary.com/df33snbqj/image/upload/v1741785111/avatar1_xpzunf.png'
+          name: "You",
+          avatar:
+            "https://res.cloudinary.com/df33snbqj/image/upload/v1741785111/avatar1_xpzunf.png",
         },
         text: newComment.trim(),
-        timestamp: 'Just now'
+        timestamp: "Just now",
       };
-      console.log('Sending comment:', comment);
-      ws.current.send(JSON.stringify({ type: 'comment', comment }));
-      setNewComment('');
+      console.log("Sending comment:", comment);
+      try {
+        ws.current.send(JSON.stringify({ type: "comment", comment }));
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
+      setNewComment("");
       setIsLoading(false);
     }
   };
@@ -94,7 +101,13 @@ export default function LiveStream() {
                 <span>{viewers}</span>
               </div>
             </div>
-            <video ref={videoRef} controls playsInline className="livestream-video" poster="/images/default-image.jpg" />
+            <video
+              ref={videoRef}
+              controls
+              playsInline
+              className="livestream-video"
+              poster="/images/default-image.jpg"
+            />
           </div>
           <div className="comment-section">
             <div className="comment-header">
@@ -104,15 +117,19 @@ export default function LiveStream() {
             <div className="comments-container" ref={commentsRef}>
               {comments.map((comment) => (
                 <div key={comment.id} className="comment">
-                  <img 
-                    src={comment.user?.avatar || comment.avatar} 
-                    alt={comment.user?.name || comment.name} 
-                    className="comment-avatar" 
+                  <img
+                    src={comment.user?.avatar || comment.avatar}
+                    alt={comment.user?.name || comment.name}
+                    className="comment-avatar"
                   />
                   <div className="comment-content">
-                    <p className="comment-author">{comment.user?.name || comment.name}</p>
+                    <p className="comment-author">
+                      {comment.user?.name || comment.name}
+                    </p>
                     <p className="comment-text">{comment.text}</p>
-                    <span className="comment-timestamp">{comment.timestamp}</span>
+                    <span className="comment-timestamp">
+                      {comment.timestamp}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -126,8 +143,11 @@ export default function LiveStream() {
                   onChange={(e) => setNewComment(e.target.value)}
                   disabled={isLoading}
                 />
-                <button type="submit" disabled={isLoading || !newComment.trim()}>
-                  {isLoading ? 'Sending...' : 'Send'}
+                <button
+                  type="submit"
+                  disabled={isLoading || !newComment.trim()}
+                >
+                  {isLoading ? "Sending..." : "Send"}
                 </button>
               </form>
             </div>

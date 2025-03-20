@@ -8,11 +8,3 @@ services:
     container_name: rtmp_server
     volumes:
       - ./data:/tmp/hls
-
-  auth:
-    build: ./auth
-    container_name: auth_server
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./auth:/usr/src/app

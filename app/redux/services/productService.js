@@ -1,12 +1,12 @@
-import { getService, getTokenService, postTokenService } from "../../utils/commonService";
 import { SERVER_BASE_URL } from "../../utils/common";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { getService, getTokenService, postTokenService } from "../../utils/commonService";
 
 export class ProductService {
-  getLatestProducts() {
+  async getLatestProducts() {
     let url = `${SERVER_BASE_URL}/api/product/mined-products?page=1&perPage=12&keyword=trending`
-    let data = getService(url, 'GET');
-    console.log({data})
+    console.log('Fetching latest products from:', url);
+    let data = await getService(url, 'GET');
+    console.log('API response:', data);
     return data;
   }
 

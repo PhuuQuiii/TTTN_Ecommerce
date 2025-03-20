@@ -50,7 +50,7 @@ const ProductDetailScreen = (props) => {
           <View
             style={{
               backgroundColor: "#696969",
-              height: 80,
+              height: 90,
               paddingTop: 20,
               paddingHorizontal: 20,
             }}
@@ -69,7 +69,7 @@ const ProductDetailScreen = (props) => {
           <ProductDetailHeader {...newProps} token={token} />
         </TouchableRipple>
         <ProductDescription {...newProps} />
-        <View style={{ height: 250, marginTop: 0 }}>
+        <View style={{ height: 400, marginTop: 10 }}>
           <FeaturedProducts title={"Similar Products"} />
         </View>
       </ScrollView>
