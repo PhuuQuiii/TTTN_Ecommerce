@@ -70,7 +70,11 @@ export default function TabNavigators() {
         },
       })}
     >
-      <Tab.Screen name="Home" component={HomeStack} />
+      <Tab.Screen name="Home" component={HomeStack}
+      options={{
+        tabBarShowLabel: false, 
+      }} 
+     />
       <Tab.Screen name="Notifications" component={NotificationStack} />
       <Tab.Screen name="Cart" component={CartStack} />
       <Tab.Screen name="Profile" component={ProfileStack} />

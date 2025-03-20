@@ -1,6 +1,8 @@
 import React from "react";
 import { Image, RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import FeaturedProducts from "./FeaturedProducts";
+import React, { useState, useCallback } from "react";
+import { View, Image, ScrollView, RefreshControl, SafeAreaView } from "react-native";
 import HomeHeader from "./HomeHeader";
 import MainCarousel from "./MainCarousel";
 import SearchView from "./SearchView";
@@ -20,6 +22,7 @@ const HomeScreen = (props) => {
   }, []);
 
   return (
+    <SafeAreaView>
     <ScrollView
       contentContainerStyle={styles.scrollContent}
       stickyHeaderIndices={[1]}
@@ -53,6 +56,7 @@ const HomeScreen = (props) => {
         </View>
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 

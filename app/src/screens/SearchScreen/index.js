@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { View, Text, StyleSheet, AsyncStorage, TouchableWithoutFeedback } from "react-native";
+import { View, Text, StyleSheet, AsyncStorage, TouchableWithoutFeedback, SafeAreaView } from "react-native";
 import { Searchbar, TouchableRipple, Button } from "react-native-paper";
 import { debounce } from "lodash";
 import Constants from "../../constants/Constants";
@@ -85,7 +85,7 @@ const SeachScreen = (props) => {
   };
 
   return (
-    <View style={styles.searchViewWrapper}>
+    <SafeAreaView style={styles.searchViewWrapper}>
       <View style={styles.searchBarWrapper}>
         <View style={styles.searchBarFlexWrapper}>
           <View style={{ flex: 6 }}>
@@ -185,7 +185,7 @@ const SeachScreen = (props) => {
           </View>
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
