@@ -1,19 +1,3 @@
-# Chatbot for E-commerce Website
-
-This is a chatbot for an e-commerce website that sells tea and coffee. The chatbot is designed to assist customers by answering their questions, providing product information, and offering recommendations.
-
-## Table of Contents
-
-- [Project Overview](#project-overview)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Training the Chatbot](#training-the-chatbot)
-- [Usage](#usage)
-- [Customization](#customization)
-- [Technologies Used](#technologies-used)
-- [Author](#author)
 
 ## Project Overview
 
@@ -39,34 +23,6 @@ The project consists of the following files and folders:
 
 - `static`: This folder contains static assets such as CSS styles and JavaScript (`app.js`) for the chat interface.
 
-## Getting Started
-
-### Prerequisites
-
-Before you begin, ensure you have met the following requirements:
-
-- Python (>=3.6) is installed on your system.
-- You have access to a terminal or command prompt.
-
-### Installation
-
-1. Clone the repository to your local machine:
-
-   ```bash
-   git clone repo_name
-   ```
-
-2. Change to the project's directory:
-
-    ```bash
-    cd chatbot-for-ecommerce
-    ```
-
-3. Install the required dependencies by running:
-
-    ```bash
-    pip install -r requirements.txt
-    ```
 
 ### Training the Chatbot
 To train the chatbot model, follow these steps:
@@ -109,3 +65,6 @@ Contributions are welcome! If you'd like to improve this chatbot or add new feat
 
 
 python -m pip show pip
+
+
+Đa dạng các chủ đề: Bạn đã bao gồm nhiều chủ đề khác nhau như giỏ hàng, danh mục sản phẩm, thương hiệu sản phẩm, đơn hàng, thanh toán, đánh giá, khuyến mãi, danh sách mong muốn, liên hệ, giao hàng, trả hàng, sản phẩm, thông tin công ty, hỗ trợ, lời chào, tạm biệt và cảm ơn. Điều này giúp chatbot có khả năng trả lời nhiều câu hỏi phổ biến từ người dùng.

@@ -1,161 +1,575 @@
 {
   "intents": [
-      {
-          "tag": "greeting",
-          "patterns": [
-              "Hi",
-              "Hey",
-              "How are you",
-              "Is anyone there?",
-              "Hello",
-              "Good day"
-          ],
-          "responses": [
-              "Hey :-)",
-              "Hello, thanks for visiting",
-              "Hi there, what can I do for you?",
-              "Hi there, how can I help?"
-          ]
-      },
-      {
-          "tag": "goodbye",
-          "patterns": ["Bye", "See you later", "Goodbye"],
-          "responses": [
-              "See you later, thanks for visiting",
-              "Have a nice day",
-              "Bye! Come back again soon."
-          ]
-      },
-      {
-          "tag": "thanks",
-          "patterns": ["Thanks", "Thank you", "That's helpful", "Thank's a lot!"],
-          "responses": ["Happy to help!", "Any time!", "My pleasure"]
-      },
-      {
-          "tag": "items",
-          "patterns": [
-              "Which items do you have?",
-              "What kinds of items are there?",
-              "What do you sell?"
-          ],
-          "responses": [
-              "We sell coffee and tea",
-              "We have coffee and tea"
-          ]
-      },
-      {
-          "tag": "payments",
-          "patterns": [
-              "Do you take credit cards?",
-              "Do you accept Mastercard?",
-              "Can I pay with Paypal?",
-              "Are you cash only?"
-          ],
-          "responses": [
-              "We accept VISA, Mastercard, and Paypal",
-              "We accept most major credit cards and Paypal"
-          ]
-      },
-      {
-          "tag": "delivery",
-          "patterns": [
-              "How long does delivery take?",
-              "How long does shipping take?",
-              "When do I get my delivery?"
-          ],
-          "responses": [
-              "Delivery takes 2-4 days",
-              "Shipping takes 2-4 days"
-          ]
-      },
-      {
-          "tag": "product_info",
-          "patterns": [
-              "Tell me about your tea products",
-              "What types of tea do you offer?",
-              "Give me details about your coffee offerings"
-          ],
-          "responses": [
-              "We offer a wide range of tea products, including black, green, herbal, and specialty teas. Each tea is carefully selected for its unique flavor and aroma.",
-              "Our coffee selection includes various blends, from medium roast to dark roast, as well as single-origin options. We have something for every coffee enthusiast."
-          ]
-      },
-      {
-          "tag": "best_sellers",
-          "patterns": [
-              "What are your best-selling teas?",
-              "Tell me your popular coffee choices"
-          ],
-          "responses": [
-              "Our best-selling teas include our classic black tea and soothing chamomile herbal tea. Customers also love our signature coffee blend for its rich taste.",
-              "Customers often choose our house blend coffee and the aromatic French roast. They're our top picks!"
-          ]
-      },
-      {
-          "tag": "discounts",
-          "patterns": [
-              "Do you offer any discounts?",
-              "Are there any ongoing promotions?"
-          ],
-          "responses": [
-              "Yes, we have special discounts on selected tea and coffee products. You can check our website for the latest promotions and offers.",
-              "Absolutely! We frequently run promotions on our premium blends. Don't miss out on our current discounts."
-          ]
-      },
-      {
-          "tag": "customer_support",
-          "patterns": [
-              "How can I contact customer support?",
-              "I need assistance with my order"
-          ],
-          "responses": [
-              "Our customer support team is here to assist you. You can reach out to us through our website's live chat, email, or phone. We're ready to help!",
-              "If you have any questions or need assistance with your order, please don't hesitate to contact our dedicated customer support team."
-          ]
-      },
-      {
-          "tag": "reviews",
-          "patterns": [
-              "Can you share customer reviews?",
-              "What do customers say about your products?"
-          ],
-          "responses": [
-              "Our customers have shared fantastic reviews about our tea and coffee. You can find authentic reviews on our website to learn about their experiences.",
-              "We're proud to have received positive feedback from our satisfied customers. Check out the reviews section on our website for firsthand testimonials."
-          ]
-      },
-      {
-          "tag": "recommendation",
-          "patterns": [
-              "What tea would you recommend?",
-              "Suggest a coffee blend for me"
-          ],
-          "responses": [
-              "For a soothing experience, we recommend trying our Chamomile Herbal Tea. If you prefer coffee, our House Blend is a great choice for its balanced flavor.",
-              "If you're new to coffee, you might enjoy our Medium Roast Blend. For a bolder taste, go for our French Roast. Enjoy your cup of goodness!"
-          ]
-      },
-      {
-          "tag": "brewing_tips",
-          "patterns": [
-              "How should I brew the perfect cup of tea?",
-              "Give me some coffee brewing tips"
-          ],
-          "responses": [
-              "To brew the perfect cup of tea, use freshly boiled water and steep the tea bag or leaves for the recommended time. Follow our brewing guide on the product label for best results.",
-              "For a delightful cup of coffee, use freshly ground beans, maintain the right water temperature, and consider your preferred brewing method, such as French press or drip. Check our website for detailed brewing tips."
-          ]
-      },
-      {
-          "tag": "organic_products",
-          "patterns": [
-              "Do you offer organic tea or coffee?",
-              "Tell me about your organic options"
-          ],
-          "responses": [
-              "Yes, we have a selection of organic teas and coffees. Our organic products are sourced sustainably and meet the highest quality standards.",
-              "Explore our range of organic options, including organic green tea and single-origin organic coffee beans. We're committed to offering you the finest organic choices."
-          ]
-      }
+    {
+      "tag": "carts",
+      "patterns": [
+        "carts",
+        "What items are in my cart?",
+        "Show me my shopping cart details",
+        "Do I have any products in my cart?"
+      ],
+      "responses": [
+        "Your cart contains multiple products with different quantities. Each item has an associated product ID and was added at a specific time.",
+        "You have items in your cart. To get detailed information, please check your account cart section."
+      ]
+    },
+    {
+      "tag": "categories",
+      "patterns": [
+        "categories",
+        "What categories do you have?",
+        "List all product categories available",
+        "Do you have electronic devices category?",
+        "Which categories are available on your platform?",
+        "What are the main product categories?",
+        "Can you list the product categories?",
+        "What are the different categories?",
+        "Which categories do you offer?",
+        "What are the available categories?"
+      ],
+      "responses": [
+        "We offer multiple categories, including Electronic Devices, Mobiles, Tablets, Laptops, Cameras, and more.",
+        "Yes, we have an Electronic Devices category along with various subcategories like Mobiles and Laptops.",
+        "Categories available on our platform include Electronic Devices, Mobiles, Tablets, Laptops, Cameras, and more.",
+        "Main product categories include Electronic Devices, Mobiles, Tablets, Laptops, Cameras, and more.",
+        "We offer categories such as Electronic Devices, Mobiles, Tablets, Laptops, Cameras, and, more.",
+        "Available categories include Electronic Devices, Mobiles, Tablets, Laptops, Cameras, and more.",
+        "We have a wide range of categories, including Electronic Devices, Mobiles, Tablets, Laptops, Cameras, and more.",
+        "The available categories are Electronic Devices, Mobiles, Tablets, Laptops, Cameras, and more.",
+        "We offer categories such as Electronic Devices, Mobiles, Tablets, Laptops, Cameras",
+        "Available categories include Electronic Devices, Mobiles, Tablets, Laptops, Cameras"
+      ]
+    },
+    {
+      "tag": "productbrands",
+      "patterns": [
+        "productbrands",
+        "Which brands do you sell?",
+        "List all available product brands",
+        "Do you have Apple products?",
+        "Do you sell Samsung products?",
+        "What brands are available for mobiles?",
+        "Which brands are popular on your platform?"
+      ],
+      "responses": [
+        "We offer products from brands such as Samsung, Apple, Oppo, Huawei, Lenovo, Nokia, and more.",
+        "Yes, we have Apple products, including mobiles and tablets under the Apple brand.",
+        "Samsung products are available on our platform, including mobiles, tablets, and accessories.",
+        "We have a wide range of mobile brands, including Samsung, Apple, Oppo, Vivo, Xiaomi, and more.",
+        "Popular brands on our platform include Samsung, Apple, Oppo, and Xiaomi."
+      ]
+    },
+    {
+      "tag": "orders",
+      "patterns": [
+        "orders",
+        "How many days does it take to deliver an order?",
+        "When will I receive my order?",
+        "What is the estimated delivery time for an order?",
+        "How long does it take to ship an order?",
+        "When can I expect my order to arrive?"
+      ],
+      "responses": [
+        "Depending on the time the seller prepares the goods and delivery time is from 3-5 days",
+        "The estimated delivery time for an order is 3-5 days.",
+        "Orders are usually delivered within 3-5 days.",
+        "The shipping time for an order is 3-5 days."
+      ]
+    },
+    {
+      "tag": "payments",
+      "patterns": [
+        "payments",
+        "What payment methods do you accept?",
+        "Can I pay by card? (payments)",
+        "Tell me about the payment options. (payments)",
+        "Which payment methods are available? (payments)",
+        "Do you accept cash on delivery? (payments)",
+        "Is PayPal an option for payments? (payments)",
+        "Can I pay in installments? (payments)"
+      ],
+      "responses": [
+        "We accept for 2 payments. Paypal and cash on delivery",
+        "You can use paypal",
+        "We accept Paypal and cash on delivery",
+        "We accept Paypal, credit card, and cash on delivery"
+      ]
+    },
+    {
+      "tag": "reviews",
+      "patterns": [
+        "reviews",
+        "How to rate a product?",
+        "Can I leave a review for a product?",
+        "Where can I find product reviews?",
+        "How to write a review for a product?",
+        "How to rate a product after purchase?"
+      ],
+      "responses": [
+        "You can rate the product after successfully purchasing.",
+        "Go to product details and reviews if you have purchased",
+        "You can leave a review for a product after purchasing it.",
+        "You can find product reviews on the product page.",
+        "To write a review for a product, go to the product page and click on the review section.",
+        "You can rate a product after purchasing it by going to the product page and clicking on the review section."
+      ]
+    },
+    {
+      "tag": "sales",
+      "patterns": [
+        "sales",
+        "how many types of sales do you have?",
+        "What are the different types of sales?",
+        "Do you have flash sales?",
+        "What is the difference between direct sales and flash sales?",
+        "How often do you have sales?",
+        "When do you have sales?",
+        "What are the sales available?",
+        "What are the current sales?",
+        "What are the upcoming sales?"
+      ],
+      "responses": [
+        "We have 2 types of sales: direct sales and flash sales.",
+        "We have direct sales and flash sales.",
+        "Yes, we have flash sales.",
+        "Direct sales are regular sales, while flash sales are limited-time sales with higher discounts.",
+        "We have sales regularly, including direct sales and flash sales.",
+        "We have sales throughout the year, including direct sales and flash sales.",
+        "We have direct sales and flash sales available.",
+        "The current sales include direct sales and flash sales.",
+        "The upcoming sales include direct sales and flash sales."
+      ]
+    },
+    {
+      "tag": "wishlist",
+      "patterns": [
+        "wishlist",
+        "How to add a product to the wishlist?",
+        "How to view the wishlist?",
+        "How to remove a product from the wishlist?",
+        "How to clear the wishlist?",
+        "How to manage the wishlist?",
+        "Can you explain how the wishlist works?",
+        "Can you guide me on using the wishlist?"
+      ],
+      "responses": [
+        "You can add a product to the wishlist by clicking the heart icon on the product page.",
+        "To view the wishlist, go to your account and click on the wishlist tab.",
+        "To remove a product from the wishlist, click the heart icon again.",
+        "To clear the wishlist, remove all products from the wishlist.",
+        "You can manage the wishlist by adding, removing, or clearing products from it.",
+        "To add a product to the wishlist, click on the heart icon on the product page. To view the wishlist, go to your account and click on the wishlist tab. To remove a product from the wishlist, click the heart icon again. To clear the wishlist, remove all products from the wishlist. You can manage the wishlist by adding, removing, or clearing products from it.",
+        "To use the wishlist, click on the heart icon on the product page to add a product. You can view the wishlist in your account settings. To remove a product, click the heart icon again. You can manage the wishlist by adding, removing, or clearing products."
+      ]
+    },
+    {
+      "tag": "contact",
+      "patterns": [
+        "contact",
+        "How can I contact customer support?",
+        "What is the customer support email?",
+        "Do you have a customer service number?",
+        "How to reach customer service?",
+        "How to get in touch with customer support?",
+        "Can I contact you for assistance?",
+        "How to ask for help?"
+      ],
+      "responses": [
+        "You can contact customer support via email at Contact@quindigo.com or by phone at (099) 8776 543 21.",
+        "Our customer support email is",
+        "You can reach customer service by calling (099) 8776 543 21 or emailing",
+        "To get in touch with customer support, you can call (099) 8776 543 21 or email Contact@quindigo.com",
+        "You can contact us for assistance by calling (099) 8776 543 21 or emailing Contact@quindigo.com",
+        "To ask for help, you can contact customer support by calling (099) 8776 543 21 or emailing Contact@quindigo.com"
+      ]
+    },
+    {
+      "tag": "shipping",
+      "patterns": [
+        "shipping",
+        "How long does shipping take?",
+        "When will my order be shipped?",
+        "What is the shipping time?",
+        "How many days does it take to ship?",
+        "When can I expect my order to be shipped?",
+        "What is the estimated shipping time?"
+      ],
+      "responses": [
+        "Shipping usually takes 3-5 days from the date of order placement.",
+        "Your order will be shipped within 3-5 days.",
+        "The estimated shipping time is 3-5 days.",
+        "Orders are typically shipped within 3-5 days."
+      ]
+    },
+    {
+      "tag": "returns",
+      "patterns": [
+        "returns",
+        "How do I return a product?",
+        "What is your return policy?",
+        "Can I exchange a product?",
+        "Do you accept returns?",
+        "What is the process for returning an item?",
+        "How to request a return?",
+        "Can I return a product if I'm not satisfied?"
+      ],
+      "responses": [
+        "You can return a product within 30 days of purchase by contacting customer support.",
+        "Our return policy allows you to return products within 30 days of purchase.",
+        "Yes, you can exchange a product within 30 days of purchase.",
+        "We accept returns within 30 days of purchase.",
+        "To return an item, contact customer support and follow the return process.",
+        "To request a return, contact customer support within 30 days of purchase.",
+        "If you're not satisfied, you can return the product within 30 days of purchase."
+      ]
+    },
+    {
+      "tag": "products",
+      "patterns": [
+        "products",
+        "What products do you sell?",
+        "Can you show me your product range?",
+        "Tell me about your product offerings",
+        "What types of products do you offer?",
+        "Do you have a product catalog?",
+        "Can you list your products?",
+        "What are your popular products?",
+        "What are your best-selling products?"
+      ],
+      "responses": [
+        "We sell a wide range of products, including electronics, accessories, and more.",
+        "Our product range includes electronics, accessories, and more.",
+        "We offer various products, including electronics, accessories, and more",
+        "Our product offerings include electronics, accessories, and more.",
+        "We have a product catalog with electronics, accessories, and more.",
+        "Our products include electronics, accessories, and more.",
+        "We sell popular products such as smartphones, laptops, and accessories.",
+        "Our best-selling products include smartphones, laptops, and accessories."
+      ]
+    },
+    {
+      "tag": "about",
+      "patterns": [
+        "about",
+        "Tell me about your company",
+        "What is your company's mission?",
+        "Can you provide information about your company?",
+        "What are your values?",
+        "Do you have an 'About Us' page?",
+        "Can you tell me about your brand?",
+        "What makes your company unique?"
+      ],
+      "responses": [
+        "Our company is dedicated to providing high-quality products and excellent customer service.",
+        "Our mission is to offer innovative products and exceptional service to our customers.",
+        "We strive to provide the best products and services to our customers.",
+        "Our values include integrity, quality, and customer satisfaction.",
+        "Yes, we have an 'About Us' page on our website.",
+        "Our brand focuses on quality, innovation, and customer satisfaction.",
+        "What makes us unique is our commitment to quality, innovation, and customer care."
+      ]
+    },
+    {
+      "tag": "help",
+      "patterns": [
+        "help",
+        "I need help",
+        "Can you assist me?",
+        "How can I get help?",
+        "Help me with my order",
+        "I require assistance",
+        "Can you help me with a product issue?",
+        "I need support"
+      ],
+      "responses": [
+        "How can I help you today?",
+        "I'm here to assist you. What do you need help with?",
+        "Sure, I can help. What do you need assistance with?",
+        "I'm here to help. What can I assist you with?",
+        "How can I support you today?",
+        "I'm here to help. Please let me know how I can assist you.",
+        "Of course, I'm here to help. What do you need assistance with?",
+        "I'm here to provide support. How can I assist you?"
+      ]
+    },
+    {
+      "tag": "greetings",
+      "patterns": [
+        "hi",
+        "hello",
+        "hey",
+        "good morning",
+        "good afternoon",
+        "good evening"
+      ],
+      "responses": [
+        "Hello! How can I help you today?",
+        "Hi! What can I assist you with?",
+        "Hey! How can I support you today?",
+        "Good morning! How can I help you?",
+        "Good afternoon! What do you need assistance with?",
+        "Good evening! How can I assist you today?"
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "goodbye",
+        "bye",
+        "see you later",
+        "take care",
+        "have a good day",
+        "have a great day"
+      ],
+      "responses": [
+        "Goodbye! Have a great day!",
+        "Bye! Take care.",
+        "See you later! Have a good day.",
+        "Take care! Goodbye.",
+        "Have a good day! Goodbye.",
+        "Have a great day! Goodbye."
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": [
+        "thanks",
+        "thank you",
+        "thanks a lot",
+        "thank you very much",
+        "appreciate it",
+        "grateful"
+      ],
+      "responses": [
+        "You're welcome! How can I assist you further?",
+        "Happy to help! Let me know if you need anything else.",
+        "Anytime! Feel free to ask if you have more questions.",
+        "My pleasure! Let me know if there's anything else I can do for you.",
+        "Glad to assist you! If you need more help, just ask.",
+        "You're welcome! If you have any other questions, feel free to ask."
+      ]
+    },
+    {
+      "tag": "default",
+      "patterns": ["default"],
+      "responses": [
+        "I'm sorry, I didn't understand that. Can you please rephrase your question?",
+        "I'm not sure I follow. Can you provide more details or ask a different question?",
+        "I'm still learning. Can you ask me something else?",
+        "I'm not sure what you're asking. Can you try phrasing it differently?",
+        "I'm still learning and may not have an answer to that. Can you ask something else?"
+      ]
+    },
+    {
+        "tag": "customer service",
+        "patterns": [
+            "How can I track my order?",
+            "Where is my order?",
+            "Can I change my order after placing it?",
+            "What should I do if I receive a damaged product?",
+            "How do I cancel my order?",
+            "Can I return a product if I change my mind?",
+            "What is the warranty policy for products?",
+            "How do I contact customer service?"
+        ],
+        "responses": [
+            "You can track your order by logging into your account and checking the order status.",
+            "To find your order, please check the order confirmation email or log into your account.",
+            "If you need to change your order, please contact customer service as soon as possible.",
+            "If you receive a damaged product, please contact customer service for assistance.",
+            "To cancel your order, please go to your account and select the order you wish to cancel.",
+            "Yes, you can return a product within the return period if you change your mind.",
+            "Our warranty policy covers defects in materials and workmanship for a specified period.",
+            "You can contact customer service via email or phone for any inquiries."
+        ]
+    },
+    {
+        "tag": "promotions",
+        "patterns": [
+            "Are there any ongoing promotions?",
+            "How can I get discounts?",
+            "Do you have any coupon codes?",
+            "What are the current deals?",
+            "How often do you have sales?",
+            "Can I combine discounts?"
+        ],
+        "responses": [
+            "Yes, we have ongoing promotions. Please check our website for the latest deals.",
+            "You can get discounts by signing up for our newsletter or following us on social media.",
+            "We occasionally offer coupon codes. Keep an eye on our promotions page.",
+            "Current deals can be found on our website under the 'Deals' section.",
+            "We have sales regularly, especially during holidays and special events.",
+            "Discounts cannot always be combined. Please check the terms and conditions."
+        ]
+    },
+    {
+        "tag": "payment issues",
+        "patterns": [
+            "What should I do if my payment fails?",
+            "Can I pay in cash?",
+            "Is it safe to use my credit card?",
+            "What payment options do you offer?",
+            "Can I get a refund if I cancel my order?"
+        ],
+        "responses": [
+            "If your payment fails, please check your payment details or try a different payment method.",
+            "Yes, we accept cash on delivery for certain orders.",
+            "Yes, we use secure payment gateways to ensure your credit card information is safe.",
+            "We offer various payment options including credit card, PayPal, and cash on delivery.",
+            "Yes, you can get a refund if you cancel your order before it is shipped."
+        ]
+    },
+    {
+        "tag": "order status",
+        "patterns": [
+            "What is the status of my order?",
+            "Has my order been shipped?",
+            "When will my order arrive?",
+            "Can I get an update on my order?",
+            "Is my order on its way?"
+        ],
+        "responses": [
+            "You can check the status of your order by logging into your account.",
+            "Your order has been shipped and is on its way. You will receive a tracking number soon.",
+            "The estimated delivery time for your order is 3-5 days.",
+            "You can get an update on your order by checking your order history in your account.",
+            "Yes, your order is currently being processed and will be shipped shortly."
+        ]
+    },
+    {
+        "tag": "product availability",
+        "patterns": [
+            "Is this product in stock?",
+            "When will this item be available?",
+            "Do you have this product in stock?",
+            "Can I pre-order this item?",
+            "What are the available sizes/colors for this product?"
+        ],
+        "responses": [
+            "Yes, this product is currently in stock.",
+            "This item will be available soon. Please check back later.",
+            "You can pre-order this item, and it will be shipped as soon as it becomes available.",
+            "The available sizes/colors for this product are listed on the product page.",
+            "Please check the product page for the latest availability information."
+        ]
+    },
+    {
+        "tag": "shipping info",
+        "patterns": [
+            "What are the shipping options?",
+            "Do you offer international shipping?",
+            "How much does shipping cost?",
+            "Can I choose my shipping method?",
+            "What is the estimated delivery time?"
+        ],
+        "responses": [
+            "We offer several shipping options, including standard and express shipping.",
+            "Yes, we do offer international shipping to select countries.",
+            "Shipping costs vary based on the shipping method and destination. Please check the checkout page for details.",
+            "You can choose your preferred shipping method at checkout.",
+            "The estimated delivery time depends on your location and the shipping method selected."
+        ]
+    },
+    {
+        "tag": "returns exchanges",
+        "patterns": [
+            "How do I return an item?",
+            "What is your return policy?",
+            "Can I exchange a product?",
+            "What should I do if I received the wrong item?",
+            "How long does it take to process a return?"
+        ],
+        "responses": [
+            "To return an item, please contact customer service within 30 days of purchase.",
+            "Our return policy allows returns within 30 days of purchase for a full refund.",
+            "Yes, you can exchange a product within 30 days of purchase.",
+            "If you received the wrong item, please contact customer service for assistance.",
+            "Returns are typically processed within 5-7 business days after we receive the item."
+        ]
+    },
+    {
+        "tag": "account management",
+        "patterns": [
+            "How do I create an account?",
+            "I forgot my password, how can I reset it?",
+            "How can I update my account information?",
+            "Can I delete my account?",
+            "How do I verify my email address?"
+        ],
+        "responses": [
+            "To create an account, please visit our registration page and fill in the required information.",
+            "If you forgot your password, click on 'Forgot Password' on the login page to reset it.",
+            "You can update your account information by logging into your account and going to the settings section.",
+            "To delete your account, please contact customer support for assistance.",
+            "You can verify your email address by clicking the link sent to your email after registration."
+        ]
+    },
+    {
+        "tag": "loyalty program",
+        "patterns": [
+            "Do you have a loyalty program?",
+            "How can I earn points?",
+            "What are the benefits of the loyalty program?",
+            "How do I redeem my points?",
+            "Can I transfer my points to someone else?"
+        ],
+        "responses": [
+            "Yes, we have a loyalty program that rewards you for your purchases.",
+            "You can earn points by making purchases and participating in special promotions.",
+            "Benefits of the loyalty program include exclusive discounts, early access to sales, and more.",
+            "You can redeem your points at checkout for discounts on your next purchase.",
+            "Points are non-transferable and can only be used by the account holder."
+        ]
+    },
+    {
+        "tag": "product information",
+        "patterns": [
+            "Can you provide more details about this product?",
+            "What are the specifications of this item?",
+            "Is there a warranty for this product?",
+            "Are there any user reviews for this product?",
+            "What is the return policy for this item?"
+        ],
+        "responses": [
+            "You can find detailed information about the product on its page, including specifications and features.",
+            "Yes, this product comes with a warranty. Please check the warranty details on the product page.",
+            "User reviews for this product can be found in the reviews section on the product page.",
+            "The return policy for this item is the same as our general return policy, allowing returns within 30 days."
+        ]
+    },
+    {
+        "tag": "technical support",
+        "patterns": [
+            "I'm having trouble with the website.",
+            "Why can't I log in?",
+            "The payment process is not working.",
+            "How do I report a technical issue?",
+            "Can you help me with a bug I found?"
+        ],
+        "responses": [
+            "If you're having trouble with the website, please try clearing your browser cache or using a different browser.",
+            "If you can't log in, make sure you're using the correct email and password. You can reset your password if needed.",
+            "If the payment process is not working, please check your payment details or try a different payment method.",
+            "To report a technical issue, please contact our customer support with details of the problem.",
+            "We appreciate your feedback on bugs. Please provide details so we can investigate and resolve the issue."
+        ]
+    },
+    {
+        "tag": "gift cards",
+        "patterns": [
+            "Do you sell gift cards?",
+            "How can I purchase a gift card?",
+            "Can I use a gift card for my order?",
+            "What is the value of your gift cards?",
+            "Do gift cards expire?"
+        ],
+        "responses": [
+            "Yes, we sell gift cards that can be purchased on our website.",
+            "To purchase a gift card, visit the gift card section on our website and select the amount.",
+            "Yes, you can use a gift card as a payment method during checkout.",
+            "Our gift cards are available in various values. Please check the gift card section for options.",
+            "Gift cards do not expire, so you can use them at your convenience."
+        ]
+    }
   ]
 }
