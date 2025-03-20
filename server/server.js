@@ -88,6 +88,7 @@ app.use("/api/review-qna", require("./routes/review_qna"));
 app.use("/api/cart-wishlist", require("./routes/cart_wishlist"));
 app.use("/api/dispatcher-auth", require("./routes/dispatcher_auth"));
 app.use("/api/sale", require("./routes/sale"));
+app.use("/api/notification", require("./routes/notification"));
 
 // logout for all types of user in the system
 app.delete("/api/logout", async (req, res) => {

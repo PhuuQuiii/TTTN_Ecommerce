@@ -1,10 +1,9 @@
-import React, { useState, useCallback } from "react";
-import { View, Image, ScrollView, RefreshControl } from "react-native";
-import HomeHeader from "./HomeHeader";
-
-import SearchView from "./SearchView";
-import MainCarousel from "./MainCarousel";
+import React from "react";
+import { Image, RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import FeaturedProducts from "./FeaturedProducts";
+import HomeHeader from "./HomeHeader";
+import MainCarousel from "./MainCarousel";
+import SearchView from "./SearchView";
 
 const wait = (timeout) => {
   return new Promise((resolve) => {
@@ -17,45 +16,96 @@ const HomeScreen = (props) => {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
   return (
     <ScrollView
-      contentContainerStyle={{ flexGrow: 1 }}
+      contentContainerStyle={styles.scrollContent}
       stickyHeaderIndices={[1]}
       showsVerticalScrollIndicator={false}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      <View style={{ height: 0 }}>
+      <View style={styles.headerContainer}>
         <HomeHeader headerTitle="" {...props} />
       </View>
-      <View style={{ height: 60 }}>
+      <View style={styles.searchContainer}>
         <SearchView {...props} />
       </View>
-      <View style={{ height: 800 }}>
-        <View style={{ flex: 1.5 }}>
+      <View style={styles.mainContent}>
+        <View style={styles.carouselContainer}>
           <MainCarousel />
         </View>
-        <View style={{ flex: 2 }}>
-          <FeaturedProducts title={"Latest Products"} type="latest"/>
+        <View style={styles.productsSection}>
+          <FeaturedProducts title="Sản phẩm mới nhất" type="latest" />
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={styles.adContainer}>
           <Image
             source={require("../../../assets/ad.jpg")}
-            style={{ height: "100%" }}
-          ></Image>
+            style={styles.adImage}
+            resizeMode="cover"
+          />
         </View>
-        <View style={{ flex: 2 }}>
-          <FeaturedProducts title={"Featured Products"} />
+        <View style={styles.productsSection}>
+          <FeaturedProducts title="Sản phẩm nổi bật" />
         </View>
       </View>
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  scrollContent: {
+    flexGrow: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  headerContainer: {
+    height: 0,
+  },
+  searchContainer: {
+    height: 60,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  mainContent: {
+    paddingVertical: 16,
+  },
+  carouselContainer: {
+    height: 200,
+    marginBottom: 24,
+  },
+  productsSection: {
+    marginBottom: 24,
+  },
+  adContainer: {
+    marginHorizontal: 16,
+    marginBottom: 24,
+    borderRadius: 16,
+    overflow: 'hidden',
+    height: 200,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  adImage: {
+    width: '100%',
+    height: '100%',
+  },
+});
 
 // function mapStateToProps(state) {
 //   return {

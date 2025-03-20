@@ -56,6 +56,10 @@ const userSchema = new mongoose.Schema({
     isBlocked: {
         type: Date,
         default: null
+    },
+    expoPushToken: {
+        type: String,
+        default: null
     }
 }, { timestamps: true });
 userSchema.index({ geolocation: "2dsphere" });
