@@ -15,3 +15,7 @@ HLS Server chuyển đổi luồng RTMP thành các đoạn .ts và .m3u8 để 
 HTTP Server (cổng 8080) phục vụ luồng HLS cho trình duyệt hoặc trình phát video.
 Xác thực RTMP trước khi cho phép stream lên server.
 Hỗ trợ CORS để có thể phát trên các domain khác nhau
+
+docker-compose down
+docker-compose build
+docker-compose up -d

@@ -1,48 +1,48 @@
-import Hls from 'hls.js';
-import React, { useEffect, useRef, useState } from 'react';
+import Hls from "hls.js";
+import React, { useEffect, useRef, useState } from "react";
 
 const LayoutLiveStream = () => {
   const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState('');
+  const [newComment, setNewComment] = useState("");
   const [viewers, setViewers] = useState(0);
   const commentsRef = useRef(null);
   const ws = useRef(null);
 
   useEffect(() => {
-    const video = document.getElementById('video');
+    const video = document.getElementById("video");
     const videoSrc = "http://localhost:8080/hls/test.m3u8";
 
     if (Hls.isSupported()) {
       const hls = new Hls();
       hls.loadSource(videoSrc);
       hls.attachMedia(video);
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
       video.src = videoSrc;
     }
 
-    ws.current = new WebSocket('ws://localhost:8000');
+    ws.current = new WebSocket("ws://localhost:3001");
     ws.current.onopen = () => {
-      console.log('WebSocket connection opened');
+      console.log("WebSocket connection opened");
     };
     ws.current.onmessage = (event) => {
       try {
         const message = JSON.parse(event.data);
-        console.log('Received message:', message);
-        if (message.type === 'comment') {
+        console.log("Received message:", message);
+        if (message.type === "comment") {
           setComments((prevComments) => [...prevComments, message.comment]);
-        } else if (message.type === 'viewers') {
+        } else if (message.type === "viewers") {
           setViewers(message.count);
         }
       } catch (error) {
-        console.error('Error parsing message:', error);
+        console.error("Error parsing message:", error);
       }
     };
     ws.current.onclose = () => {
-      console.log('WebSocket connection closed');
+      console.log("WebSocket connection closed");
     };
 
     ws.current.onerror = (error) => {
-      console.log('WebSocket error', error);
+      console.log("WebSocket error", error);
     };
 
     return () => {
@@ -61,15 +61,16 @@ const LayoutLiveStream = () => {
       const comment = {
         id: comments.length + 1,
         user: {
-          name: 'Admin',
-          avatar: 'https://res.cloudinary.com/df33snbqj/image/upload/v1741785111/avatar1_xpzunf.png'
+          name: "Admin",
+          avatar:
+            "https://res.cloudinary.com/df33snbqj/image/upload/v1741785111/avatar1_xpzunf.png",
         },
         text: newComment.trim(),
-        timestamp: 'Just now'
+        timestamp: "Just now",
       };
-      console.log('Sending comment:', comment);
-      ws.current.send(JSON.stringify({ type: 'comment', comment }));
-      setNewComment('');
+      console.log("Sending comment:", comment);
+      ws.current.send(JSON.stringify({ type: "comment", comment }));
+      setNewComment("");
     }
   };
 
@@ -98,10 +99,15 @@ const LayoutLiveStream = () => {
             {comments.map((comment) => (
               <div key={comment.id} className="comment-item">
                 <div className="comment-avatar">
-                  <img src={comment.user?.avatar || comment.avatar} alt={comment.user?.name || comment.name} />
+                  <img
+                    src={comment.user?.avatar || comment.avatar}
+                    alt={comment.user?.name || comment.name}
+                  />
                 </div>
                 <div className="comment-content">
-                  <div className="comment-author">{comment.user?.name || comment.name}</div>
+                  <div className="comment-author">
+                    {comment.user?.name || comment.name}
+                  </div>
                   <div className="comment-text">{comment.text}</div>
                   {comment.timestamp && (
                     <div className="comment-timestamp">{comment.timestamp}</div>
@@ -117,7 +123,7 @@ const LayoutLiveStream = () => {
                 placeholder="Type a message..."
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSendComment()}
+                onKeyDown={(e) => e.key === "Enter" && handleSendComment()}
               />
               <button onClick={handleSendComment}>Send</button>
             </div>

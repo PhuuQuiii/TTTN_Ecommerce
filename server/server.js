@@ -13,6 +13,7 @@ const socketIO = require("socket.io");
 const paypalRoutes = require("./routes/paypalRoutes.js");
 // Import methods
 const { dbConnection, errorHandler } = require("./middleware/helpers");
+const WebSocket = require("ws");
 
 // Database Connection
 dbConnection();
@@ -99,7 +100,7 @@ app.delete("/api/logout", async (req, res) => {
 // Error handling middleware
 app.use(function (err, req, res, next) {
   console.log("****SERVER_ERROR****");
-  console.log(err);
+  console.log(err); // in lỗi middleware
   if (err.message == "Not Image") {
     return res.status(415).json({ error: "Images are only allowed" });
   }
@@ -107,6 +108,66 @@ app.use(function (err, req, res, next) {
     error: errorHandler(err) || err.message || "Something went wrong!",
   });
 });
+
+// Xử lý bên Live stream
+const wss = new WebSocket.Server({ server });
+
+app.post("/auth", function (req, res) {
+  const streamkey = req.body.key;
+
+  if (streamkey === "supersecret") {
+    res.status(200).send();
+    return;
+  }
+
+  res.status(403).send();
+});
+
+let viewers = -1;
+
+wss.on("connection", (ws) => {
+  viewers++;
+  console.log("New connection, viewers:", viewers);
+  broadcastViewers();
+
+  ws.on("message", (message) => {
+    console.log("Received message:", message);
+    try {
+      const parsedMessage = JSON.parse(message);
+      // Kiểm tra loại tin nhắn
+      if (parsedMessage.type === "comment") {
+        // Gửi lại tin nhắn cho tất cả client
+        wss.clients.forEach((client) => {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify(parsedMessage));
+          }
+        });
+      }
+    } catch (error) {
+      console.error("Error parsing message:", error);
+    }
+  });
+
+  ws.on("close", () => {
+    viewers--;
+    console.log("Connection closed, viewers:", viewers);
+    broadcastViewers();
+  });
+
+  ws.on("error", (error) => {
+    console.error("WebSocket error:", error);
+  });
+});
+
+function broadcastViewers() {
+  const message = JSON.stringify({ type: "viewers", count: viewers });
+  console.log("Broadcasting viewers:", viewers);
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(message);
+    }
+  });
+}
 
 let roller = Fawn.Roller();
 roller.roll().then(function () {
