@@ -1,5 +1,5 @@
 import React, { memo, useState } from 'react';
-import { ImageBackground, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { ImageBackground, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import { Button, IconButton, Surface, Text, TextInput } from "react-native-paper";
 // import { emailValidator } from '../core/utils';
 import Logo from '../../components/Logo';
@@ -21,6 +21,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
   };
 
   return (
+    <SafeAreaView>
     <ImageBackground
       source={require('../../../assets/background_dot.png')}
       style={styles.background}
@@ -89,6 +90,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
         </ScrollView>
       </KeyboardAvoidingView>
     </ImageBackground>
+    </SafeAreaView>
   );
 };
 

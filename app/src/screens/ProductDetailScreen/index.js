@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, SafeAreaView } from "react-native";
 import { TouchableRipple, Divider } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 // import Gallery from "react-native-image-gallery";
@@ -39,7 +39,7 @@ const ProductDetailScreen = (props) => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <ImageView
         images={galleryImages}
         imageIndex={0}
@@ -74,7 +74,7 @@ const ProductDetailScreen = (props) => {
         </View>
       </ScrollView>
       <ProductDetailFooter {...newProps} />
-    </View>
+    </SafeAreaView>
   );
 };
 

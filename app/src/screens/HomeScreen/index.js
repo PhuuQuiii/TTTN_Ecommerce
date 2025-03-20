@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { View, Image, ScrollView, RefreshControl } from "react-native";
+import { View, Image, ScrollView, RefreshControl, SafeAreaView } from "react-native";
 import HomeHeader from "./HomeHeader";
 
 import SearchView from "./SearchView";
@@ -22,6 +22,7 @@ const HomeScreen = (props) => {
   }, []);
 
   return (
+    <SafeAreaView>
     <ScrollView
       contentContainerStyle={{ flexGrow: 1 }}
       stickyHeaderIndices={[1]}
@@ -54,6 +55,7 @@ const HomeScreen = (props) => {
         </View>
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 

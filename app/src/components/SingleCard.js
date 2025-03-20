@@ -13,7 +13,10 @@ const SingleCard = ({ product }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const {token} = useSelector(state => state.authentication)
+  const { token } = useSelector(state => state.authentication)
+  
+  console.log("Product Data: ", product);
+
 
   return (
     <TouchableWithoutFeedback
@@ -35,10 +38,10 @@ const SingleCard = ({ product }) => {
         </View>
         <Card style={styles.productDetails}>
           <View style={{ flex: 1 }}>
-            <Text style={styles.name}>{nameWithTripleDots(product.name)}</Text>
+          <Text style={[styles.name, { color: "black" }]}>{nameWithTripleDots(product.name)}</Text>
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.price}>{product.price.$numberDecimal} đ</Text>
+          <Text style={[styles.price, { color: "black" }]}>{product.price.$numberDecimal} đ</Text>
           </View>
         </Card>
         <View style={{ flex: 0.25 }}></View>
@@ -58,7 +61,8 @@ const styles = StyleSheet.create({
   productDetails: {
     flex: 1,
     paddingLeft: 5,
-  },
+    alignItems: "center",
+  },  
   tinyLogo: {
     width: "100%",
     height: "100%",

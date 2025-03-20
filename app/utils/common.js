@@ -5,8 +5,8 @@ import jwt from "expo-jwt";
 // export const BASE_URL = "http://192.168.1.17:3001";
 // export const BASE_URL = "http://192.168.99.37";
 
-export const SERVER_BASE_URL = "http://10.0.2.2:3001";
-export const BASE_URL = "http://10.0.2.2:3001";
+export const SERVER_BASE_URL = "http://192.168.67.39:3001";
+export const BASE_URL = "http://192.168.67.39:3001";
 
 // export const SERVER_BASE_URL = "http://192.168.1.64:3001";
 // export const BASE_URL = "http://192.168.1.64";
