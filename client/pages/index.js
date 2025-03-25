@@ -1,5 +1,6 @@
 import { Col, Row } from "antd";
 import { isEmpty } from "lodash";
+import Link from 'next/link';
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import actions from "../redux/actions";
@@ -108,40 +109,39 @@ const Index = (props) => {
             <div className="livestream-container">
               <div className="livestream-header">
                 <h2>Live Shopping</h2>
-                <a href="/livestream" className="view-all">View All</a>
+                <Link href="/livestream">
+                  <a className="view-all">View All</a>
+                </Link>
               </div>
               <div className="livestream-grid">
                 {livestreams.map((stream) => (
-                  <div 
-                  key={stream.id} 
-                  className="livestream-card" 
-                  onClick={() => window.location.href = "http://localhost:3002/livestream"}
-                  style={{ cursor: "pointer" }} 
-                >
-                  <div className="livestream-thumbnail">
-                    <img src={stream.thumbnail} alt={stream.title} />
-                    <div className="live-badge">
-                      <span className="live-dot"></span> LIVE
-                    </div>
-                    <div className="viewer-count">
-                      <i className="fas fa-eye"></i>
-                      <span>{stream.viewerCount}</span>
-                    </div>
-                  </div>
-                  <div className="livestream-info">
-                    <div className="streamer-info">
-                      <div className="streamer-avatar">
-                        <img src={stream.streamer.avatar} alt={stream.streamer.name} />
+                  <Link href="/livestream" key={stream.id}>
+                    <a className="livestream-card">
+                      <div className="livestream-thumbnail">
+                        <img src={stream.thumbnail} alt={stream.title} />
+                        <div className="live-badge">
+                          <span className="live-dot"></span> LIVE
+                        </div>
+                        <div className="viewer-count">
+                          <i className="fas fa-eye"></i>
+                          <span>{stream.viewerCount}</span>
+                        </div>
                       </div>
-                      <div className="streamer-details">
-                        <h3>{stream.streamer.name}</h3>
-                        <p>{stream.streamer.role}</p>
+                      <div className="livestream-info">
+                        <div className="streamer-info">
+                          <div className="streamer-avatar">
+                            <img src={stream.streamer.avatar} alt={stream.streamer.name} />
+                          </div>
+                          <div className="streamer-details">
+                            <h3>{stream.streamer.name}</h3>
+                            <p>{stream.streamer.role}</p>
+                          </div>
+                        </div>
+                        <h4 className="stream-title">{stream.title}</h4>
+                        <p className="stream-description">{stream.description}</p>
                       </div>
-                    </div>
-                    <h4 className="stream-title">{stream.title}</h4>
-                    <p className="stream-description">{stream.description}</p>
-                  </div>
-                </div>                
+                    </a>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -154,7 +154,7 @@ const Index = (props) => {
           {
             !isEmpty(allProducts.featuredProducts?.products) &&
             <>
-            {/* {console.log("Danh sách sản phẩm hiển thị:", allProducts.featuredProducts?.products)} */}
+            {console.log("Danh sách sản phẩm hiển thị:", allProducts.featuredProducts?.products)}
               <SliderHeader
                 headTitle="Featured Products"
                 headDetails="Quicksand is a sans serif type family of three weights plus matching obliques"
