@@ -49,6 +49,8 @@ const OrderDetails = (props) => {
 
     let { getOrderByIdResp: orderDetails } = store.order
 
+    // console.log("Order Details:", orderDetails); // Kiểm tra dữ liệu orderDetails
+
     return (
         <div className="order-details">
             {
@@ -68,7 +70,7 @@ const OrderDetails = (props) => {
                         </div>
                         <div className="summary-detail">
                             <div className="title">Transaction Code</div>
-                            <div className="sum-value">{orderDetails.payment.transactionCode}</div>
+                            <div className="sum-value">{orderDetails.payment?.transactionCode || 'N/A'}</div>
                         </div>
                         <div className="summary-detail">
                             <div className="title">Ordered Date</div>
@@ -80,7 +82,7 @@ const OrderDetails = (props) => {
                         </div>
                         <div className="summary-detail">
                             <div className="title">Method</div>
-                            <div className="sum-value">{orderDetails.payment.method}</div>
+                            <div className="sum-value">{orderDetails.payment?.method || 'N/A'}</div>
                         </div>
                         <div className="summary-detail" style={{ border: 0, padding: 0 }}>
                         </div>
@@ -159,15 +161,15 @@ const OrderDetails = (props) => {
                         <div className="summart-title">Total Summary</div>
                         <div className="summary-detail">
                             <div className="title">Subtotal</div>
-                            <div className="sum-value">{orderDetails.payment.amount}</div>
+                            <div className="sum-value">{orderDetails.payment?.amount || 'N/A'}</div>
                         </div>
                         <div className="summary-detail">
                             <div className="title">Shipping Fee</div>
-                            <div className="sum-value">{orderDetails.payment.shippingCharge}</div>
+                            <div className="sum-value">{orderDetails.payment?.shippingCharge || 'N/A'}</div>
                         </div>
                         <div className="summary-detail">
                             <div className="title">Total</div>
-                            <div className="sum-value">{orderDetails.payment.amount + orderDetails.payment.shippingCharge}</div>
+                            <div className="sum-value">{(orderDetails.payment?.amount || 0) + (orderDetails.payment?.shippingCharge || 0)}</div>
                         </div>
                     </div>
                     <div className="order-btns">

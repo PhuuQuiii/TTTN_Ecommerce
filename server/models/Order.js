@@ -159,7 +159,7 @@ const orderSchema = new mongoose.Schema({
     },
     isPaid:{ // Xác thực order đã thanh toán chưa
         type: Boolean,
-        default: false
+        default: true
     },
     cancelledByModel: {
         type: String,

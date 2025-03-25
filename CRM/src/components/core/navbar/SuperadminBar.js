@@ -18,10 +18,10 @@ const SuberadminBar = ({}) => {
     {
         key:'admin',
         icon:'layout',
-        main: 'Admin',
+        main: 'Shop',
         sub: [ {
-            name: 'Manage Admins',
-            path: '/manage-admins'
+            name: 'Manage Shop',
+            path: '/manage-shop'
         }]
         },
         {
