@@ -1,5 +1,7 @@
 import Hls from "hls.js";
 import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import "./LiveStream.scss";
 
 const LayoutLiveStream = () => {
   const [comments, setComments] = useState([]);
@@ -7,6 +9,24 @@ const LayoutLiveStream = () => {
   const [viewers, setViewers] = useState(0);
   const commentsRef = useRef(null);
   const ws = useRef(null);
+  const { authUser } = useSelector((state) => state.auth);
+  const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
+
+  // Function to scroll to bottom
+  const scrollToBottom = () => {
+    if (commentsRef.current) {
+      commentsRef.current.scrollTop = commentsRef.current.scrollHeight;
+    }
+  };
+
+  // Handle scroll events
+  const handleScroll = () => {
+    if (commentsRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = commentsRef.current;
+      const isAtBottom = Math.abs(scrollHeight - scrollTop - clientHeight) < 50;
+      setShouldAutoScroll(isAtBottom);
+    }
+  };
 
   useEffect(() => {
     const video = document.getElementById("video");
@@ -23,6 +43,13 @@ const LayoutLiveStream = () => {
     ws.current = new WebSocket("ws://localhost:3001");
     ws.current.onopen = () => {
       console.log("WebSocket connection opened");
+      // Send admin info when connecting
+      ws.current.send(JSON.stringify({
+        type: "user_info",
+        name: authUser?.name || "Admin",
+        isHost: true,
+        role: authUser?.role || "admin"
+      }));
     };
     ws.current.onmessage = (event) => {
       try {
@@ -30,6 +57,10 @@ const LayoutLiveStream = () => {
         console.log("Received message:", message);
         if (message.type === "comment") {
           setComments((prevComments) => [...prevComments, message.comment]);
+          // Auto scroll when new message arrives if shouldAutoScroll is true
+          if (shouldAutoScroll) {
+            setTimeout(scrollToBottom, 100);
+          }
         } else if (message.type === "viewers") {
           setViewers(message.count);
         }
@@ -48,29 +79,34 @@ const LayoutLiveStream = () => {
     return () => {
       ws.current.close();
     };
-  }, []);
+  }, [authUser, shouldAutoScroll]);
 
   useEffect(() => {
     if (commentsRef.current) {
-      commentsRef.current.scrollTop = commentsRef.current.scrollHeight;
+      commentsRef.current.addEventListener("scroll", handleScroll);
+      return () => {
+        commentsRef.current.removeEventListener("scroll", handleScroll);
+      };
     }
-  }, [comments]);
+  }, []);
 
   const handleSendComment = () => {
     if (newComment.trim()) {
       const comment = {
         id: comments.length + 1,
         user: {
-          name: "Admin",
-          avatar:
-            "https://res.cloudinary.com/df33snbqj/image/upload/v1741785111/avatar1_xpzunf.png",
+          name: authUser?.name || "Admin",
+          avatar: "https://res.cloudinary.com/df33snbqj/image/upload/v1741785111/avatar1_xpzunf.png",
+          isHost: true,
+          role: authUser?.role || "admin"
         },
         text: newComment.trim(),
         timestamp: "Just now",
       };
-      console.log("Sending comment:", comment);
       ws.current.send(JSON.stringify({ type: "comment", comment }));
       setNewComment("");
+      // Auto scroll when sending a new message
+      setTimeout(scrollToBottom, 100);
     }
   };
 
@@ -106,7 +142,10 @@ const LayoutLiveStream = () => {
                 </div>
                 <div className="comment-content">
                   <div className="comment-author">
-                    {comment.user?.name || comment.name}
+                    <span className="comment-name">{comment.user?.name || comment.name}</span>
+                    {comment.user?.isHost && (
+                      <span className="host-badge">Chủ Phòng</span>
+                    )}
                   </div>
                   <div className="comment-text">{comment.text}</div>
                   {comment.timestamp && (

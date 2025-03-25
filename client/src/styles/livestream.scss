@@ -179,3 +179,26 @@
       }
     }
   }
+
+.host-badge {
+  background-color: #ff4757;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  margin-left: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(255, 71, 87, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.comment-author {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  font-weight: 600;
+  gap: 8px;
+}
