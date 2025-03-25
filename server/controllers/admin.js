@@ -642,6 +642,37 @@ exports.getAnalytics = async (req, res) => {
             }
         ]);
 
+        const allReturnedProducts = await Order.aggregate([
+            {
+                $match: {
+                    ...baseQuery,
+                    "status.currentStatus": "return"
+                }
+            },
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "product",
+                    foreignField: "_id",
+                    as: "productDetails"
+                }
+            },
+            {
+                $unwind: "$productDetails"
+            },
+            {
+                $group: {
+                    _id: "$product",
+                    returnCount: { $sum: 1 },
+                    product: { $first: "$productDetails" }
+                }
+            },
+            {
+                $sort: { returnCount: -1 }
+            }
+        ]);
+
+
         const analytics = {
             daily: {
                 completedOrders: completedOrdersToday || 0,
@@ -649,6 +680,7 @@ exports.getAnalytics = async (req, res) => {
                 cancelledOrders: cancelledOrdersToday || 0,
                 totalSales: totalSalesToday[0]?.total || 0,
                 topReturnedProducts: topReturnedProductsToday || []
+
             },
             monthly: {
                 completedOrders: completedOrdersMonth || 0,
@@ -656,6 +688,9 @@ exports.getAnalytics = async (req, res) => {
                 cancelledOrders: cancelledOrdersMonth || 0,
                 totalSales: totalSalesMonth[0]?.total || 0,
                 topReturnedProducts: topReturnedProductsMonth || []
+            },
+            all: {
+                topReturnedProducts: allReturnedProducts || []
             }
         };
 

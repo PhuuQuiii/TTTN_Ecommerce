@@ -152,7 +152,7 @@ const Graph = ({ analytics, isSuperAdmin }) => {
     };
 
     const returnedProductData = {
-        labels: analytics?.daily?.topReturnedProducts?.map(item => item.product?.name || 'Unknown') || [],
+        labels: analytics?.all?.topReturnedProducts?.map(item => item.product?.name || 'Unknown') || [],
         datasets: [
             {
                 label: 'Top 6 Returned Products',
@@ -161,9 +161,26 @@ const Graph = ({ analytics, isSuperAdmin }) => {
                 borderWidth: 1,
                 hoverBackgroundColor: 'rgba(78, 115, 223, 0.4)',
                 hoverBorderColor: 'rgba(78, 115, 223, 1)',
-                data: analytics?.daily?.topReturnedProducts?.map(item => item.returnCount) || []
+                data: analytics?.all?.topReturnedProducts?.map(item => item.returnCount) || []
             }
         ]
+    };
+
+    const returnedProductOptions = {
+        scales: {
+            yAxes: [
+                {
+                    ticks: {
+                        beginAtZero: true,
+                        callback: function(value) {
+                            if (Number.isInteger(value)) {
+                                return value;
+                            }
+                        }
+                    }
+                }
+            ]
+        }
     };
 
     return (
@@ -286,7 +303,7 @@ const Graph = ({ analytics, isSuperAdmin }) => {
                             <h5 className="mb-0 ms-3">Top 6 Returned Products</h5>
                         </div>
                         <div style={{ height: '100%' }}>
-                            <Bar data={returnedProductData} />
+                            <Bar data={returnedProductData} options={returnedProductOptions} />
                         </div>
                     </div>
                 </div>
