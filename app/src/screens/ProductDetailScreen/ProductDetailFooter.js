@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { View, ScrollView, Share } from "react-native";
 import { Button } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
@@ -7,9 +7,11 @@ import { FontAwesome } from "@expo/vector-icons";
 import Constants from "../../constants/Constants";
 import SnackbarView from "../../components/SnackBarView";
 import { BASE_URL } from "../../../utils/common";
+import { addToCart, getCartProducts } from "../../../redux/actions/cartActions";
 
 const ProductDetailFooter = (props) => {
   const { token } = useSelector((state) => state.authentication);
+  const dispatch = useDispatch();
 
   const [state, setState] = useState({
     visible: false,
@@ -38,11 +40,27 @@ const ProductDetailFooter = (props) => {
       alert(error.message);
     }
   };
+
+  const handleAddToCart = () => {
+    console.log("handleAddToCart clicked");
+    if (token) {
+      const slug = props.productDetails.product.slug; 
+      const body = { quantity: 1 };
+      
+      dispatch(addToCart(slug, body, token));
+      dispatch(getCartProducts("page=1", token));
+      setVisible();
+    } else {
+      props.navigation.navigate("Auth");
+    }
+  };
+
+
   return (
     <>
       <View style={{ backgroundColor: Constants.headerTintColor, height: 50 }}>
         <View style={{ flex: 1, flexDirection: "row" }}>
-          <Button
+        <Button
             style={{
               flex: 0.45,
               backgroundColor: Constants.activeTintColor,
@@ -50,10 +68,14 @@ const ProductDetailFooter = (props) => {
             }}
             labelStyle={{ color: "white" }}
             onPress={() => {
-              token ? setVisible() : props.navigation.navigate("Auth");
+              if (token) {
+                handleAddToCart();
+              } else {
+                props.navigation.navigate("Auth");
+              }
             }}
           >
-            Add to Cart
+          Add to Cart
           </Button>
           <Button
             onPress={() => props.navigation.navigate("CheckOut")}

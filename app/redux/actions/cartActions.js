@@ -63,10 +63,10 @@ export const getCartProducts = (query, token) => {
   };
 };
 
-const addToCart = (query, body) => {
+export const addToCart = (query, body, token) => {
   return async (dispatch) => {
     const cartService = new CartService();
-    const response = await cartService.addToCart(query, body);
+    const response = await cartService.addToCart(query, body, token);
     if (response.isSuccess) {
       dispatch({ type: ADD_TO_CART, payload: response.data });
     } else if (!response.isSuccess) {
