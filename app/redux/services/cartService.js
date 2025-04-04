@@ -8,9 +8,9 @@ export class CartService {
     return data;
   }
 
-  addToCart(query, body, token) {
+  addToCart(query, body) {
     let url = `${SERVER_BASE_URL}/api/cart-wishlist/cart/${query}`
-    let data = postTokenService(url, 'POST', body, token);
+    let data = postTokenService(url, 'POST', body);
     return data;
   }
 

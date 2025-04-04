@@ -1,7 +1,8 @@
+import React from "react";
 import { Image, RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import FeaturedProducts from "./FeaturedProducts";
 import React, { useState, useCallback } from "react";
-import { SafeAreaView } from "react-native";
+import { View, Image, ScrollView, RefreshControl, SafeAreaView } from "react-native";
 import HomeHeader from "./HomeHeader";
 import MainCarousel from "./MainCarousel";
 import SearchView from "./SearchView";

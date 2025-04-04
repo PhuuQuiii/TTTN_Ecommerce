@@ -13,7 +13,7 @@ import {
   Checkbox,
   TouchableRipple,
 } from "react-native-paper";
-import { View, Text, Image, StyleSheet, ToastAndroid, SafeAreaView } from "react-native";
+import { View, Text, Image, StyleSheet, ToastAndroid } from "react-native";
 
 import Constants from "../../constants/Constants";
 import {
@@ -96,7 +96,7 @@ const CartScreen = (props) => {
   }
 
   return (
-    <SafeAreaView>
+    <>
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         // stickyHeaderIndices={[1]}
@@ -302,7 +302,7 @@ const CartScreen = (props) => {
           </View>
         </View>
       </View>
-    </SafeAreaView>
+    </>
   );
 };
 
