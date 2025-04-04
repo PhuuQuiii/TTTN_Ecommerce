@@ -1,5 +1,4 @@
-import React from "react";
-import { Image, RefreshControl, ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import FeaturedProducts from "./FeaturedProducts";
 import React, { useState, useCallback } from "react";
 import { View, Image, ScrollView, RefreshControl, SafeAreaView } from "react-native";
