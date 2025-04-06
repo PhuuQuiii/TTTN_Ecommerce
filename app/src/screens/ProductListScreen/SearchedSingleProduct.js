@@ -174,9 +174,7 @@ const SearchedSingleProduct = (props) => {
                   {props.type === "searched" && (
                     <Avatar.Text
                       size={24}
-                      label={
-                        props.product.averageRating.$numberDecimal + "/5 stars"
-                      }
+                      label={`${props.product.averageRating?.$numberDecimal || 0}/5 stars`}
                       color={Constants.headerTintColor}
                       backgroundColor="green"
                       width={90}

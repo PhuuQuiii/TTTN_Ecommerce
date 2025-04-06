@@ -73,9 +73,20 @@ class ProductSpecs extends Component {
   };
 
   addToCart = (slug) => {
-    this.props.addToCart(slug, {
+    const { product } = this.props.data;
+    const { flashSaleInfo } = this.props;
+  
+    let reqBody = {
       quantity: this.state.pdQty,
-    });
+    };
+  
+    // Nếu có flashSaleInfo, bổ sung vào body
+    if (flashSaleInfo) {
+      reqBody.discountedPrice = flashSaleInfo.discountedPrice;
+      reqBody.discountRate = flashSaleInfo.discountRate;
+    }
+  
+    this.props.addToCart(slug, reqBody);
   };
 
   render() {

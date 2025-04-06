@@ -13,11 +13,8 @@ import actions from "../../../redux/actions";
 import { STORE_CHECKOUT_ITEMS } from "../../../redux/types";
 import { getDiscountedPrice } from "../../../utils/common";
 import EditAddressModal from "../../Components/EditAddressModal";
-import axios from 'axios';
+import axios from "axios";
 import { getTokenService, postTokenService } from "../../../utils/commonService";
-
-
-
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 const shortid = require("shortid");
@@ -46,7 +43,7 @@ class OrderSummary extends Component {
     return null;
   }
 
-  handleCancel = (e) => {
+  handleCancel = () => {
     this.setState({
       showEditAddressModal: false,
     });
@@ -60,6 +57,7 @@ class OrderSummary extends Component {
     }
   }
 
+  // Gửi đơn hàng lên server
   placeOrderItems = async () => {
     let { checkoutItems, userData } = this.props;
 
@@ -70,10 +68,11 @@ class OrderSummary extends Component {
       };
     });
 
-    let activeAddress = {}
-    userData.location.map((loc) => {  
+    // Lấy địa chỉ active
+    let activeAddress = {};
+    userData.location.map((loc) => {
       if (loc.isActive) {
-        activeAddress = loc
+        activeAddress = loc;
       }
     });
 
@@ -90,45 +89,59 @@ class OrderSummary extends Component {
       },
       shippingCharge: this.props.shippingCharge ? this.props.shippingCharge : 0,
       orderID: shortid.generate(),
-      method: "PayPal"
-
+      method: "PayPal",
     };
 
-    this.setState({
-      loading: true
-    }, async () => {
+    this.setState({ loading: true }, async () => {
       await this.props.placeOrder(body);
-    })
+    });
   };
 
+  // Tạo order trên PayPal
   createOrder = async () => {
     let { checkoutItems } = this.props;
+    const flashSales = this.props.sale?.activeSales || [];
 
+    // Tính tổng tiền (giá flash sale nếu có)
     let totalCheckoutItems = 0;
-    if (!this.props.checkoutItems?.totalAmount) {
-      this.props.checkoutItems?.map((items) => {
-        totalCheckoutItems +=
-          items.quantity *
-          getDiscountedPrice(
-            items.product.price.$numberDecimal,
-            items.product.discountRate
+    if (!checkoutItems?.totalAmount) {
+      checkoutItems?.map((item) => {
+        const sale = flashSales.find((fs) =>
+          fs.products.some((p) => String(p._id) === String(item.product._id))
+        );
+
+        let discountedPrice;
+        if (sale) {
+          // Nếu sản phẩm có flash sale
+          const discountRate = sale.discountRate || 20;
+          const originalPrice =
+            parseFloat(item.product?.price?.$numberDecimal) || 999000;
+          discountedPrice = originalPrice * (1 - discountRate / 100);
+        } else {
+          // Giá gốc hoặc giảm discountRate bình thường
+          discountedPrice = getDiscountedPrice(
+            item.product.price.$numberDecimal,
+            item.product.discountRate
           );
+        }
+        totalCheckoutItems += item.quantity * discountedPrice;
       });
     } else {
-      totalCheckoutItems = this.props.checkoutItems.totalAmount;
+      // Nếu đã có totalAmount => dùng luôn
+      totalCheckoutItems = checkoutItems.totalAmount;
     }
 
     let deliveryCharges =
       this.props.showShippingAddress === "showDisplay"
         ? this.props.shippingCharge
-        : this.props.shippingCharge && this.props.checkoutItems.length
+        : this.props.shippingCharge && checkoutItems.length
         ? this.props.shippingCharge
         : 0;
 
     let totalAmount = (totalCheckoutItems + deliveryCharges).toFixed(2);
-    console.log("Total Amount in OrderSummary.js:", totalAmount); 
+    console.log("Total Amount in OrderSummary.js:", totalAmount);
 
-
+    // Gọi API server /create-order PayPal
     try {
       const response = await postTokenService(
         "http://localhost:3001/api/paypal/create-order",
@@ -146,6 +159,7 @@ class OrderSummary extends Component {
     }
   };
 
+  // Khi người dùng xác nhận trên PayPal
   captureOrder = async (orderID) => {
     try {
       const response = await postTokenService(
@@ -168,18 +182,37 @@ class OrderSummary extends Component {
 
   render() {
     let { activeLocation, userData } = this.state;
+    const flashSales = this.props.sale?.activeSales || [];
 
+    // ===========================
+    //  TÍNH GIÁ HIỂN THỊ TẠI UI
+    // ===========================
     let totalCheckoutItems = 0;
     if (!this.props.checkoutItems?.totalAmount) {
-      this.props.checkoutItems?.map((items) => {
-        totalCheckoutItems +=
-          items.quantity *
-          getDiscountedPrice(
-            items.product.price.$numberDecimal,
-            items.product.discountRate
+      // Tự tính nếu chưa có totalAmount
+      this.props.checkoutItems?.map((item) => {
+        // Check flash sale
+        const sale = flashSales.find((fs) =>
+          fs.products.some((p) => String(p._id) === String(item.product._id))
+        );
+
+        let discountedPrice;
+        if (sale) {
+          const discountRate = sale.discountRate || 20;
+          const originalPrice =
+            parseFloat(item.product?.price?.$numberDecimal) || 999000;
+          discountedPrice = originalPrice * (1 - discountRate / 100);
+        } else {
+          discountedPrice = getDiscountedPrice(
+            item.product.price.$numberDecimal,
+            item.product.discountRate
           );
+        }
+
+        totalCheckoutItems += item.quantity * discountedPrice;
       });
     } else {
+      // Có sẵn totalAmount => dùng luôn
       totalCheckoutItems = this.props.checkoutItems.totalAmount;
     }
 
@@ -191,6 +224,7 @@ class OrderSummary extends Component {
         : 0;
 
     let totalAmount = (totalCheckoutItems + deliveryCharges).toFixed(2);
+
     return (
       <div className="order-shipping">
         <EditAddressModal
@@ -233,7 +267,6 @@ class OrderSummary extends Component {
                 </div>
               )}
             </div>
-            {/* <div className="pr edit">EDIT</div> */}
           </div>
           <div className="ti-pr">
             <div className="ti">
@@ -242,9 +275,9 @@ class OrderSummary extends Component {
                 <div className="name">{userData?.email}</div>
               </div>
             </div>
-            {/* <div className="pr edit">EDIT</div> */}
           </div>
         </div>
+
         <div className="order-summary">
           <div className="os-title">Order Summary</div>
           <div className="price-details">
@@ -254,32 +287,21 @@ class OrderSummary extends Component {
                 <div className="ti">Cart Total</div>
                 <div className="pr">vnđ {totalCheckoutItems.toFixed(2)}</div>
               </div>
-              {/* <div className="ti-pr">
-                <div className="ti">Cart Discount</div>
-                <div className="pr">- 0</div>
-              </div> */}
-              {/* <div className="ti-pr">
-                <div className="ti">Tax</div>
-                <div className="pr">$4</div>
-              </div> */}
               <div className="ti-pr">
                 <div className="ti">Delivery Charges</div>
                 <div className="pr">vnđ {deliveryCharges}</div>
               </div>
             </div>
-            {/* <div className="cupon-voucher">
-              <Input placeholder="Enter Voucher Code" />
-              <Button className="btn">APPLY</Button>
-            </div> */}
             <div className="total-price">
               <div className="ti-pr">
                 <div className="ti">Total</div>
                 <div className="pr">
-                  vnđ {(totalCheckoutItems + deliveryCharges).toFixed(2)}
+                  vnđ {totalAmount}
                 </div>
               </div>
             </div>
 
+            {/* Nếu là PLACE ORDER thì hiển thị PayPal */}
             {this.props.orderTxt === "PLACE ORDER" ? (
               <div className="order-procced">
                 <PayPalScriptProvider
@@ -312,6 +334,7 @@ class OrderSummary extends Component {
                 </PayPalScriptProvider>
               </div>
             ) : (
+              // Nếu chưa PLACE ORDER => chỉ hiển thị nút normal
               <div
                 className="order-procced"
                 onClick={() =>
@@ -338,7 +361,7 @@ class OrderSummary extends Component {
                   </a>
                 </Link>
 
-                {isEmpty(this.props.userResp?.location) && ( // Hiển thị thông báo khi chưa có địa chỉ
+                {isEmpty(this.props.userResp?.location) && (
                   <div className="checkout-note">
                     Note: Please add address in your profile before proceeding
                     further.
@@ -357,6 +380,7 @@ const mapStatesToProps = (state) => ({
   shippingCharge: state.order.getShippingChargeResp,
   orderResp: state.order.placeOrderResp,
   userResp: state.user.userProfile,
+  sale: state.sale, // Lấy flash sale từ Redux
 });
 
 const mapDispatchToProps = (dispatch) => ({
