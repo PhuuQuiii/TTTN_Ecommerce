@@ -126,7 +126,7 @@ class Header extends Component {
           </div>
           <div>
             <ul>
-              <li>Sell On Kindeem</li>
+              <li>Sell On Quindigo</li>
               <li className="about-top-head">About Us</li>
               <li className="profile-top-head">
                 <Link href="/myprofile/manageAccount">
