@@ -3,6 +3,7 @@ import {
   MailOutlined,
   PhoneOutlined,
 } from "@ant-design/icons";
+import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { Button } from "antd";
 import { isEmpty } from "lodash";
 import Link from "next/link";
@@ -12,10 +13,8 @@ import { connect } from "react-redux";
 import actions from "../../../redux/actions";
 import { STORE_CHECKOUT_ITEMS } from "../../../redux/types";
 import { getDiscountedPrice } from "../../../utils/common";
+import { postTokenService } from "../../../utils/commonService";
 import EditAddressModal from "../../Components/EditAddressModal";
-import axios from "axios";
-import { getTokenService, postTokenService } from "../../../utils/commonService";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 const shortid = require("shortid");
 
@@ -325,9 +324,14 @@ class OrderSummary extends Component {
                         return result;
                       }}
                     />
-                    <div className="text-center">
+                    {/* <div className="text-center">
                       <button className="w-full bg-black text-white py-3 rounded-md flex items-center justify-center">
                         <span>Debit or Credit Card</span>
+                      </button>
+                    </div> */}
+                    <div className="text-center mt-4">
+                      <button className="w-full bg-black text-white py-3 rounded-md flex items-center justify-center">
+                        <span>Place Order</span>
                       </button>
                     </div>
                   </div>
