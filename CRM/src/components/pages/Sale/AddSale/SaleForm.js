@@ -50,18 +50,18 @@ const AddSale = () => {
 
     dispatch(createSale(payload))
       .then(() => {
-        message.success("Tạo sale thành công!");
+        message.success("Success!");
       })
       .catch((err) => {
-        message.error("Tạo sale thất bại: " + err);
+        message.error("Error " + err);
       });
   };
 
   return (
     <>
       <Steps current={current}>
-        <Step title="Chọn Sản Phẩm" />
-        <Step title="Thông Tin Sale" />
+        <Step title="Choose Product" />
+        <Step title="Detail" />
       </Steps>
 
       {/* Thêm div bọc và thêm margin-top để tạo khoảng cách */}
