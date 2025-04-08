@@ -35,7 +35,7 @@ const FeaturedProducts = (props) => {
           <Text style={styles.title}>{props.title}</Text>
         </View>
         <View style={styles.subtitleContainer}>
-          <Text style={styles.subtitle}>Khám phá các sản phẩm mới nhất</Text>
+          <Text style={styles.subtitle}>Explore the latest products</Text>
         </View>
       </View>
       <ScrollView

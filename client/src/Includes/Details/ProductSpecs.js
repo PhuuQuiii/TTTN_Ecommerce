@@ -164,12 +164,12 @@ class ProductSpecs extends Component {
                         <>
                           <div className="old-price">
                             <span style={{ textDecoration: 'line-through' }}>
-                              {originalPrice.toLocaleString()} vnđ
+                              {originalPrice.toLocaleString()} $
                             </span>
                           </div>
                           <div className="new-price">
                             <span className="price" style={{ color: 'red', fontSize: '24px' }}>
-                              {parseFloat(this.props.flashSaleInfo.discountedPrice).toLocaleString()} vnđ
+                              {parseFloat(this.props.flashSaleInfo.discountedPrice).toLocaleString()} $
                             </span>
                           </div>
                         </>
@@ -177,12 +177,12 @@ class ProductSpecs extends Component {
                         <>
                           <div className="old-price">
                             <span>
-                              {originalPrice.toLocaleString()} vnđ
+                              {originalPrice.toLocaleString()} $
                             </span>
                           </div>
                           <div className="new-price">
                             <span className="price">
-                              {(originalPrice - (originalPrice * product.discountRate / 100)).toLocaleString()} vnđ
+                              {(originalPrice - (originalPrice * product.discountRate / 100)).toLocaleString()} $
                             </span>
                             <span className="discount">
                               (SAVE { (originalPrice * product.discountRate / 100).toLocaleString() } | {product.discountRate} %)
@@ -192,7 +192,7 @@ class ProductSpecs extends Component {
                       ) : (
                         <div className="new-price">
                           <span className="price">
-                            {originalPrice.toLocaleString()} vnđ
+                            {originalPrice.toLocaleString()} $
                           </span>
                         </div>
                         )

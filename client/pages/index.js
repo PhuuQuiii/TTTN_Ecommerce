@@ -22,37 +22,14 @@ const Index = (props) => {
       thumbnail: "/images/default-image.jpg",
       title: "New Summer Collection 2025",
       description: "Check out our latest summer fashion collection with exclusive deals!",
-      viewerCount: 1234,
+      // viewerCount: 1234,
       streamer: {
         name: "Sarah Johnson",
         avatar: "/images/default-user.png",
         role: "Fashion Specialist"
       }
     },
-    {
-      id: 2,
-      thumbnail: "/images/default-image.jpg",
-      title: "Tech Gadgets Review",
-      description: "Live review of the newest smartphones and gadgets with special discounts!",
-      viewerCount: 856,
-      streamer: {
-        name: "Mike Chen",
-        avatar: "/images/default-user.png",
-        role: "Tech Expert"
-      }
-    },
-    {
-      id: 3,
-      thumbnail: "/images/default-image.jpg",
-      title: "Home Decor Ideas",
-      description: "Interior design tips and exclusive home decoration items showcase",
-      viewerCount: 567,
-      streamer: {
-        name: "Emily White",
-        avatar: "/images/default-user.png",
-        role: "Interior Designer"
-      }
-    }
+    
   ];
 
   useEffect(() => {

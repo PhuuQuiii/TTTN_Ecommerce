@@ -41,7 +41,7 @@ const HomeScreen = (props) => {
           <MainCarousel />
         </View>
         <View style={styles.productsSection}>
-          <FeaturedProducts title="Sản phẩm mới nhất" type="latest" />
+          <FeaturedProducts title="Latest products" type="latest" />
         </View>
         <View style={styles.adContainer}>
           <Image
