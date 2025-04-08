@@ -47,7 +47,7 @@ class Reviews extends Component {
       <div className="stars-show">
         <div className="star-show">
           <StarRatings
-            rating={totalStars}
+            rating={totalStars  ||  0}
             starDimension="18px"
             starSpacing="0px"
             starRatedColor="#f2c900"
@@ -100,7 +100,7 @@ class Reviews extends Component {
                 / 5
               </div>
               <StarRatings
-                rating={data?.stars?.averageStar}
+                rating={data?.stars?.averageStar || 0}
                 starDimension="40px"
                 starSpacing="5px"
                 starRatedColor="#f2c900"
