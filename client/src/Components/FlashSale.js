@@ -193,7 +193,7 @@ const FlashSale = () => {
                     {product.name || 'Tên sản phẩm'}
                   </ProductTitle>
                   <PriceText>
-                    ₫{formatCurrency(discountedPrice)}
+                    $ {formatCurrency(discountedPrice)}
                   </PriceText>
                   {/* <StatusBadge status="SELLING_FAST">ĐANG BÁN CHẠY</StatusBadge> */}
                 </ProductCard>

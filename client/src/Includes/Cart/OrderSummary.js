@@ -284,18 +284,18 @@ class OrderSummary extends Component {
             <div className="price-cover">
               <div className="ti-pr">
                 <div className="ti">Cart Total</div>
-                <div className="pr">vnđ {totalCheckoutItems.toFixed(2)}</div>
+                <div className="pr">$ {totalCheckoutItems.toFixed(2)}</div>
               </div>
               <div className="ti-pr">
                 <div className="ti">Delivery Charges</div>
-                <div className="pr">vnđ {deliveryCharges}</div>
+                <div className="pr">$ {deliveryCharges}</div>
               </div>
             </div>
             <div className="total-price">
               <div className="ti-pr">
                 <div className="ti">Total</div>
                 <div className="pr">
-                  vnđ {totalAmount}
+                  $ {totalAmount}
                 </div>
               </div>
             </div>

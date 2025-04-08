@@ -326,12 +326,12 @@ class ProductListView extends Component {
                             className="flash-sale-price"
                             style={{ color: "red" }}
                           >
-                            vnđ {flashSaleInfo.discountedPrice}
+                            $ {flashSaleInfo.discountedPrice}
                           </div>
                         ) : items.product?.discountRate === 0 ? (
                           // Không có discount => hiển thị giá gốc
                           <div className="new-price">
-                            {!checkSkeleton && "vnđ"}{" "}
+                            {!checkSkeleton && "$"}{" "}
                             {items.product?.price?.$numberDecimal}
                           </div>
                         ) : (
@@ -340,10 +340,10 @@ class ProductListView extends Component {
                             <>
                               <div className="new-price">
                                 <span className="old-price">
-                                  {!checkSkeleton && "vnđ"}{" "}
+                                  {!checkSkeleton && "$"}{" "}
                                   {items.product?.price?.$numberDecimal}
                                 </span>
-                                {!checkSkeleton && "vnđ"}{" "}
+                                {!checkSkeleton && "$"}{" "}
                                 {(
                                   items.product?.price?.$numberDecimal -
                                   (items.product?.price?.$numberDecimal *
