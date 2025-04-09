@@ -80,15 +80,15 @@ print(input_size, output_size)
 class ChatDataset(Dataset):
 
     def __init__(self):
-        self.n_samples = len(X_train)
-        self.x_data = X_train
-        self.y_data = y_train
+        self.n_samples = len(X_train) # Số lượng mẫu dữ liệu
+        self.x_data = X_train # Dữ liệu đầu vào (vector bag-of-words)
+        self.y_data = y_train # Nhãn tương ứng (chỉ số của tags)
 
-    # support indexing such that dataset[i] can be used to get i-th sample
+    # Truy cập một mẫu dữ liệu cụ thể
     def __getitem__(self, index):
         return self.x_data[index], self.y_data[index]
 
-    # we can call len(dataset) to return the size
+    # Trả về tổng số lượng mẫu dữ liệu
     def __len__(self):
         return self.n_samples
 
@@ -120,7 +120,7 @@ for epoch in range(num_epochs):
         labels = labels.to(dtype=torch.long).to(device)
         
         # Forward pass
-        # Dự đoán của mô hình
+        # Dự đoán của mô hình ( logits (giá trị chưa qua softmax), đại diện cho xác suất của từng lớp)
         outputs = model(words)
         # if y would be one-hot, we must apply
         # labels = torch.max(labels, 1)[1]
