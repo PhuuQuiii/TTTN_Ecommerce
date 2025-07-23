@@ -63,17 +63,16 @@ export const getCartProducts = (query, token) => {
   };
 };
 
-const addToCart = (query, body) => {
+export const addToCart = (query, body, token) => {
   return async (dispatch) => {
+    console.log("addToCart query:", query, "body:", body);
     const cartService = new CartService();
-    const response = await cartService.addToCart(query, body);
+    const response = await cartService.addToCart(query, body, token);
+    console.log("addToCart response:", response);
     if (response.isSuccess) {
       dispatch({ type: ADD_TO_CART, payload: response.data });
-    } else if (!response.isSuccess) {
-      dispatch({
-        type: GLOBAL_ERROR,
-        payload: response.errorMessage,
-      });
+    } else {
+      dispatch({ type: GLOBAL_ERROR, payload: response.errorMessage });
     }
   };
 };

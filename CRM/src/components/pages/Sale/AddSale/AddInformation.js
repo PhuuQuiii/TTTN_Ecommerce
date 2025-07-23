@@ -29,34 +29,34 @@ const AddInformation = ({ saleDetails, setSaleDetails, onSubmit, prev }) => {
         }}
       >
         <Form.Item
-          label="Tên chương trình sale"
+          label="Name of sale"
           name="name"
-          rules={[{ required: true, message: "Vui lòng nhập tên sale!" }]}
+          rules={[{ required: true, message: "Please enter name sale!" }]}
         >
           <Input placeholder="Ví dụ: Sale Mùa Hè Sôi Động" />
         </Form.Item>
 
         <Form.Item
-          label="Tỷ lệ giảm giá (%)"
+          label="Discount rate (%)"
           name="discountRate"
-          rules={[{ required: true, message: "Vui lòng nhập tỷ lệ giảm giá!" }]}
+          rules={[{ required: true, message: "Please enter discount sale!!" }]}
         >
           <Input type="number" placeholder="0 - 100" />
         </Form.Item>
 
         <Form.Item
-          label="Thời gian bắt đầu"
+          label="Time start"
           name="startTime"
-          rules={[{ required: true, message: "Vui lòng chọn thời gian bắt đầu!" }]}
+          rules={[{ required: true, message: "Please enter time sale!" }]}
         >
           {/* DatePicker showTime cho phép chọn cả ngày lẫn giờ */}
           <DatePicker showTime style={{ width: "100%" }} />
         </Form.Item>
 
         <Form.Item
-          label="Thời gian kết thúc"
+          label="Time end"
           name="endTime"
-          rules={[{ required: true, message: "Vui lòng chọn thời gian kết thúc!" }]}
+          rules={[{ required: true, message: "Please enter time sale!" }]}
         >
           <DatePicker showTime style={{ width: "100%" }} />
         </Form.Item>

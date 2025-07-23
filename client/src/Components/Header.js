@@ -1,13 +1,14 @@
-import { SearchOutlined } from '@ant-design/icons';
-import { AutoComplete, Col, Row, message } from "antd";
-import { debounce, isEmpty } from "lodash";
-import Link from "next/link";
-import Router, { withRouter } from "next/router";
 import React, { Component } from "react";
+import { Row, Col, Input, Button } from "antd";
+import { SearchOutlined } from '@ant-design/icons'
 import { connect } from "react-redux";
-import actions from "../../redux/actions";
-import { getUserInfo } from "../../utils/common";
 
+import { getUserInfo } from "../../utils/common";
+import Link from "next/link";
+import actions from "../../redux/actions";
+import Router, { withRouter } from "next/router";
+import { AutoComplete } from "antd";
+import { debounce, isEmpty } from "lodash";
 class Header extends Component {
   state = {
     search: "",
@@ -20,8 +21,7 @@ class Header extends Component {
     allCategories: [],
     currentChildCate: [],
     currentChildChildCate: [],
-    handleDelay: '',
-    loading: false
+    handleDelay: ''
   };
 
   componentDidMount() {
@@ -79,65 +79,32 @@ class Header extends Component {
     }
   }
 
-  handleSubmit = async (e) => {
+  handleSubmit = (e) => {
     e.preventDefault();
-    const searchValue = this.state.searchValue.trim();
-    if (searchValue) {
-      this.setState({ loading: true });
-      try {
-        // Gọi action searchProducts từ Redux
-        await this.props.searchProducts(searchValue);
-        Router.push({
-          pathname: '/search/[slug]',
-          query: { slug: searchValue }
-        }, `/search/${encodeURIComponent(searchValue)}`);
-      } catch (error) {
-        console.error('Search error:', error);
-        message.error('Search failed. Please try again.');
-      } finally {
-        this.setState({ loading: false });
-      }
-    }
+    this.searchSelectedProduct(this.state.searchValue);
+  };
+
+  searchProducts = (e, slug, cateId) => {
+    e.stopPropagation();
+    Router.push("/category/[slug]/[cate]", `/category/${slug}/${cateId}`);
   };
 
   selectKeyword = (keyword) => {
-    if (keyword) {
-      this.setState({ searchValue: keyword });
-      this.handleSubmit({ preventDefault: () => {} });
-    }
+    this.searchSelectedProduct(keyword)
   }
 
   searchSelectedProduct = debounce((keyword) => {
-    if (keyword) {
-      this.setState({ loading: true });
-      this.props.searchProducts(keyword)
-        .then(() => {
-          Router.push({
-            pathname: '/search/[slug]',
-            query: { slug: keyword }
-          }, `/search/${encodeURIComponent(keyword)}`);
-        })
-        .catch(error => {
-          console.error('Search error:', error);
-          message.error('Search failed. Please try again.');
-        })
-        .finally(() => {
-          this.setState({ loading: false });
-        });
-    }
+    Router.push("/search/[slug]", "/search/" + keyword);
+    this.setState({ searchValue: keyword });
   }, 500)
 
   getSearchKeywordsDeb = (search) => {
     this.setState({ searchValue: search });
-    if (search.trim()) {
-      this.debouceSearchKeywords(search);
-    }
+    this.debouceSearchKeywords(search)
   }
 
   debouceSearchKeywords = debounce((keyword) => {
-    if (keyword.trim()) {
-      this.props.getSearchKeywords(keyword);
-    }
+    this.props.getSearchKeywords(keyword);
   }, 500)
 
   getCurrentChildCates = (cate) => {
@@ -148,22 +115,14 @@ class Header extends Component {
     this.setState({ currentChildChildCate: cate.childCate, currentActiveChildId: cate._id })
   }
 
-  searchProducts = (e, slug, id) => {
-    e.preventDefault();
-    Router.push({
-      pathname: '/search/[slug]',
-      query: { slug }
-    }, `/search/${slug}`);
-  }
-
   render() {
-    let { loginToken, loading } = this.state;
+    let { loginToken } = this.state;
     let parentCate = this.props.menu.menuCategories || []
     return (
       <React.Fragment>
         <div className="top-header">
           <div>
-            Customer Care: +84983675437
+            Customer Care: +9779856321452
           </div>
           <div>
             <ul>
@@ -195,7 +154,7 @@ class Header extends Component {
                 <Col span={4} className="logo">
                   <Link href="/">
                     <a>
-                      <img src="/images/logo.png" /> 
+                      <img src="/images/logo.png" />
                     </a>
                   </Link>
                 </Col>
@@ -205,6 +164,9 @@ class Header extends Component {
                       <AutoComplete
                         value={this.state.searchValue}
                         options={this.state.searchOptions}
+                        // style={{
+                        //   width: 400,
+                        // }}
                         className="auto-search"
                         onSelect={(select) => {
                           this.selectKeyword(select)
@@ -213,15 +175,17 @@ class Header extends Component {
                           this.getSearchKeywordsDeb(search)
                         }}
                         placeholder="Search for products, brands and more"
-                        loading={loading}
-                        notFoundContent={null}
-                        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                      />
+                      >
+                        {/* <SearchOutlined /> */}
+                        {/* <Input size="large" placeholder="Search for products, brands and more"/> */}
+                      </AutoComplete>
                       <div className="search-btn" onClick={() => this.selectKeyword(this.state.searchValue)}>
                         <SearchOutlined />
                       </div>
                     </div>
+                    {/* <img src="/images/search-icon.png" /> */}
                   </form>
+
                 </Col>
               </Row>
             </Col>
@@ -279,6 +243,12 @@ class Header extends Component {
               <div className="parent-cate-cover">
                 <div
                   className={"parent-cate "}
+                  // onMouseEnter={() => {
+                  //   this.getCurrentChildCates(cate);
+                  //   this.setState({
+                  //     currentActiveChildId: ''
+                  //   })
+                  // }}
                 >
                   Home
                 </div>
@@ -315,6 +285,7 @@ class Header extends Component {
                           this.state.currentChildCate?.map((cate, i) => {
                             return (
                               <div
+                                // id={"child"+i}
                                 className={"child-cate " + (cate._id === this.state.currentActiveChildId ? 'active' : '')}
                                 key={i}
                                 onClick={(e) =>
@@ -369,10 +340,12 @@ class Header extends Component {
                       <div><img src="/images/elect-imag.jpg" /></div>
                     </Col>
                   </Row>
+
                 </div>
               }
             </div>
           </div>
+
         </div>
       </React.Fragment>
     );

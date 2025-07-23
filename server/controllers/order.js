@@ -260,6 +260,8 @@ exports.createOrder = async (req, res) => {
       },
     });
 
+    await newOrder.save();
+
     const newPayment = new Payment({
       user: req.user._id,
       order: newOrder._id,
@@ -272,8 +274,11 @@ exports.createOrder = async (req, res) => {
       from: req.user.phone,
     });
 
-    await newOrder.save();
     await newPayment.save();
+
+    newOrder.payment = newPayment._id;
+
+    await newOrder.save();
 
     // Xóa sản phẩm khỏi giỏ hàng nếu có
     await Cart.updateOne(

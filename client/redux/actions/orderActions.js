@@ -24,6 +24,7 @@ const getOrderById = (id) => {
     const orderService = new OrderService();
     const response = await orderService.getOrderById(id);
     if (response.isSuccess) {
+      console.log("Order Data:", response.data);
       dispatch({ type: GET_ORDER_BY_ID, payload: response.data });
     } else if (!response.isSuccess) {
       dispatch({

@@ -18,9 +18,9 @@ const SuberadminBar = ({}) => {
     {
         key:'admin',
         icon:'layout',
-        main: 'Admin',
+        main: 'Shop',
         sub: [ {
-            name: 'Manage Admins',
+            name: 'Manage Shop',
             path: '/manage-admins'
         }]
         },

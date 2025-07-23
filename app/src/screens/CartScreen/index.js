@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import {
   TouchableWithoutFeedback,
   ScrollView,
 } from "react-native-gesture-handler";
-
 import {
   Card,
   Appbar,
@@ -35,48 +33,43 @@ const CartScreen = (props) => {
   });
 
   useEffect(() => {
+    // Lấy danh sách sản phẩm có trong giỏ
     dispatch(getCartProducts("page=1", token));
   }, [dispatch]);
 
   useEffect(() => {
+    // Mỗi lần getCartProductsResponse thay đổi, mình tạo key cho từng item
     if (!getCartProductsResponse) return;
 
     let newState = {};
-
     for (let i = 0; i < getCartProductsResponse.carts.length; i++) {
-      newState["checked" + i] = false;
+      newState["checked" + i] = false; // ban đầu chưa check
     }
 
-    setState({
-      ...state,
+    setState((prevState) => ({
+      ...prevState,
       ...newState,
-    });
+    }));
   }, [getCartProductsResponse]);
 
   const _goBack = () => {
     props.navigation.pop();
   };
 
-  const setChecked = (i, _id) => {
+  // Toggle checkbox
+  const setChecked = (i) => {
     if (i === "all") {
-      // checedall = false
-
       let allChecks = { ...state };
-
       for (let checks in allChecks) {
+        // Nếu đang là checkedall = true, thì chuyển mọi thứ thành false và ngược lại
         allChecks[checks] = state.checkedall ? false : true;
       }
-
       setState((prevState) => ({
         ...allChecks,
         checkedall: !prevState.checkedall,
       }));
-      
-    } else if (i === null) {
-      setState((prevState) => ({
-        checked: !prevState.checked,
-      }));
     } else {
+      // NOTE: Chỉ cần toggle cho "checked0", "checked1"... tùy i
       setState((prevState) => ({
         ...prevState,
         ["checked" + i]: !prevState["checked" + i],
@@ -84,9 +77,16 @@ const CartScreen = (props) => {
     }
   };
 
+  // Show toast để báo chưa chọn item
   const showToastWithGravityAndOffset = () => {
-    const message = "Can not checkout without any product!"; // Đảm bảo là string
-    ToastAndroid.showWithGravityAndOffset(message, ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50);
+    const message = "Cannot checkout without any product!";
+    ToastAndroid.showWithGravityAndOffset(
+      message,
+      ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      25,
+      50
+    );
   };
 
   const isCartStack = props.route.name === "CartStack";
@@ -99,7 +99,6 @@ const CartScreen = (props) => {
     <>
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
-        // stickyHeaderIndices={[1]}
         showsVerticalScrollIndicator={false}
       >
         <View style={{ height: 0 }}>
@@ -110,7 +109,6 @@ const CartScreen = (props) => {
                 onPress={_goBack}
               />
             )}
-
             <Appbar.Content title="Cart" color={Constants.headerTintColor} />
           </Appbar.Header>
         </View>
@@ -119,14 +117,17 @@ const CartScreen = (props) => {
           <TouchableWithoutFeedback key={i}>
             <Card
               onPress={() => {
-                cart.product &&
+                // Lấy detail sản phẩm
+                if (cart.product) {
                   dispatch(getProductDetails(cart.product.slug, token));
+                }
                 props.navigation.navigate("Detail");
               }}
               style={{ marginBottom: 5 }}
             >
               <Card.Content>
                 <View style={{ flex: 1, flexDirection: "row", marginTop: 5 }}>
+                  {/* Checkbox */}
                   <View
                     style={{
                       flex: 0.1,
@@ -136,12 +137,15 @@ const CartScreen = (props) => {
                     }}
                   >
                     <Checkbox
+                      color="blue" // NOTE: Thêm color cho dễ nhìn
                       status={state["checked" + i] ? "checked" : "unchecked"}
                       onPress={() => {
-                        setChecked(i, cart._id);
+                        setChecked(i);
                       }}
                     />
                   </View>
+
+                  {/* Hình ảnh */}
                   <View style={{ flex: 0.5 }}>
                     <Image
                       style={styles.tinyLogo}
@@ -153,97 +157,103 @@ const CartScreen = (props) => {
                       }}
                     />
                   </View>
-                  <View style={{ flex: 0.5 }}>
-                    <>
-                      <View style={{ flex: 0.2 }}>
-                        <Text style={{ ...Constants.titleText }}>
-                          {cart.product.name}
-                        </Text>
-                        <Text style={{ ...Constants.paragraphText }}>
-                          {"Ujjal's shop"}
-                        </Text>
-                      </View>
-                      <View style={{ flex: 0.2 }}></View>
 
-                      <View style={{ flex: 0.2, flexDirection: "row" }}>
-                        <View style={{ flex: 1 }}>
-                          <Text style={{ fontSize: 15, color: "orange" }}>
-                            {getDiscountedAmount(
-                              cart.product.price.$numberDecimal,
-                              cart.product.discountRate
-                            )}
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 10,
-                              textDecorationLine: "line-through",
-                              textDecorationStyle: "solid",
-                            }}
-                          >
-                            {cart.product.price.$numberDecimal}
-                          </Text>
-                        </View>
-                        <View style={{ flex: 1, flexDirection: "row" }}>
-                          <TouchableRipple
-                            onPress={() =>
-                              dispatch(
-                                editCartQty(
-                                  `${cart._id}?quantity=${cart.quantity - 1}`,
-                                  token
-                                )
-                              )
-                            }
-                            style={{
-                              flex: 0.3,
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Button>{"-"}</Button>
-                          </TouchableRipple>
-                          <View
-                            style={{
-                              flex: 0.4,
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Text>{cart.quantity}</Text>
-                          </View>
-                          <TouchableRipple
-                            onPress={() =>
-                              dispatch(
-                                editCartQty(
-                                  `${cart._id}?quantity=${cart.quantity + 1}`,
-                                  token
-                                )
-                              )
-                            }
-                            style={{
-                              flex: 0.3,
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Button>{"+"}</Button>
-                          </TouchableRipple>
-                        </View>
+                  {/* Thông tin sản phẩm */}
+                  <View style={{ flex: 0.5 }}>
+                    <View style={{ flex: 0.2 }}>
+                      <Text style={{ ...Constants.titleText }}>
+                        {cart.product.name}
+                      </Text>
+                      <Text style={{ ...Constants.paragraphText }}>
+                        {"Ujjal's shop"}
+                      </Text>
+                    </View>
+
+                    <View style={{ flex: 0.2 }} />
+
+                    <View style={{ flex: 0.2, flexDirection: "row" }}>
+                      <View style={{ flex: 1 }}>
+                        {/* Giá */}
+                        <Text style={{ fontSize: 15, color: "orange" }}>
+                          {getDiscountedAmount(
+                            cart.product.price.$numberDecimal,
+                            cart.product.discountRate
+                          )}
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 10,
+                            textDecorationLine: "line-through",
+                            textDecorationStyle: "solid",
+                          }}
+                        >
+                          {cart.product.price.$numberDecimal}
+                        </Text>
                       </View>
-                      <View style={{ flex: 0.2 }}></View>
-                    </>
+
+                      {/* Số lượng */}
+                      <View style={{ flex: 1, flexDirection: "row" }}>
+                        <TouchableRipple
+                          onPress={() =>
+                            dispatch(
+                              editCartQty(
+                                `${cart._id}?quantity=${cart.quantity - 1}`,
+                                token
+                              )
+                            )
+                          }
+                          style={{
+                            flex: 0.3,
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Button>{"-"}</Button>
+                        </TouchableRipple>
+
+                        <View
+                          style={{
+                            flex: 0.4,
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Text>{cart.quantity}</Text>
+                        </View>
+
+                        <TouchableRipple
+                          onPress={() =>
+                            dispatch(
+                              editCartQty(
+                                `${cart._id}?quantity=${cart.quantity + 1}`,
+                                token
+                              )
+                            )
+                          }
+                          style={{
+                            flex: 0.3,
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Button>{"+"}</Button>
+                        </TouchableRipple>
+                      </View>
+                    </View>
+
+                    <View style={{ flex: 0.2 }} />
                   </View>
                 </View>
               </Card.Content>
             </Card>
           </TouchableWithoutFeedback>
         ))}
-        {/* <View style={{ height: 250, marginTop: 0 }}>
-          <FeaturedProducts title={"Products for you"} />
-        </View> */}
       </ScrollView>
 
+      {/* Footer */}
       <View style={{ backgroundColor: Constants.headerTintColor, height: 70 }}>
         <View style={{ flex: 1, flexDirection: "row" }}>
+          {/* Toggle All */}
           <View
             style={{
               flex: 0.4,
@@ -254,18 +264,19 @@ const CartScreen = (props) => {
           >
             <View style={{ flex: 0.2, justifyContent: "center" }}>
               <Checkbox
+                color="blue" // NOTE: Thêm color cho dễ nhìn
                 status={state["checkedall"] ? "checked" : "unchecked"}
                 onPress={() => {
                   setChecked("all");
                 }}
               />
             </View>
-            <View
-              style={{ flex: 0.8, justifyContent: "center", marginLeft: 5 }}
-            >
+            <View style={{ flex: 0.8, justifyContent: "center", marginLeft: 5 }}>
               <Text style={{ fontWeight: "bold" }}>{"ALL"}</Text>
             </View>
           </View>
+
+          {/* Tổng tiền + Button Check Out */}
           <View style={{ flex: 0.6 }}>
             <View style={{ flex: 1, flexDirection: "row" }}>
               <View
@@ -288,12 +299,17 @@ const CartScreen = (props) => {
                     borderRadius: 5,
                   }}
                   labelStyle={{ color: "white" }}
-                  // onPress={() => props.navigation.navigate("CheckOut")}
-                  onPress={
-                    !state.checked
-                      ? showToastWithGravityAndOffset
-                      : () => props.navigation.navigate("CheckOut")
-                  }
+                  onPress={() => {
+                    // NOTE: Kiểm tra xem có item nào checked không
+                    const anyChecked = Object.keys(state).some(
+                      (key) => key.startsWith("checked") && state[key] === true
+                    );
+                    if (!anyChecked) {
+                      showToastWithGravityAndOffset();
+                    } else {
+                      props.navigation.navigate("CheckOut");
+                    }
+                  }}
                 >
                   Check Out
                 </Button>
@@ -318,11 +334,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 4,
   },
   footer: {
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.5,
-    // shadowRadius: 2,
-    // elevation: 2,
+    // Custom style cho footer
   },
 });
 
