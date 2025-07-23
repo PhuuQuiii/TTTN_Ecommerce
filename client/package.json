@@ -10,7 +10,7 @@
     "sass-build": "sass sass/main.scss:public/css/style.css"
   },
   "engines": {
-    "node": "16.x"
+    "node": "18.x"
   },
   "dependencies": {
     "@paypal/react-paypal-js": "^8.8.2",
