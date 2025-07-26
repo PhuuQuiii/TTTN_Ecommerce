@@ -62,7 +62,6 @@ app.get("/", (req, res) => {
   res.json({ message: "Backend is running on Vercel!" });
 });
 
-
 // Extended: https://swagger.io/specification/#infoObject
 const swaggerOptions = {
   swaggerDefinition: {
@@ -78,8 +77,6 @@ const swaggerOptions = {
   },
   apis: ["./controllers/*.js"],
 };
-
-
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
@@ -183,8 +180,13 @@ function broadcastViewers() {
 let roller = Fawn.Roller();
 roller.roll().then(function () {
   // start server
-  const port = process.env.PORT;
-  server.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-  });
+  const port = process.env.PORT || 3001;
+  if (process.env.NODE_ENV !== "production") {
+    server.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+  }
 });
+
+// Export for Vercel
+module.exports = app;
