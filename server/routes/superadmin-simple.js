@@ -7,14 +7,16 @@ router.get("/banner", async (req, res) => {
     const page = +req.query.page || 1;
     const perPage = +req.query.perPage || 10;
 
-    // Simple response first to test if route works
+    // Format response to match frontend expectations
     res.json({
-      banners: [],
-      totalCount: 0,
-      page,
-      perPage,
-      message: "Banner endpoint working - simplified version",
-      timestamp: new Date().toISOString(),
+      data: {
+        banners: [],
+        totalCount: 0,
+        page,
+        perPage,
+        message: "Banner endpoint working - simplified version",
+        timestamp: new Date().toISOString(),
+      }
     });
   } catch (error) {
     console.error("Banner fetch error:", error);
@@ -25,11 +27,14 @@ router.get("/banner", async (req, res) => {
 // Test endpoint without database first
 router.get("/product-categories", async (req, res) => {
   try {
+    // Format response to match frontend expectations
     res.json({
-      categories: [],
-      totalCount: 0,
-      message: "Categories endpoint working - simplified version",
-      timestamp: new Date().toISOString(),
+      data: {
+        categories: [],
+        totalCount: 0,
+        message: "Categories endpoint working - simplified version",
+        timestamp: new Date().toISOString(),
+      }
     });
   } catch (error) {
     console.error("Categories fetch error:", error);

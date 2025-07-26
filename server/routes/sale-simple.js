@@ -4,12 +4,14 @@ const router = express.Router();
 // Get active sales - simplified version
 router.get("/active", async (req, res) => {
   try {
-    // Simple response without complex database operations
+    // Format response to match frontend expectations
     res.json({
-      message: "Không có chương trình sale nào đang diễn ra",
-      activeSales: [],
-      timestamp: new Date().toISOString(),
-      status: "working",
+      data: {
+        message: "Không có chương trình sale nào đang diễn ra",
+        activeSales: [],
+        timestamp: new Date().toISOString(),
+        status: "working"
+      }
     });
   } catch (error) {
     console.error("Sale fetch error:", error);
