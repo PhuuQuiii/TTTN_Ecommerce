@@ -16,6 +16,8 @@ if (process.env.MONGO_URI) {
       useUnifiedTopology: true,
       useFindAndModify: false,
       useCreateIndex: true,
+      serverSelectionTimeoutMS: 5000, // 5 second timeout
+      socketTimeoutMS: 45000, // 45 second socket timeout
     })
     .then(() => {
       console.log("Connected to MongoDB");
@@ -73,15 +75,22 @@ app.get("/health", (req, res) => {
   });
 });
 
-// Add basic API routes
+// Add basic API routes with detailed error logging
 try {
+  console.log("Loading routes...");
   app.use("/api/superadmin", require("./routes/superadmin-simple"));
   app.use("/api/sale", require("./routes/sale-simple"));
-
   console.log("Real routes loaded successfully");
 } catch (error) {
   console.error("Error loading routes:", error.message);
+  console.error("Stack trace:", error.stack);
 }
+
+// Add request logging middleware
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  next();
+});
 
 // Error handling
 app.use((err, req, res, next) => {
