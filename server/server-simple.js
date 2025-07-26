@@ -5,6 +5,25 @@ require("dotenv").config();
 
 const app = express();
 
+// Database Connection (simplified for Vercel)
+const mongoose = require("mongoose");
+
+// Connect to MongoDB
+if (process.env.MONGO_URI) {
+  mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true
+  }).then(() => {
+    console.log('Connected to MongoDB');
+  }).catch(err => {
+    console.error('MongoDB connection error:', err);
+  });
+} else {
+  console.warn('MONGO_URI not found in environment variables');
+}
+
 // CORS Configuration
 const allowlist = [
   "http://localhost:3000",
@@ -43,8 +62,22 @@ app.get("/api/test", (req, res) => {
 
 // Health check
 app.get("/health", (req, res) => {
-  res.json({ status: "OK", uptime: process.uptime() });
+  res.json({ 
+    status: "OK", 
+    uptime: process.uptime(),
+    mongodb: mongoose.connection.readyState === 1 ? "connected" : "disconnected"
+  });
 });
+
+// Add basic API routes
+try {
+  app.use("/api/superadmin", require("./routes/superadmin-test"));
+  app.use("/api/sale", require("./routes/sale-test"));
+  
+  console.log('Test routes loaded successfully');
+} catch (error) {
+  console.error('Error loading routes:', error.message);
+}
 
 // Error handling
 app.use((err, req, res, next) => {
