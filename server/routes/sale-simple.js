@@ -9,7 +9,7 @@ router.get("/active", async (req, res) => {
       message: "Không có chương trình sale nào đang diễn ra",
       activeSales: [],
       timestamp: new Date().toISOString(),
-      status: "working"
+      status: "working",
     });
   } catch (error) {
     console.error("Sale fetch error:", error);
