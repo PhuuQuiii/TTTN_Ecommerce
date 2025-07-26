@@ -1,7 +1,6 @@
 // Packages
 const expressValidator = require("express-validator");
 const express = require("express");
-const http = require("http");
 const cors = require("cors");
 require("dotenv").config();
 const app = express();
@@ -9,20 +8,12 @@ const Fawn = require("fawn");
 require("express-async-errors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
-const socketIO = require("socket.io");
 const paypalRoutes = require("./routes/paypalRoutes.js");
 // Import methods
 const { dbConnection, errorHandler } = require("./middleware/helpers");
-const WebSocket = require("ws");
 
 // Database Connection
 dbConnection();
-
-// our server instance
-const server = http.createServer(app);
-// This creates our socket using the instance of the server
-const io = socketIO(server);
-io.origins([`${process.env.ADMIN_CRM_ROUTE}`]);
 
 // Middlewares
 var allowlist = [
@@ -48,10 +39,6 @@ var corsOptionsDelegate = function (req, callback) {
 
 app.use(cors(corsOptionsDelegate));
 
-app.use((req, res, next) => {
-  req.io = io;
-  next();
-});
 app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
@@ -117,76 +104,21 @@ app.use(function (err, req, res, next) {
   });
 });
 
-// Xử lý bên Live stream
-const wss = new WebSocket.Server({ server });
-
+// Simple auth endpoint for livestream (without WebSocket for Vercel compatibility)
 app.post("/auth", function (req, res) {
   const streamkey = req.body.key;
-
   if (streamkey === "supersecret") {
     res.status(200).send();
     return;
   }
-
   res.status(403).send();
 });
 
-let viewers = -1;
-
-wss.on("connection", (ws) => {
-  viewers++;
-  console.log("New connection, viewers:", viewers);
-  broadcastViewers();
-
-  ws.on("message", (message) => {
-    console.log("Received message:", message);
-    try {
-      const parsedMessage = JSON.parse(message);
-      // Kiểm tra loại tin nhắn
-      if (parsedMessage.type === "comment") {
-        // Gửi lại tin nhắn cho tất cả client
-        wss.clients.forEach((client) => {
-          if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify(parsedMessage));
-          }
-        });
-      }
-    } catch (error) {
-      console.error("Error parsing message:", error);
-    }
-  });
-
-  ws.on("close", () => {
-    viewers--;
-    console.log("Connection closed, viewers:", viewers);
-    broadcastViewers();
-  });
-
-  ws.on("error", (error) => {
-    console.error("WebSocket error:", error);
-  });
-});
-
-function broadcastViewers() {
-  const message = JSON.stringify({ type: "viewers", count: viewers });
-  console.log("Broadcasting viewers:", viewers);
-  wss.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(message);
-    }
-  });
-}
-
+// Initialize Fawn and export app
 let roller = Fawn.Roller();
 roller.roll().then(function () {
-  // start server
-  const port = process.env.PORT || 3001;
-  if (process.env.NODE_ENV !== "production") {
-    server.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
-    });
-  }
-});
+  console.log("Database transaction system initialized");
+}).catch(console.error);
 
 // Export for Vercel
 module.exports = app;
