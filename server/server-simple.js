@@ -75,10 +75,10 @@ app.get("/health", (req, res) => {
 
 // Add basic API routes
 try {
-  app.use("/api/superadmin", require("./routes/superadmin-test"));
-  app.use("/api/sale", require("./routes/sale-test"));
+  app.use("/api/superadmin", require("./routes/superadmin-simple"));
+  app.use("/api/sale", require("./routes/sale-simple"));
 
-  console.log("Test routes loaded successfully");
+  console.log("Real routes loaded successfully");
 } catch (error) {
   console.error("Error loading routes:", error.message);
 }
