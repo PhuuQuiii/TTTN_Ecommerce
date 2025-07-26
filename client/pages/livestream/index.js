@@ -58,7 +58,8 @@ function LiveStream({ authentication }) {
       }
     }
 
-    ws.current = new WebSocket("ws://localhost:3001");
+    // ws.current = new WebSocket("ws://localhost:3001");
+    ws.current = new WebSocket("https://backend-ecommerce-theta-plum.vercel.app");
     ws.current.onopen = () => {
       console.log("WebSocket connection opened");
       // Send user info when connecting

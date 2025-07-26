@@ -11,8 +11,10 @@ import jwt from "expo-jwt";
 // export const SERVER_BASE_URL = "http://172.20.10.2:3001";
 // export const BASE_URL = "http://172.20.10.2:3001";
 
-export const SERVER_BASE_URL = "http://192.168.2.34:3001";
-export const BASE_URL = "http://192.168.2.34";
+// export const SERVER_BASE_URL = "http://192.168.2.34:3001";
+export const SERVER_BASE_URL = "https://backend-ecommerce-theta-plum.vercel.app";
+// export const BASE_URL = "http://192.168.2.34";
+export const BASE_URL = "https://backend-ecommerce-theta-plum.vercel.app";
 
 export const getChildCategories = (allCategories, parentCategory) => {
   let newParentCate = [];

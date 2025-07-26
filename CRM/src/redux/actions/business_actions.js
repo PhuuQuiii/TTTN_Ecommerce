@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { BUSINESS_ERROR, GET_BUSINESS_INFO, UPDATE_BUSINESS_INFO } from '../types';
 
-const API_URL = process.env.REACT_APP_SERVER_URL || 'http://localhost:3001';
+// const API_URL = process.env.REACT_APP_SERVER_URL || 'http://localhost:3001';
+const API_URL = process.env.REACT_APP_SERVER_URL || 'https://backend-ecommerce-theta-plum.vercel.app';
 
 // Helper function to get auth headers
 const getAuthHeaders = (contentType = 'application/json') => {

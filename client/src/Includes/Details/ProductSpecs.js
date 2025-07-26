@@ -117,8 +117,10 @@ class ProductSpecs extends Component {
           <AllHelmet
             title={`${product.name} | QUINDIGO`}
             desc={`${description}`}
-            url={`http://sthautsav.com.np/products/${product.slug}`}
-            img={`http://sthautsav.com.np:3001/uploads/${product.images[0].large}`} />
+            // url={`http://sthautsav.com.np/products/${product.slug}`}
+            url={`https://backend-ecommerce-theta-plum.vercel.app/products/${product.slug}`}
+            // img={`http://sthautsav.com.np:3001/uploads/${product.images[0].large}`} />
+            img={`https://backend-ecommerce-theta-plum.vercel.app/uploads/${product.images[0].large}`} />
         }
         
         <div id="magnifyPortal" className="magnifyPortal" />

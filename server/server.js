@@ -65,7 +65,8 @@ const swaggerOptions = {
       contact: {
         name: "Amazing Developer",
       },
-      servers: ["http://localhost:3001/api"],
+      servers: ["https://backend-ecommerce-theta-plum.vercel.app"],
+      // servers: ["http://localhost:3001/api"],
     },
   },
   apis: ["./controllers/*.js"],
