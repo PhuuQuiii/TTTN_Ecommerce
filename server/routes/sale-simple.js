@@ -22,8 +22,12 @@ router.get("/active", async (req, res) => {
       .populate("createdBy");
 
     let activeSales = allSales.filter((sale) => {
-      const saleStartLocal = new Date(sale.startTime.getTime() + 7 * 60 * 60 * 1000);
-      const saleEndLocal = new Date(sale.endTime.getTime() + 7 * 60 * 60 * 1000);
+      const saleStartLocal = new Date(
+        sale.startTime.getTime() + 7 * 60 * 60 * 1000
+      );
+      const saleEndLocal = new Date(
+        sale.endTime.getTime() + 7 * 60 * 60 * 1000
+      );
       return saleStartLocal <= nowLocal && nowLocal <= saleEndLocal;
     });
 
@@ -31,17 +35,23 @@ router.get("/active", async (req, res) => {
     activeSales = activeSales
       .map((sale) => {
         const saleObj = sale.toObject();
-        saleObj.products = saleObj.products.filter((product) => product.isVerified);
+        saleObj.products = saleObj.products.filter(
+          (product) => product.isVerified
+        );
         return saleObj;
       })
       .filter((saleObj) => saleObj.products.length > 0);
 
     if (activeSales.length === 0) {
-      return res.status(200).json({ message: "Không có chương trình sale nào đang diễn ra" });
+      return res
+        .status(200)
+        .json({ message: "Không có chương trình sale nào đang diễn ra" });
     }
 
     const result = activeSales.map((sale) => {
-      sale.startTimeVN = new Date(sale.startTime.getTime() + 7 * 60 * 60 * 1000);
+      sale.startTimeVN = new Date(
+        sale.startTime.getTime() + 7 * 60 * 60 * 1000
+      );
       sale.endTimeVN = new Date(sale.endTime.getTime() + 7 * 60 * 60 * 1000);
       return sale;
     });

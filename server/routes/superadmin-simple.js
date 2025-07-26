@@ -10,14 +10,14 @@ router.get("/banner", async (req, res) => {
   try {
     const page = +req.query.page || 1;
     const perPage = +req.query.perPage || 10;
-    
+
     const banners = await Banner.find({ isDeleted: null })
       .skip(perPage * page - perPage)
       .limit(perPage)
       .lean();
-    
+
     const totalCount = await Banner.countDocuments({ isDeleted: null });
-    
+
     res.json({ banners, totalCount });
   } catch (error) {
     console.error("Banner fetch error:", error);
@@ -30,7 +30,7 @@ router.get("/product-categories", async (req, res) => {
   try {
     const categories = await Category.find();
     const totalCount = await Category.countDocuments();
-    
+
     res.json({ categories, totalCount });
   } catch (error) {
     console.error("Categories fetch error:", error);
