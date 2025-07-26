@@ -16,7 +16,7 @@ router.get("/banner", async (req, res) => {
         perPage,
         message: "Banner endpoint working - simplified version",
         timestamp: new Date().toISOString(),
-      }
+      },
     });
   } catch (error) {
     console.error("Banner fetch error:", error);
@@ -34,7 +34,7 @@ router.get("/product-categories", async (req, res) => {
         totalCount: 0,
         message: "Categories endpoint working - simplified version",
         timestamp: new Date().toISOString(),
-      }
+      },
     });
   } catch (error) {
     console.error("Categories fetch error:", error);
