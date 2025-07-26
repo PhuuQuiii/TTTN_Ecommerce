@@ -6,7 +6,7 @@ router.get("/active", (req, res) => {
   res.json({
     message: "Không có chương trình sale nào đang diễn ra",
     activeSales: [],
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
