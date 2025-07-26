@@ -32,6 +32,8 @@ var allowlist = [
   "http://157.245.106.101:3000",
   "http://157.245.106.101:3003",
   "http://157.245.106.101:3002",
+  "https://ecommerce-alpha-two-72.vercel.app",
+  "https://backend-ecommerce-theta-plum.vercel.app",
 ];
 
 var corsOptionsDelegate = function (req, callback) {
@@ -44,8 +46,7 @@ var corsOptionsDelegate = function (req, callback) {
   callback(null, corsOptions); // callback expects two parameters: error and options
 };
 
-// app.use(cors(corsOptionsDelegate));
-app.use(cors());
+app.use(cors(corsOptionsDelegate));
 
 app.use((req, res, next) => {
   req.io = io;
@@ -55,6 +56,12 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(expressValidator());
+
+// Test endpoint
+app.get("/", (req, res) => {
+  res.json({ message: "Backend is running on Vercel!" });
+});
+
 
 // Extended: https://swagger.io/specification/#infoObject
 const swaggerOptions = {
@@ -71,6 +78,8 @@ const swaggerOptions = {
   },
   apis: ["./controllers/*.js"],
 };
+
+
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
