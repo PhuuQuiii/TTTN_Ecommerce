@@ -116,9 +116,12 @@ app.post("/auth", function (req, res) {
 
 // Initialize Fawn and export app
 let roller = Fawn.Roller();
-roller.roll().then(function () {
-  console.log("Database transaction system initialized");
-}).catch(console.error);
+roller
+  .roll()
+  .then(function () {
+    console.log("Database transaction system initialized");
+  })
+  .catch(console.error);
 
 // Export for Vercel
 module.exports = app;

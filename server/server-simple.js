@@ -8,7 +8,7 @@ const app = express();
 // CORS Configuration
 const allowlist = [
   "http://localhost:3000",
-  "http://localhost:3003", 
+  "http://localhost:3003",
   "http://localhost:3002",
   "https://ecommerce-alpha-two-72.vercel.app",
   "https://backend-ecommerce-theta-plum.vercel.app",
@@ -16,8 +16,10 @@ const allowlist = [
 
 const corsOptionsDelegate = function (req, callback) {
   const corsOptions = {
-    origin: allowlist.includes(req.header("Origin")) || req.header("Origin") === undefined,
-    credentials: true
+    origin:
+      allowlist.includes(req.header("Origin")) ||
+      req.header("Origin") === undefined,
+    credentials: true,
   };
   callback(null, corsOptions);
 };
@@ -28,10 +30,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // Test endpoint
 app.get("/", (req, res) => {
-  res.json({ 
+  res.json({
     message: "Backend is running on Vercel!",
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || "development"
+    environment: process.env.NODE_ENV || "development",
   });
 });
 
