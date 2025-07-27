@@ -6,9 +6,16 @@
       "maxDuration": 10
     }
   },
-  "rewrites": [{ "source": "/(.*)", "destination": "/api" }],
+  "routes": [
+    { "src": "/api-simple/(.*)", "dest": "/api/minimal-$1.js" },
+    { "src": "/standalone", "dest": "/api/standalone.js" },
+    { "src": "/api/(.*)", "dest": "/api/index.js" },
+    { "src": "/(.*)", "dest": "/api/index.js" }
+  ],
   "env": {
     "NODE_ENV": "production",
-    "VERCEL": "true"
+    "VERCEL": "true",
+    "DEBUG": "true",
+    "MONGODB_TIMEOUT": "5000"
   }
 }

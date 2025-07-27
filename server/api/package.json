@@ -1,0 +1,14 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "Vercel Serverless API",
+  "engines": {
+    "node": "22.x"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "dotenv": "^8.6.0",
+    "cors": "^2.8.5",
+    "mongoose": "^5.6.10"
+  }
+}

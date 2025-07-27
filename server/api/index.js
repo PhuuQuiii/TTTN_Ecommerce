@@ -5,48 +5,6 @@ const app = require("../server");
 // Export for Vercel serverless functions
 module.exports = app;
 
-// Import methods
-const { dbConnection, errorHandler } = require("../middleware/helpers");
-
-// Database Connection
-dbConnection();
-
-const app = express();
-
-// CORS Configuration
-var allowlist = [
-  "http://localhost:3000",
-  "http://localhost:3003",
-  "http://localhost:3002",
-  "http://157.245.106.101:3000",
-  "http://157.245.106.101:3003",
-  "http://157.245.106.101:3002",
-  "https://ecommerce-alpha-two-72.vercel.app",
-  "https://backend-ecommerce-theta-plum.vercel.app",
-];
-
-var corsOptionsDelegate = function (req, callback) {
-  var corsOptions;
-  if (allowlist.indexOf(req.header("Origin")) !== -1) {
-    corsOptions = { origin: true };
-  } else {
-    corsOptions = { origin: false };
-  }
-  callback(null, corsOptions);
-};
-
-app.use(cors(corsOptionsDelegate));
-
-app.use(express.json());
-app.use(express.static("public"));
-app.use(express.urlencoded({ extended: true }));
-app.use(expressValidator());
-
-// Test endpoint
-app.get("/", (req, res) => {
-  res.json({ message: "Backend is running on Vercel!" });
-});
-
 // Swagger configuration
 const swaggerOptions = {
   swaggerDefinition: {
