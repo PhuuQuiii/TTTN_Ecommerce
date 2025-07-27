@@ -10,21 +10,26 @@ module.exports = async () => {
   }
 
   if (!isConnected) {
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    isConnected = true;
-    console.log("✅ MongoDB connected:", mongoose.connection.db.databaseName);
+    try {
+      await mongoose.connect(process.env.MONGO_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
+      isConnected = true;
+      console.log("✅ MongoDB connected:", mongoose.connection.db.databaseName);
+    } catch (err) {
+      console.error("❌ MongoDB connection error:", err);
+      throw err;
+    }
   }
 
   if (!isFawnInitialized) {
-    // Nếu model `_transname_` đã tồn tại, xoá nó
-    if (mongoose.models['_transname_']) {
-      delete mongoose.models['_transname_'];
+    // Xóa model nếu đã tồn tại để tránh OverwriteModelError
+    if (mongoose.models["_transname_"]) {
+      delete mongoose.models["_transname_"];
     }
 
-    Fawn.init(mongoose, process.env.TRANS_COLL || "transactions");
+    Fawn.init(mongoose, process.env.TRANS_COLL || "_transname_");
     isFawnInitialized = true;
     console.log("✅ Fawn initialized");
   }
