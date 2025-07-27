@@ -7,6 +7,7 @@ require("express-async-errors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const { dbConnection, errorHandler } = require("./middleware/helpers");
+const serverless = require("serverless-http");
 
 const app = express();
 
@@ -51,10 +52,10 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-// API Root Test
-app.get("/", (req, res) => {
-  res.json({ message: "Backend is running on Vercel!" });
-});
+// // API Root Test
+// app.get("/", (req, res) => {
+//   res.json({ message: "Backend is running on Vercel!" });
+// });
 
 // Async DB + Route boot
 (async () => {
@@ -111,5 +112,8 @@ app.use((err, req, res, next) => {
   return res.status(500).json({ error: errorHandler(err) || "Something went wrong!" });
 });
 
-// Export for Vercel
-module.exports = app;
+app.get("/", (req, res) => {
+  res.send("Serverless Express on Vercel works!");
+});
+
+module.exports = serverless(app);
