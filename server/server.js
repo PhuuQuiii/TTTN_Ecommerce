@@ -14,14 +14,12 @@ const { dbConnection, errorHandler } = require("./middleware/helpers");
 
 // Database Connection
 (async () => {
-  await dbConnection();
-
-  // Sau đó khởi chạy các phần còn lại
-  let roller = Fawn.Roller();
-  roller
-    .roll()
-    .then(() => console.log("Database transaction system initialized"))
-    .catch(console.error);
+  try {
+    await dbConnection();
+    console.log("🔥 All systems go!");
+  } catch (err) {
+    console.error("❌ Init error:", err);
+  }
 })();
 
 
