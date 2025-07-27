@@ -1,4 +1,3 @@
-// middleware/helpers.js
 const mongoose = require("mongoose");
 const Fawn = require("fawn");
 
@@ -20,7 +19,6 @@ const dbConnection = async () => {
   }
 
   if (!isFawnInitialized) {
-    // Delete model nếu tồn tại tránh OverwriteModelError
     if (mongoose.models["_transname_"]) {
       delete mongoose.models["_transname_"];
     }
@@ -31,9 +29,7 @@ const dbConnection = async () => {
   }
 };
 
-const errorHandler = (err) => {
-  return err.message;
-};
+const errorHandler = (err) => err.message || "Unknown Error";
 
 module.exports = {
   dbConnection,
