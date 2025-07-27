@@ -60,7 +60,27 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // Async DB + Route boot
 (async () => {
   try {
-    await dbConnection.dbConnection();
+    // Add timeout for serverless environment
+    const dbConnectionPromise = dbConnection.dbConnection();
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        reject(new Error('Database connection timeout after 5 seconds'));
+      }, 5000);
+    });
+
+    // Race between connection and timeout
+    if (process.env.NODE_ENV === 'production') {
+      await Promise.race([dbConnectionPromise, timeoutPromise])
+        .catch(err => {
+          console.warn('⚠️ Database connection warning:', err.message);
+          console.log('Continuing without confirmed DB connection in serverless environment...');
+          // In serverless, we'll let routes try to connect when needed
+        });
+    } else {
+      // In non-serverless, wait for connection
+      await dbConnectionPromise;
+    }
+    
     console.log("🔥 All systems go!");
 
     // ✅ Only import routes AFTER dbConnection & Fawn.init
@@ -129,30 +149,10 @@ app.use((err, req, res, next) => {
 // Endpoint to check MongoDB connection status
 app.get("/db-status", async (req, res) => {
   try {
-    const mongoose = require("mongoose");
-    const status = mongoose.connection.readyState;
-    const statusMap = {
-      0: "disconnected",
-      1: "connected",
-      2: "connecting",
-      3: "disconnecting",
-    };
-
-    const dbName = mongoose.connection.db?.databaseName || "Not connected";
-
-    return res.json({
-      status: statusMap[status] || "unknown",
-      databaseName: dbName,
-      message:
-        status === 1
-          ? "MongoDB connection successful"
-          : "MongoDB not connected",
-      mongoURI: process.env.MONGO_URI
-        ? "MongoDB URI is configured"
-        : "MongoDB URI is missing",
-      timestamp: new Date().toISOString(),
-    });
+    const { getConnectionStatus } = require("./middleware/helpers/dbConnection");
+    return res.json(getConnectionStatus());
   } catch (error) {
+    console.error("Error in /db-status endpoint:", error);
     return res.status(500).json({
       message: "Error checking database connection",
       error: error.message,
@@ -177,6 +177,9 @@ app.get("/api-test", (req, res) => {
     message: "API is working!",
     timestamp: new Date().toISOString(),
     env: process.env.NODE_ENV,
+    nodeVersion: process.version,
+    memoryUsage: JSON.stringify(process.memoryUsage()),
+    uptime: process.uptime()
   });
 });
 

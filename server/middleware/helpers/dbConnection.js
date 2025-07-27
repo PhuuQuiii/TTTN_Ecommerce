@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const Fawn = require("fawn");
 
-let isConnected = false;
+// For serverless environments, cached connection helps performance
+let cachedDb = null;
 let isFawnInitialized = false;
 
 const dbConnection = async () => {
@@ -9,22 +10,45 @@ const dbConnection = async () => {
     throw new Error("MONGO_URI not defined");
   }
 
-  if (!isConnected) {
-    try {
-      console.log("Connecting to MongoDB...");
-      await mongoose.connect(process.env.MONGO_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        serverSelectionTimeoutMS: 10000, // Timeout after 10s
-        socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
-      });
-      isConnected = true;
-      console.log("✅ MongoDB connected:", mongoose.connection.db.databaseName);
-    } catch (error) {
-      console.error("❌ MongoDB connection error:", error.message);
-      // In serverless environment, rethrow the error for proper handling
-      throw error;
+  // If we already have a connection, use it
+  if (cachedDb && mongoose.connection.readyState === 1) {
+    console.log("Using cached MongoDB connection");
+    return;
+  }
+
+  try {
+    console.log("Connecting to MongoDB...");
+    
+    // Serverless optimized connection options
+    const options = {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      bufferCommands: false, // Disable mongoose buffering
+      serverSelectionTimeoutMS: 5000, // Shorter timeout for serverless
+      socketTimeoutMS: 30000, // Close sockets after 30s of inactivity
+      maxPoolSize: 10, // Maintain up to 10 socket connections
+    };
+
+    // If we're in a serverless environment (Vercel)
+    if (process.env.VERCEL) {
+      console.log("Running in Vercel environment");
     }
+
+    // Connect to database
+    await mongoose.connect(process.env.MONGO_URI, options);
+    
+    cachedDb = mongoose.connection.db;
+    console.log("✅ MongoDB connected:", mongoose.connection.db.databaseName);
+  } catch (error) {
+    console.error("❌ MongoDB connection error:", error.message);
+    console.error("Connection error details:", error);
+    
+    // Create a more informative error for serverless environments
+    const enhancedError = new Error(`MongoDB connection failed: ${error.message}`);
+    enhancedError.originalError = error;
+    enhancedError.mongoURI = process.env.MONGO_URI ? "MongoDB URI is configured" : "MongoDB URI is missing";
+    
+    throw enhancedError;
   }
 
   if (!isFawnInitialized) {
@@ -38,14 +62,42 @@ const dbConnection = async () => {
       console.log("✅ Fawn initialized");
     } catch (error) {
       console.error("❌ Fawn initialization error:", error.message);
-      throw error;
+      // Don't throw here, just log the error
+      // Fawn is for transactions, and we can still operate without it
+      // in emergency mode
     }
   }
 };
 
-const errorHandler = (err) => err.message || "Unknown Error";
+// Enhanced error handler with more details
+const errorHandler = (err) => {
+  console.error("Database error:", err);
+  return err.message || "Unknown database error occurred";
+};
+
+// Check database connection status
+const getConnectionStatus = () => {
+  const state = mongoose.connection.readyState;
+  const stateMap = {
+    0: "disconnected",
+    1: "connected",
+    2: "connecting",
+    3: "disconnecting",
+    99: "uninitialized"
+  };
+  
+  return {
+    status: stateMap[state] || "unknown",
+    databaseName: mongoose.connection.db?.databaseName || "Not connected",
+    message: state === 1 ? "MongoDB connected" : "MongoDB not connected",
+    mongoURI: process.env.MONGO_URI ? "MongoDB URI is configured" : "MongoDB URI is missing",
+    timestamp: new Date().toISOString()
+  };
+};
 
 module.exports = {
   dbConnection,
   errorHandler,
+  getConnectionStatus
+}
 };
