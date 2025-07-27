@@ -18,7 +18,7 @@ const dbConnection = async () => {
 
   try {
     console.log("Connecting to MongoDB...");
-    
+
     // Serverless optimized connection options
     const options = {
       useNewUrlParser: true,
@@ -27,6 +27,9 @@ const dbConnection = async () => {
       serverSelectionTimeoutMS: 5000, // Shorter timeout for serverless
       socketTimeoutMS: 30000, // Close sockets after 30s of inactivity
       maxPoolSize: 10, // Maintain up to 10 socket connections
+      autoIndex: false, // Don't build indexes in serverless
+      maxIdleTimeMS: 10000, // Close idle connections after 10 seconds
+      family: 4, // Use IPv4, skip trying IPv6
     };
 
     // If we're in a serverless environment (Vercel)
@@ -36,18 +39,22 @@ const dbConnection = async () => {
 
     // Connect to database
     await mongoose.connect(process.env.MONGO_URI, options);
-    
+
     cachedDb = mongoose.connection.db;
     console.log("✅ MongoDB connected:", mongoose.connection.db.databaseName);
   } catch (error) {
     console.error("❌ MongoDB connection error:", error.message);
     console.error("Connection error details:", error);
-    
+
     // Create a more informative error for serverless environments
-    const enhancedError = new Error(`MongoDB connection failed: ${error.message}`);
+    const enhancedError = new Error(
+      `MongoDB connection failed: ${error.message}`
+    );
     enhancedError.originalError = error;
-    enhancedError.mongoURI = process.env.MONGO_URI ? "MongoDB URI is configured" : "MongoDB URI is missing";
-    
+    enhancedError.mongoURI = process.env.MONGO_URI
+      ? "MongoDB URI is configured"
+      : "MongoDB URI is missing";
+
     throw enhancedError;
   }
 
@@ -83,20 +90,22 @@ const getConnectionStatus = () => {
     1: "connected",
     2: "connecting",
     3: "disconnecting",
-    99: "uninitialized"
+    99: "uninitialized",
   };
-  
+
   return {
     status: stateMap[state] || "unknown",
     databaseName: mongoose.connection.db?.databaseName || "Not connected",
     message: state === 1 ? "MongoDB connected" : "MongoDB not connected",
-    mongoURI: process.env.MONGO_URI ? "MongoDB URI is configured" : "MongoDB URI is missing",
-    timestamp: new Date().toISOString()
+    mongoURI: process.env.MONGO_URI
+      ? "MongoDB URI is configured"
+      : "MongoDB URI is missing",
+    timestamp: new Date().toISOString(),
   };
 };
 
 module.exports = {
   dbConnection,
   errorHandler,
-  getConnectionStatus
-}
+  getConnectionStatus,
+};

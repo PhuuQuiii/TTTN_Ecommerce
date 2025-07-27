@@ -1,20 +1,12 @@
 {
   "version": 2,
-  "rewrites": [
-    { "source": "/minimal/(.*)", "destination": "/minimal-server.js" },
-    { "source": "/api/(.*)", "destination": "/server.js" },
-    { "source": "/(.*)", "destination": "/server.js" }
-  ],
   "functions": {
-    "server.js": {
+    "api/**/*.js": {
       "memory": 1024,
       "maxDuration": 10
-    },
-    "minimal-server.js": {
-      "memory": 512,
-      "maxDuration": 5
     }
   },
+  "rewrites": [{ "source": "/(.*)", "destination": "/api" }],
   "env": {
     "NODE_ENV": "production",
     "VERCEL": "true"

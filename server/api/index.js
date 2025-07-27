@@ -1,15 +1,9 @@
 // Import main server configuration
-const expressValidator = require("express-validator");
-const express = require("express");
-const http = require("http");
-const cors = require("cors");
-require("dotenv").config();
-const Fawn = require("fawn");
-require("express-async-errors");
-const swaggerUi = require("swagger-ui-express");
-const swaggerJsDoc = require("swagger-jsdoc");
-const socketIO = require("socket.io");
-const paypalRoutes = require("../routes/paypalRoutes.js");
+// This is the Vercel serverless entry point that redirects to our main server.js
+const app = require("../server");
+
+// Export for Vercel serverless functions
+module.exports = app;
 
 // Import methods
 const { dbConnection, errorHandler } = require("../middleware/helpers");
