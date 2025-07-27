@@ -1,28 +1,22 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node"
-    }
+  "rewrites": [
+    { "source": "/minimal/(.*)", "destination": "/minimal-server.js" },
+    { "source": "/api/(.*)", "destination": "/server.js" },
+    { "source": "/(.*)", "destination": "/server.js" }
   ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/server.js"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  },
   "functions": {
     "server.js": {
       "memory": 1024,
       "maxDuration": 10
+    },
+    "minimal-server.js": {
+      "memory": 512,
+      "maxDuration": 5
     }
+  },
+  "env": {
+    "NODE_ENV": "production",
+    "VERCEL": "true"
   }
 }

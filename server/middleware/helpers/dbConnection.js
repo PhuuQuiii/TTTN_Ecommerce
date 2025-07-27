@@ -100,4 +100,3 @@ module.exports = {
   errorHandler,
   getConnectionStatus
 }
-};
