@@ -59,7 +59,7 @@ app.get("/", (req, res) => {
 // Async DB + Route boot
 (async () => {
   try {
-    await dbConnection();
+    await dbConnection.dbConnection(); 
     console.log("🔥 All systems go!");
 
     // ✅ Only import routes AFTER dbConnection & Fawn.init
