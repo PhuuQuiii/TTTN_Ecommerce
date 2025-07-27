@@ -60,7 +60,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // Async DB + Route boot
 (async () => {
   try {
-    await dbConnection.dbConnection(); 
+    await dbConnection.dbConnection();
     console.log("🔥 All systems go!");
 
     // ✅ Only import routes AFTER dbConnection & Fawn.init
@@ -77,6 +77,21 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
     app.use("/api/dispatcher-auth", require("./routes/dispatcher_auth"));
     app.use("/api/sale", require("./routes/sale"));
     app.use("/api/notification", require("./routes/notification"));
+
+    // Also support routes without /api prefix for Vercel deployment
+    app.use("/paypal", require("./routes/paypalRoutes"));
+    app.use("/admin-auth", require("./routes/admin_auth"));
+    app.use("/user-auth", require("./routes/user_auth"));
+    app.use("/admin", require("./routes/admin"));
+    app.use("/superadmin", require("./routes/superadmin"));
+    app.use("/user", require("./routes/user"));
+    app.use("/product", require("./routes/product"));
+    app.use("/order", require("./routes/order"));
+    app.use("/review-qna", require("./routes/review_qna"));
+    app.use("/cart-wishlist", require("./routes/cart_wishlist"));
+    app.use("/dispatcher-auth", require("./routes/dispatcher_auth"));
+    app.use("/sale", require("./routes/sale"));
+    app.use("/notification", require("./routes/notification"));
 
     // Logout handler
     app.delete("/api/logout", async (req, res) => {
@@ -95,7 +110,6 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
     // Optional: Start a server locally (if NOT using Vercel)
     // app.listen(3001, () => console.log("Server listening on port 3001"));
-
   } catch (err) {
     console.error("❌ Init error:", err);
     process.exit(1);
@@ -109,11 +123,16 @@ app.use((err, req, res, next) => {
   if (err.message === "Not Image") {
     return res.status(415).json({ error: "Images are only allowed" });
   }
-  return res.status(500).json({ error: errorHandler(err) || "Something went wrong!" });
+  return res
+    .status(500)
+    .json({ error: errorHandler(err) || "Something went wrong!" });
 });
 
+// Root route for health check
 app.get("/", (req, res) => {
-  res.send("Serverless Express on Vercel works!");
+  res.json({ message: "Backend is running on Vercel!" });
 });
 
-module.exports = serverless(app);
+// Export both for Vercel and for local development
+module.exports = app;
+module.exports.handler = serverless(app);
