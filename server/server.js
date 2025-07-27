@@ -91,9 +91,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
     app.use("/cart-wishlist", require("./routes/cart_wishlist"));
     app.use("/dispatcher-auth", require("./routes/dispatcher_auth"));
     app.use("/sale", require("./routes/sale"));
-    app.use("/notification", require("./routes/notification"));
-
-    // Logout handler
+    app.use("/notification", require("./routes/notification")); // Logout handler
     app.delete("/api/logout", async (req, res) => {
       const RefreshToken = require("./models/RefereshToken");
       const { refreshToken } = req.body;
@@ -128,9 +126,58 @@ app.use((err, req, res, next) => {
     .json({ error: errorHandler(err) || "Something went wrong!" });
 });
 
+// Endpoint to check MongoDB connection status
+app.get("/db-status", async (req, res) => {
+  try {
+    const mongoose = require("mongoose");
+    const status = mongoose.connection.readyState;
+    const statusMap = {
+      0: "disconnected",
+      1: "connected",
+      2: "connecting",
+      3: "disconnecting",
+    };
+
+    const dbName = mongoose.connection.db?.databaseName || "Not connected";
+
+    return res.json({
+      status: statusMap[status] || "unknown",
+      databaseName: dbName,
+      message:
+        status === 1
+          ? "MongoDB connection successful"
+          : "MongoDB not connected",
+      mongoURI: process.env.MONGO_URI
+        ? "MongoDB URI is configured"
+        : "MongoDB URI is missing",
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error checking database connection",
+      error: error.message,
+      timestamp: new Date().toISOString(),
+    });
+  }
+});
+
 // Root route for health check
 app.get("/", (req, res) => {
-  res.json({ message: "Backend is running on Vercel!" });
+  res.json({
+    message: "Backend is running on Vercel!",
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV,
+    mongoUriConfigured: !!process.env.MONGO_URI,
+  });
+});
+
+// Simple test route that doesn't require database
+app.get("/api-test", (req, res) => {
+  res.json({
+    message: "API is working!",
+    timestamp: new Date().toISOString(),
+    env: process.env.NODE_ENV,
+  });
 });
 
 // Start server if running locally (not on Vercel)
