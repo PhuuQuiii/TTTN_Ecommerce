@@ -7,8 +7,8 @@ require("express-async-errors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const { dbConnection, errorHandler } = require("./middleware/helpers");
-const serverless = require("serverless-http");
 
+// Create Express app
 const app = express();
 
 // CORS whitelist
@@ -133,6 +133,13 @@ app.get("/", (req, res) => {
   res.json({ message: "Backend is running on Vercel!" });
 });
 
-// Export both for Vercel and for local development
+// Start server if running locally (not on Vercel)
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 3001;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+// Export the Express app
 module.exports = app;
-module.exports.handler = serverless(app);
