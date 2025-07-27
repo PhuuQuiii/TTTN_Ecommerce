@@ -64,23 +64,24 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
     const dbConnectionPromise = dbConnection.dbConnection();
     const timeoutPromise = new Promise((_, reject) => {
       setTimeout(() => {
-        reject(new Error('Database connection timeout after 5 seconds'));
+        reject(new Error("Database connection timeout after 5 seconds"));
       }, 5000);
     });
 
     // Race between connection and timeout
-    if (process.env.NODE_ENV === 'production') {
-      await Promise.race([dbConnectionPromise, timeoutPromise])
-        .catch(err => {
-          console.warn('⚠️ Database connection warning:', err.message);
-          console.log('Continuing without confirmed DB connection in serverless environment...');
-          // In serverless, we'll let routes try to connect when needed
-        });
+    if (process.env.NODE_ENV === "production") {
+      await Promise.race([dbConnectionPromise, timeoutPromise]).catch((err) => {
+        console.warn("⚠️ Database connection warning:", err.message);
+        console.log(
+          "Continuing without confirmed DB connection in serverless environment..."
+        );
+        // In serverless, we'll let routes try to connect when needed
+      });
     } else {
       // In non-serverless, wait for connection
       await dbConnectionPromise;
     }
-    
+
     console.log("🔥 All systems go!");
 
     // ✅ Only import routes AFTER dbConnection & Fawn.init
@@ -149,7 +150,9 @@ app.use((err, req, res, next) => {
 // Endpoint to check MongoDB connection status
 app.get("/db-status", async (req, res) => {
   try {
-    const { getConnectionStatus } = require("./middleware/helpers/dbConnection");
+    const {
+      getConnectionStatus,
+    } = require("./middleware/helpers/dbConnection");
     return res.json(getConnectionStatus());
   } catch (error) {
     console.error("Error in /db-status endpoint:", error);
@@ -179,7 +182,7 @@ app.get("/api-test", (req, res) => {
     env: process.env.NODE_ENV,
     nodeVersion: process.version,
     memoryUsage: JSON.stringify(process.memoryUsage()),
-    uptime: process.uptime()
+    uptime: process.uptime(),
   });
 });
 
