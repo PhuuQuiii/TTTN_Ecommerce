@@ -13,7 +13,17 @@ const paypalRoutes = require("./routes/paypalRoutes.js");
 const { dbConnection, errorHandler } = require("./middleware/helpers");
 
 // Database Connection
-dbConnection();
+(async () => {
+  await dbConnection();
+
+  // Sau đó khởi chạy các phần còn lại
+  let roller = Fawn.Roller();
+  roller
+    .roll()
+    .then(() => console.log("Database transaction system initialized"))
+    .catch(console.error);
+})();
+
 
 // Middlewares
 var allowlist = [
