@@ -71,7 +71,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
     // Race between connection and timeout
     if (process.env.NODE_ENV === "production") {
       await Promise.race([dbConnectionPromise, timeoutPromise]).catch((err) => {
-        console.warn("⚠️ Database connection warning:", err.message);
+        console.warn(" Database connection warning:", err.message);
         console.log(
           "Continuing without confirmed DB connection in serverless environment..."
         );
@@ -82,9 +82,9 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
       await dbConnectionPromise;
     }
 
-    console.log("🔥 All systems go!");
+    console.log(" All systems go!");
 
-    // ✅ Only import routes AFTER dbConnection & Fawn.init
+    //  Only import routes AFTER dbConnection & Fawn.init
     app.use("/api/paypal", require("./routes/paypalRoutes"));
     app.use("/api/admin-auth", require("./routes/admin_auth"));
     app.use("/api/user-auth", require("./routes/user_auth"));

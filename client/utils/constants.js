@@ -3,7 +3,8 @@ export const QUINDIGO_BASE_URL = "http://157.245.106.101";
 // export const BASE_URL = process.env.NODE_ENV === 'production' ? 'http://157.245.106.101:3001' : process.env.SERVER_BASE_URL
 export const BASE_URL =
   process.env.NODE_ENV === "production"
-    ? "https://backend-ecommerce-theta-plum.vercel.app"
+    // ? "https://backend-ecommerce-theta-plum.vercel.app"
+    ? "http://localhost:3001/api"
     : process.env.SERVER_BASE_URL;
 
 export const USER_AUTH_BASE_URL = `${BASE_URL}/user-auth`;

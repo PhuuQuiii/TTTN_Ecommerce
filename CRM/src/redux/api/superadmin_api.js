@@ -63,8 +63,8 @@ export class SuperadminService {
     const state = store.getState();
     const token = state.auth.token; // Giả sử token được lưu trong state.auth.token
     try {
-      // const response = await axios.get('http://localhost:3001/api/superadmin/users', {
-      const response = await axios.get('https://backend-ecommerce-theta-plum.vercel.app/api/superadmin/users', {
+      const response = await axios.get('http://localhost:3001/api/superadmin/users', {
+      // const response = await axios.get('https://backend-ecommerce-theta-plum.vercel.app/api/superadmin/users', {
         headers: {
           'x-auth-token': token
         },

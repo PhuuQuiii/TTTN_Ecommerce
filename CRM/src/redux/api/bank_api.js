@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const API_URL = process.env.REACT_APP_SERVER_URL || 'http://localhost:3001';
-const API_URL = process.env.REACT_APP_SERVER_URL || 'https://backend-ecommerce-theta-plum.vercel.app';
+const API_URL = process.env.REACT_APP_SERVER_URL || 'http://localhost:3001';
+// const API_URL = process.env.REACT_APP_SERVER_URL || 'https://backend-ecommerce-theta-plum.vercel.app';
 
 export class BankService {
   async updateBank(formData, id) {

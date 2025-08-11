@@ -41,8 +41,8 @@ const Login = (props) => {
 
     if (token) {
       axios
-        .put(`https://backend-ecommerce-theta-plum.vercel.app/api/admin-auth/email-verify?token=${token}`)
-        // .put(`http://localhost:3001/api/admin-auth/email-verify?token=${token}`)
+        // .put(`https://backend-ecommerce-theta-plum.vercel.app/api/admin-auth/email-verify?token=${token}`)
+        .put(`http://localhost:3001/api/admin-auth/email-verify?token=${token}`)
         .then((response) => {
           alert("Email verified successfully!");
           history.push("/");

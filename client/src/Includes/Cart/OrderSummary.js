@@ -143,8 +143,8 @@ class OrderSummary extends Component {
     // Gọi API server /create-order PayPal
     try {
       const response = await postTokenService(
-        "https://backend-ecommerce-theta-plum.vercel.app/api/paypal/create-order",
-        // "http://localhost:3001/api/paypal/create-order",
+        // "https://backend-ecommerce-theta-plum.vercel.app/api/paypal/create-order",
+        "http://localhost:3001/api/paypal/create-order",
         "POST",
         { amount: totalAmount }
       );
@@ -163,8 +163,8 @@ class OrderSummary extends Component {
   captureOrder = async (orderID) => {
     try {
       const response = await postTokenService(
-        "https://backend-ecommerce-theta-plum.vercel.app/api/paypal/capture-order",
-        // "http://localhost:3001/api/paypal/capture-order",
+        // "https://backend-ecommerce-theta-plum.vercel.app/api/paypal/capture-order",
+        "http://localhost:3001/api/paypal/capture-order",
         "POST",
         { orderID }
       );

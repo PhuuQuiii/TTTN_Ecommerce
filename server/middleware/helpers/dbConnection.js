@@ -41,9 +41,9 @@ const dbConnection = async () => {
     await mongoose.connect(process.env.MONGO_URI, options);
 
     cachedDb = mongoose.connection.db;
-    console.log("✅ MongoDB connected:", mongoose.connection.db.databaseName);
+    console.log(" MongoDB connected:", mongoose.connection.db.databaseName);
   } catch (error) {
-    console.error("❌ MongoDB connection error:", error.message);
+    console.error(" MongoDB connection error:", error.message);
     console.error("Connection error details:", error);
 
     // Create a more informative error for serverless environments
@@ -66,9 +66,9 @@ const dbConnection = async () => {
     try {
       Fawn.init(mongoose, process.env.TRANS_COLL || "_transname_");
       isFawnInitialized = true;
-      console.log("✅ Fawn initialized");
+      console.log(" Fawn initialized");
     } catch (error) {
-      console.error("❌ Fawn initialization error:", error.message);
+      console.error(" Fawn initialization error:", error.message);
       // Don't throw here, just log the error
       // Fawn is for transactions, and we can still operate without it
       // in emergency mode

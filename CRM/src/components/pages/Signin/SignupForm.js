@@ -26,8 +26,8 @@ function SignupForm({ switchToLogin }) {
     setError(null);
     
     try {
-      // await axios.post("http://localhost:3001/api/admin-auth/signup", formData);
-      await axios.post("https://backend-ecommerce-theta-plum.vercel.app/api/admin-auth/signup", formData);
+      await axios.post("http://localhost:3001/api/admin-auth/signup", formData);
+      // await axios.post("https://backend-ecommerce-theta-plum.vercel.app/api/admin-auth/signup", formData);
       alert("Registration successful! Please check your email to verify your account.");
       switchToLogin();
     } catch (err) {
